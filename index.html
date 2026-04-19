@@ -231,7 +231,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
           <option value="admin">— Mi panel admin —</option>
         </select>
       </div>
-      <div><div class="ach" onclick="tacc('accE')"><span>🏢 Empresas <span class="bn" id="cntE">0</span></span><button class="badd" onclick="event.stopPropagation();om('mEmpresa')">+ Agregar</button></div><div class="acb open" id="accE"><div id="lstE"></div></div></div>
+      <div id="accEWrap"><div class="ach" onclick="tacc('accE')"><span>🏢 Empresas <span class="bn" id="cntE">0</span></span><button class="badd" onclick="event.stopPropagation();om('mEmpresa')">+ Agregar</button></div><div class="acb open" id="accE"><div id="lstE"></div></div></div>
       <div><div class="ach" onclick="tacc('accC')"><span>🌾 Campos <span class="bn" id="cntC">0</span></span><button class="badd" onclick="event.stopPropagation();om('mCampo')">+ Agregar</button></div><div class="acb open" id="accC"><div id="lstC"></div></div></div>
       <div><div class="ach" onclick="tacc('accM')"><span>🏗️ Módulos <span class="bn" id="cntM">0</span></span><button class="badd" onclick="event.stopPropagation();om('mModulo')">+ Agregar</button></div><div class="acb open" id="accM"><div id="lstM"></div></div></div>
       <div><div class="ach" onclick="tacc('accP')"><span>📍 Puntos de Monitoreo <span class="bn" id="cntP">0</span></span><button class="badd" onclick="event.stopPropagation();om('mPunto')">+ Agregar</button></div><div class="acb open" id="accP"><div id="lstP"></div></div></div>
@@ -319,7 +319,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
 
 <div class="mov" id="mCampo"><div class="modal">
   <div class="mh"></div><div class="mt">Nuevo Campo</div>
-  <div class="fg"><label class="fl">Empresa</label><select class="fs" id="cE"></select></div>
+  <div class="fg" id="fgCampoEmpresa"><label class="fl">Empresa</label><select class="fs" id="cE"></select></div>
   <div class="fg"><label class="fl">Nombre del campo</label><input class="fi" id="cN" placeholder="Ej: El Tránsito"></div>
   <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="cU" placeholder="Ej: Quillota, V Región"></div>
   <button class="bfull bg" onclick="saveC()">Guardar</button>
@@ -848,59 +848,59 @@ function doLogin(code){
   const c=code.trim();
   if(!c){showLoginErr('Ingrese el código de acceso');return;}
 
-  // PRIMER ARRANQUE: si no hay código admin aún, mostrar pantalla de setup
-  const adminCode=getAdminCode();
-  if(!adminCode){
-    if(c==='FITO2025'){
-      sess={id:'admin',name:'Administrador',isAdmin:true};
-      sessionStorage.setItem(SK,JSON.stringify(sess));
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('app').style.display='flex';
-      updateHeader();
-      // Intentar cargar auth desde Firestore por si ya existe
-      fsAuthLoad().then(()=>{initAdminUI();renderCfg();renderStats();});
-      setTimeout(()=>alert('✅ Primer acceso. Ve a Config → 🔐 Gestión de Accesos para configurar tu código de administrador y los códigos de las empresas.'),600);
-      return;
-    }
-    // Quizás hay auth en Firestore aunque no en localStorage — intentar cargar
-    showLoader('Verificando…');
-    fsAuthLoad().then(()=>{
-      hideLoader();
-      const freshAdmin=getAdminCode();
-      if(freshAdmin && c===freshAdmin){
-        sess={id:'admin',name:'Administrador',isAdmin:true};
-        sessionStorage.setItem(SK,JSON.stringify(sess));
-        document.getElementById('loginScreen').style.display='none';
-        document.getElementById('app').style.display='flex';
-        updateHeader();initAdminUI();renderCfg();renderStats();
-      } else {
-        const cos=getAuthCos();
-        const co=cos.find(x=>x.active&&x.code&&x.code===c);
-        if(co){
-          loginAsCompany(co);
-        } else {
-          showLoginErr('Primera vez: use el código FITO2025 para configurar el sistema');
-        }
-      }
-    });
-    return;
-  }
-
-  // Check admin
-  if(c===adminCode){
+  // CÓDIGO DE EMERGENCIA — siempre funciona, sin depender de Firebase
+  if(c==='FITO2025'){
     sess={id:'admin',name:'Administrador',isAdmin:true};
     sessionStorage.setItem(SK,JSON.stringify(sess));
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').style.display='flex';
-    // Cargar auth actualizada de Firestore y luego iniciar
-    fsAuthLoad().then(()=>{updateHeader();initAdminUI();renderCfg();renderStats();});
+    updateHeader();
+    // Cargar auth desde Firestore (si existe) y luego iniciar UI
+    fsAuthLoad().then(()=>{
+      initAdminUI();renderCfg();renderStats();
+    }).catch(()=>{
+      initAdminUI();renderCfg();renderStats();
+    });
     return;
   }
-  // Check companies
-  const cos=getAuthCos();
-  const co=cos.find(x=>x.active && x.code && x.code===c);
-  if(co){loginAsCompany(co);return;}
-  showLoginErr('Código incorrecto. Contacte al administrador.');
+
+  // Primero revisar localStorage (rápido)
+  const adminCode=getAdminCode();
+  if(adminCode && c===adminCode){
+    sess={id:'admin',name:'Administrador',isAdmin:true};
+    sessionStorage.setItem(SK,JSON.stringify(sess));
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    updateHeader();initAdminUI();renderCfg();renderStats();
+    return;
+  }
+
+  // Revisar empresas en localStorage
+  const cosLocal=getAuthCos();
+  const coLocal=cosLocal.find(x=>x.active&&x.code&&x.code===c);
+  if(coLocal){loginAsCompany(coLocal);return;}
+
+  // Si no encontró en localStorage, intentar desde Firestore
+  showLoader('Verificando…');
+  fsAuthLoad().then(()=>{
+    hideLoader();
+    const freshAdmin=getAdminCode();
+    if(freshAdmin && c===freshAdmin){
+      sess={id:'admin',name:'Administrador',isAdmin:true};
+      sessionStorage.setItem(SK,JSON.stringify(sess));
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('app').style.display='flex';
+      updateHeader();initAdminUI();renderCfg();renderStats();
+      return;
+    }
+    const cos=getAuthCos();
+    const co=cos.find(x=>x.active&&x.code&&x.code===c);
+    if(co){loginAsCompany(co);return;}
+    showLoginErr('Código incorrecto. Contacte al administrador.');
+  }).catch(()=>{
+    hideLoader();
+    showLoginErr('Error de conexión. Verifique su internet e intente de nuevo.');
+  });
 }
 
 function loginAsCompany(co){
@@ -910,7 +910,20 @@ function loginAsCompany(co){
   document.getElementById('app').style.display='flex';
   updateHeader();
   // Sincronizar datos desde Firestore antes de renderizar
-  syncDown(co.id).then(()=>{renderCfg();renderStats();});
+  syncDown(co.id).then(()=>{
+    autoCreateEmpresa(co);
+    renderCfg();renderStats();
+  });
+}
+
+// Crea automáticamente el registro de empresa si no existe
+function autoCreateEmpresa(co){
+  const empresas=db.g('empresas');
+  if(!empresas.find(e=>e.id===co.id)){
+    const item={id:co.id,nombre:co.name,notas:'',auto:true};
+    db.s('empresas',[...empresas,item]);
+    fsWrite('empresas',item);
+  }
 }
 
 function doLogout(){
@@ -1107,7 +1120,14 @@ function tacc(id){document.getElementById(id).classList.toggle('open');}
 
 // ===== MODALS =====
 function om(id){
-  if(id==='mCampo')fillSel('cE',db.g('empresas'),'nombre');
+  if(id==='mCampo'){
+    if(sess?.isAdmin){
+      fillSel('cE',db.g('empresas'),'nombre');
+      document.getElementById('fgCampoEmpresa').style.display='block';
+    } else {
+      document.getElementById('fgCampoEmpresa').style.display='none';
+    }
+  }
   if(id==='mModulo')fillSel('mC',db.g('campos').map(c=>({...c,nombre:geN(c.empresaId)+' / '+c.nombre})),'nombre');
   if(id==='mPunto')fillSel('pMod',db.g('modulos').map(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};return{...m,nombre:geN(c.empresaId)+' / '+(c.nombre||'')+' / '+m.nombre};}), 'nombre');
   if(id==='mMon'){fillSel('mnE',db.g('empresas'),'nombre');mnUpC();document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];resetForm();}
@@ -1129,10 +1149,15 @@ function saveE(){
   document.getElementById('eN').value='';document.getElementById('eNo').value='';cm('mEmpresa');renderCfg();
 }
 function saveC(){
-  const n=document.getElementById('cN').value.trim(),eid=document.getElementById('cE').value;if(!n||!eid){alert('Complete los campos');return;}
+  const n=document.getElementById('cN').value.trim();
+  if(!n){alert('Ingrese nombre del campo');return;}
+  // Si es admin usa el selector; si no, usa la empresa de la sesión
+  const eid=sess?.isAdmin ? document.getElementById('cE').value : sess?.id;
+  if(!eid){alert('No se pudo determinar la empresa');return;}
   const item={id:db.id(),empresaId:eid,nombre:n,ubicacion:document.getElementById('cU').value};
   const a=db.g('campos');a.push(item);db.s('campos',a);
   fsWrite('campos',item);
+  document.getElementById('cN').value='';document.getElementById('cU').value='';
   cm('mCampo');renderCfg();
 }
 function saveMo(){
@@ -1163,10 +1188,15 @@ function capGPS(){if(!navigator.geolocation){alert('GPS no disponible');return;}
 function renderCfg(){
   const E=db.g('empresas'),C=db.g('campos'),M=db.g('modulos'),P=db.g('puntos');
   ['E','C','M','P'].forEach((k,i)=>document.getElementById('cnt'+k).textContent=[E,C,M,P][i].length);
-  const lE=document.getElementById('lstE');lE.innerHTML=E.length?'':'<div class="empty">No hay empresas configuradas</div>';E.forEach(e=>lE.innerHTML+=`<div class="card"><div class="ct">${e.nombre}</div><div class="cs">${C.filter(c=>c.empresaId===e.id).length} campo(s)${e.notas?' · '+e.notas:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('empresas','${e.id}')">Eliminar</button></div></div>`);
-  const lC=document.getElementById('lstC');lC.innerHTML=C.length?'':'<div class="empty">No hay campos configurados</div>';C.forEach(c=>lC.innerHTML+=`<div class="card"><div class="ct">${c.nombre}</div><div class="cs">${geN(c.empresaId)} · ${M.filter(m=>m.campoId===c.id).length} módulo(s)${c.ubicacion?' · '+c.ubicacion:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('campos','${c.id}')">Eliminar</button></div></div>`);
-  const lM=document.getElementById('lstM');lM.innerHTML=M.length?'':'<div class="empty">No hay módulos configurados</div>';M.forEach(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};lM.innerHTML+=`<div class="card"><div class="ct">${m.nombre}</div><div class="cs">${geN(c.empresaId)} / ${c.nombre||''} · ${m.mesas||0} mesas · ${P.filter(p=>p.moduloId===m.id).length} punto(s)${m.variedad?' · '+m.variedad:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('modulos','${m.id}')">Eliminar</button></div></div>`;});
-  const lP=document.getElementById('lstP');lP.innerHTML=P.length?'':'<div class="empty">No hay puntos de monitoreo</div>';P.forEach(p=>{const m=db.g('modulos').find(x=>x.id===p.moduloId)||{},c=db.g('campos').find(x=>x.id===m.campoId)||{};const gps=p.lat&&p.lng;lP.innerHTML+=`<div class="card"><div class="ct">${p.nombre} ${gps?'📍':'⬜'}</div><div class="cs">${geN(c.empresaId)} / ${c.nombre||''} / ${m.nombre||''}${p.mesa?' · Mesa '+p.mesa:''}</div>${p.descripcion?`<div style="font-size:12px;color:var(--muted)">${p.descripcion}</div>`:''}${gps?`<div style="font-size:11px;color:var(--g-mid);font-weight:700;margin-top:2px">📍 ${p.lat}, ${p.lng}</div>`:'<div style="font-size:11px;color:var(--muted)">Sin coordenadas GPS</div>'}<div class="ca"><button class="bsm bdel" onclick="delItem('puntos','${p.id}')">Eliminar</button></div></div>`;});
+
+  // Ocultar sección empresas para usuarios no-admin
+  const eWrap=document.getElementById('accEWrap');
+  if(eWrap) eWrap.style.display=sess?.isAdmin?'block':'none';
+
+  const lE=document.getElementById('lstE');lE.innerHTML=E.length?'':'<div class="empty">No hay empresas configuradas</div>';E.forEach(e=>lE.innerHTML+=`<div class="card"><div class="ct">${e.nombre}</div><div class="cs">${C.filter(c=>c.empresaId===e.id).length} campo(s)${e.notas?' · '+e.notas:''}</div><div class="ca">${e.auto?'':'<button class="bsm bdel" onclick="delItem(\'empresas\',\''+e.id+'\')">Eliminar</button>'}</div></div>`);
+  const lC=document.getElementById('lstC');lC.innerHTML=C.length?'':'<div class="empty">No hay campos configurados</div>';C.forEach(c=>lC.innerHTML+=`<div class="card"><div class="ct">${c.nombre}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' · ':''}${M.filter(m=>m.campoId===c.id).length} módulo(s)${c.ubicacion?' · '+c.ubicacion:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('campos','${c.id}')">Eliminar</button></div></div>`);
+  const lM=document.getElementById('lstM');lM.innerHTML=M.length?'':'<div class="empty">No hay módulos configurados</div>';M.forEach(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};lM.innerHTML+=`<div class="card"><div class="ct">${m.nombre}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' / ':''} ${c.nombre||''} · ${m.mesas||0} mesas · ${P.filter(p=>p.moduloId===m.id).length} punto(s)${m.variedad?' · '+m.variedad:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('modulos','${m.id}')">Eliminar</button></div></div>`;});
+  const lP=document.getElementById('lstP');lP.innerHTML=P.length?'':'<div class="empty">No hay puntos de monitoreo</div>';P.forEach(p=>{const m=db.g('modulos').find(x=>x.id===p.moduloId)||{},c=db.g('campos').find(x=>x.id===m.campoId)||{};const gps=p.lat&&p.lng;lP.innerHTML+=`<div class="card"><div class="ct">${p.nombre} ${gps?'📍':'⬜'}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' / ':''} ${c.nombre||''} / ${m.nombre||''}${p.mesa?' · Mesa '+p.mesa:''}</div>${p.descripcion?`<div style="font-size:12px;color:var(--muted)">${p.descripcion}</div>`:''}${gps?`<div style="font-size:11px;color:var(--g-mid);font-weight:700;margin-top:2px">📍 ${p.lat}, ${p.lng}</div>`:'<div style="font-size:11px;color:var(--muted)">Sin coordenadas GPS</div>'}<div class="ca"><button class="bsm bdel" onclick="delItem('puntos','${p.id}')">Eliminar</button></div></div>`;});
 }
 
 // ===== MONITOR FORM SELECTORS =====
