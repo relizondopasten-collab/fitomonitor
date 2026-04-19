@@ -912,7 +912,6 @@ function loginAsCompany(co){
   // Sincronizar datos desde Firestore antes de renderizar
   syncDown(co.id).then(()=>{renderCfg();renderStats();});
 }
-}
 
 function doLogout(){
   if(!confirm('¿Cerrar sesión?'))return;
