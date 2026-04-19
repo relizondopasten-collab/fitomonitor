@@ -1646,6 +1646,11 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
   <button class="ctab" id="ctab2" onclick="showCap(2)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🕷<br>Bimaculada</button>
   <button class="ctab" id="ctab3" onclick="showCap(3)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🔴<br>Ácaro seca</button>
   <button class="ctab" id="ctab4" onclick="showCap(4)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🔍<br>Trips</button>
+  <button class="ctab" id="ctab5" onclick="showCap(5)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🪱<br>Meloid.</button>
+  <button class="ctab" id="ctab6" onclick="showCap(6)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🍄<br>Botrytis</button>
+  <button class="ctab" id="ctab7" onclick="showCap(7)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">⬜<br>Oídio</button>
+  <button class="ctab" id="ctab8" onclick="showCap(8)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🟤<br>Fusarium</button>
+  <button class="ctab" id="ctab9" onclick="showCap(9)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🟣<br>Verticill.</button>
 </div>
 
 <!-- ===== PANEL 0: POLILLA ===== -->
@@ -2595,6 +2600,872 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 </div>
 </div>
 
+<!-- ===== PANEL 5: MELOIDOGYNE ===== -->
+<div class="cpanel" id="cp5" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Nematodo del nudo</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Meloidogyne spp. (Goeldi, 1887)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Nematoda · Tylenchida</span>
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Sedentario endoparásito</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Sin cuarentena interna</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 21–28 días a 25°C · Endoparásito sedentario</div>
+  <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amM" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#7c3aed"/></marker></defs>
+    <!-- Fondo suelo vs raíz -->
+    <rect x="0" y="120" width="320" height="80" rx="0" fill="#fef3c7" opacity="0.5"/>
+    <text x="10" y="135" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#92400e">🟫 EN EL SUELO</text>
+    <rect x="0" y="0" width="320" height="118" fill="#dcfce7" opacity="0.3"/>
+    <text x="10" y="14" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#15803d">🌱 EN LA RAÍZ</text>
+    <!-- Huevo en masa gelatinosa -->
+    <ellipse cx="55" cy="145" rx="28" ry="18" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+    <text x="55" y="140" text-anchor="middle" font-size="14">🥚</text>
+    <text x="55" y="152" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">MASA DE</text>
+    <text x="55" y="161" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">HUEVOS</text>
+    <!-- Flecha -->
+    <path d="M83,145 Q110,130 130,100" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amM)"/>
+    <text x="98" y="118" font-family="Nunito,sans-serif" font-size="7.5" fill="#7c3aed" font-weight="700">J2 libre</text>
+    <!-- J2 infectivo -->
+    <ellipse cx="152" cy="85" rx="22" ry="15" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="152" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#5b21b6">J2</text>
+    <text x="152" y="91" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#5b21b6">infectivo</text>
+    <!-- Flecha penetra raíz -->
+    <path d="M174,85 Q200,80 215,70" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amM)"/>
+    <text x="190" y="72" font-family="Nunito,sans-serif" font-size="7.5" fill="#7c3aed" font-weight="700">penetra</text>
+    <!-- J3-J4 en raíz -->
+    <ellipse cx="240" cy="60" rx="24" ry="15" fill="#ddd6fe" stroke="#6d28d9" stroke-width="2"/>
+    <text x="240" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#4c1d95">J3-J4</text>
+    <text x="240" y="66" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#4c1d95">en raíz</text>
+    <!-- Flecha -->
+    <path d="M255,72 Q265,90 255,105" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amM)"/>
+    <!-- Hembra sedentaria con agalla -->
+    <ellipse cx="232" cy="95" rx="26" ry="18" fill="#f9a8d4" stroke="#be185d" stroke-width="2"/>
+    <text x="232" y="89" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="900" fill="#831843">♀ ADULTA</text>
+    <text x="232" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#831843">piriforme</text>
+    <text x="232" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#be185d">AGALLA</text>
+    <!-- Flecha hembra produce masa huevos -->
+    <path d="M210,105 Q150,130 85,145" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amM)"/>
+    <text x="148" y="133" font-family="Nunito,sans-serif" font-size="7.5" fill="#7c3aed" font-weight="700">500–2000 huevos</text>
+    <!-- Macho vermiforme -->
+    <ellipse cx="152" cy="40" rx="20" ry="12" fill="#c4b5fd" stroke="#6d28d9" stroke-width="1.5"/>
+    <text x="152" y="36" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="900" fill="#4c1d95">♂</text>
+    <text x="152" y="46" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">abandona raíz</text>
+    <!-- Duración centro -->
+    <text x="60" y="95" font-family="Nunito,sans-serif" font-size="8.5" fill="#5b21b6" font-weight="800">21–28 días</text>
+    <text x="60" y="107" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">a 25°C</text>
+  </svg>
+</div>
+
+<!-- Galería síntomas -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:8px 0 8px">🎨 Síntomas e identificación</div>
+
+  <!-- Raíz con agallas ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#ede9fe;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Agallas radicales — síntoma diagnóstico</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <!-- Raíz sana izquierda -->
+        <text x="30" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#15803d">Raíz sana</text>
+        <path d="M28,18 Q25,40 23,65 Q22,85 25,100" fill="none" stroke="#4d7c0f" stroke-width="4" stroke-linecap="round"/>
+        <path d="M28,18 Q31,40 33,65 Q34,85 31,100" fill="none" stroke="#4d7c0f" stroke-width="4" stroke-linecap="round"/>
+        <path d="M25,40 Q15,50 10,58" fill="none" stroke="#4d7c0f" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M24,60 Q14,68 8,75" fill="none" stroke="#4d7c0f" stroke-width="2" stroke-linecap="round"/>
+        <path d="M31,40 Q41,50 46,58" fill="none" stroke="#4d7c0f" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Raíz con agallas derecha -->
+        <text x="95" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#b91c1c">Con Meloidogyne</text>
+        <path d="M93,18 Q90,30 88,45 Q86,60 89,75 Q91,90 90,105" fill="none" stroke="#4d7c0f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M97,18 Q100,30 102,45 Q104,60 101,75 Q99,90 100,105" fill="none" stroke="#4d7c0f" stroke-width="3" stroke-linecap="round"/>
+        <!-- Agallas (nódulos) -->
+        <ellipse cx="95" cy="35" rx="10" ry="8" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+        <ellipse cx="91" cy="52" rx="13" ry="9" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
+        <ellipse cx="97" cy="68" rx="11" ry="8" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+        <ellipse cx="93" cy="83" rx="9" ry="7" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
+        <!-- Labels -->
+        <text x="113" y="52" font-family="Nunito,sans-serif" font-size="8" fill="#c2410c" font-weight="700">agalla</text>
+        <line x1="104" y1="52" x2="111" y2="52" stroke="#c2410c" stroke-width="0.8"/>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:6px">
+        <div><b style="color:#7c3aed">🔑 Diagnóstico:</b> agallas (nódulos) visibles en raíces, de 1–10mm</div>
+        <div><b>📏 Tamaño agalla:</b> varía según especie: M. incognita → grandes; M. hapla → pequeñas</div>
+        <div><b style="color:#be185d">♀</b> Hembra dentro de la agalla: piriforme (en pera), blanca, 0.4–0.8mm</div>
+        <div><b>🥚</b> Masa gelatinosa de huevos al exterior de la agalla (café oscuro)</div>
+        <div><b>🔬</b> Confirmar con extracción de raíz + lupa o microscopio</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Síntomas aéreos -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🌿 Síntomas aéreos (indirectos)</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+      <div style="background:#fef9c3;border-radius:8px;padding:8px">
+        <b style="color:#92400e">Marchitez reversible:</b> la planta se marchita durante el día y recupera por la noche — diferencia clave con Fusarium/Verticillium que no recupera.
+      </div>
+      <div style="background:#fef9c3;border-radius:8px;padding:8px">
+        <b style="color:#92400e">Distribución en focos:</b> plantas afectadas en manchas o líneas, no distribuidas al azar. Sigue el patrón de riego o laboreo.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div>• Enanismo y amarillamiento generalizado sin causa nutricional clara</div>
+        <div>• Deficiencias de micronutrientes (Fe, Mn, Zn) por daño radical</div>
+        <div>• Reducción de calibre y producción sin causa visible en follaje</div>
+        <div>• Raíces con agallas → confirman diagnóstico al arrancar planta</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escala severidad raíz -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">📊 Escala de severidad radicular (1–5)</div>
+    <div style="display:flex;flex-direction:column;gap:5px;font-size:12px">
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#dcfce7;border:1.5px solid #16a34a;border-radius:6px;padding:3px 8px;font-weight:900;color:#15803d;min-width:24px;text-align:center;flex-shrink:0">1</div><div>Agallas escasas y pequeñas · &lt;10% del sistema radicular comprometido</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fef9c3;border:1.5px solid #ca8a04;border-radius:6px;padding:3px 8px;font-weight:900;color:#854d0e;min-width:24px;text-align:center;flex-shrink:0">2</div><div>Agallas dispersas · 10–25% raíces afectadas · sin impacto productivo visible</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#ffedd5;border:1.5px solid #ea580c;border-radius:6px;padding:3px 8px;font-weight:900;color:#c2410c;min-width:24px;text-align:center;flex-shrink:0">3</div><div>Agallas frecuentes · 25–50% raíces afectadas · enanismo moderado</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fee2e2;border:1.5px solid #dc2626;border-radius:6px;padding:3px 8px;font-weight:900;color:#b91c1c;min-width:24px;text-align:center;flex-shrink:0">4</div><div>Sistema radicular muy comprometido · raíces principales engrosadas · &gt;50% agalladas</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#450a0a;border-radius:6px;padding:3px 8px;font-weight:900;color:white;min-width:24px;text-align:center;flex-shrink:0">5</div><div>Raíz destruida · planta sin recuperación posible · pérdida total</div></div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo en campo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Evaluar al <b style="color:white">arrancar plantas con síntomas</b> de marchitez o enanismo</div>
+      <div>• Buscar focos: plantas en manchas o surcos, no distribuidas al azar</div>
+      <div>• <b style="color:white">Marchitez diurna que recupera de noche</b> = señal clave</div>
+      <div>• Confirmar agallas en raíz secundaria · lupa útil para masas de huevos</div>
+      <div>• Favorecer diagnóstico temprano en suelo virgen o con historial</div>
+      <div>• T° óptima desarrollo: <b style="color:white">25–30°C</b> · umbral mínimo: 10°C</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL 6: BOTRYTIS ===== -->
+<div class="cpanel" id="cp6" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Botrytis — Moho gris</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Botrytis cinerea (Pers., 1794)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fce7f3;color:#9d174d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ascomycota · Sclerotiniaceae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Necrotrófico · Policíclico</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo epidemiológico · Policíclico · se repite múltiples veces/temporada</div>
+  <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amB" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#9d174d"/></marker></defs>
+    <circle cx="160" cy="95" r="80" fill="#fce7f3" opacity="0.4" stroke="#f9a8d4" stroke-width="1"/>
+    <!-- Esclerocio (inóculo inicial) -->
+    <circle cx="160" cy="18" r="16" fill="#1c1c1c" stroke="#374151" stroke-width="2"/>
+    <text x="160" y="13" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">ESC</text>
+    <text x="160" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="white">LEROCIO</text>
+    <!-- Conidios -->
+    <circle cx="240" cy="55" r="16" fill="#f9a8d4" stroke="#be185d" stroke-width="2"/>
+    <text x="240" y="50" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#831843">CONI-</text>
+    <text x="240" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#831843">DIOS</text>
+    <!-- Germinación -->
+    <circle cx="270" cy="115" r="16" fill="#fbcfe8" stroke="#be185d" stroke-width="2"/>
+    <text x="270" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#9d174d">GERMI-</text>
+    <text x="270" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#9d174d">NACIÓN</text>
+    <!-- Infección -->
+    <circle cx="230" cy="168" r="18" fill="#fda4af" stroke="#be123c" stroke-width="2.5"/>
+    <text x="230" y="163" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#881337">INFEC-</text>
+    <text x="230" y="173" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#881337">CIÓN</text>
+    <!-- Lesión -->
+    <circle cx="100" cy="170" r="18" fill="#e11d48" stroke="#9f1239" stroke-width="2.5"/>
+    <text x="100" y="165" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">LESIÓN</text>
+    <text x="100" y="175" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="white">necrótica</text>
+    <!-- Esporulación -->
+    <circle cx="55" cy="110" r="16" fill="#fda4af" stroke="#be123c" stroke-width="2"/>
+    <text x="55" y="105" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#881337">ESPORU-</text>
+    <text x="55" y="115" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#881337">LACIÓN</text>
+    <!-- Flechas ciclo -->
+    <path d="M172,22 A78,78 0 0,1 228,44" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <path d="M254,63 A78,78 0 0,1 272,103" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <path d="M264,130 A78,78 0 0,1 242,157" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <path d="M213,173 A78,78 0 0,1 120,175" fill="none" stroke="#9d174d" stroke-width="2.5" marker-end="url(#amB)"/>
+    <path d="M83,163 A78,78 0 0,1 55,128" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <path d="M55,93 A78,78 0 0,1 65,50" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <path d="M72,34 A78,78 0 0,1 148,18" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amB)"/>
+    <!-- Ciclo secundario (conidios → conidios) -->
+    <path d="M45,118 Q20,95 42,68 Q52,58 58,52" fill="none" stroke="#9d174d" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amB)"/>
+    <text x="12" y="90" font-family="Nunito,sans-serif" font-size="7" fill="#9d174d" font-weight="700">ciclo</text>
+    <text x="10" y="100" font-family="Nunito,sans-serif" font-size="7" fill="#9d174d" font-weight="700">secundario</text>
+    <!-- Centro condiciones -->
+    <text x="160" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#9d174d" font-weight="800">HR &gt; 90%</text>
+    <text x="160" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">T° 15–22°C</text>
+    <text x="160" y="112" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">incubación 2–4 días</text>
+  </svg>
+</div>
+
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:8px 0 8px">🎨 Síntomas por órgano</div>
+
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fce7f3;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Síntomas e ilustración diagnóstica</div></div>
+    <div style="padding:8px">
+      <svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <!-- Tallo con lesión -->
+        <rect x="10" y="15" width="16" height="100" rx="4" fill="#4d7c0f" stroke="#15803d" stroke-width="1"/>
+        <!-- Lesión en tallo (canker) -->
+        <ellipse cx="18" cy="60" rx="13" ry="18" fill="#9f1239" stroke="#7f1d1d" stroke-width="1.5" opacity="0.9"/>
+        <!-- Micelio gris encima -->
+        <ellipse cx="18" cy="55" rx="10" ry="6" fill="#9ca3af" opacity="0.8"/>
+        <text x="18" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#9f1239">Tallo</text>
+        <!-- Fruto afectado -->
+        <circle cx="90" cy="62" r="28" fill="#dc2626" stroke="#b91c1c" stroke-width="1.5"/>
+        <!-- Lesión agua en fruto -->
+        <path d="M78,48 Q90,40 105,50 Q110,62 105,72 Q90,82 76,74 Q68,65 78,48 Z" fill="#6b7280" opacity="0.7" stroke="#374151" stroke-width="0.8"/>
+        <!-- Micelio gris -->
+        <ellipse cx="92" cy="60" rx="12" ry="8" fill="#9ca3af" opacity="0.9"/>
+        <text x="90" y="105" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#9f1239">Fruto</text>
+        <!-- Hoja con lesión -->
+        <path d="M160,20 Q190,22 210,45 Q215,65 205,85 Q185,98 160,96 Q135,95 125,75 Q120,55 130,35 Q145,22 160,20 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+        <line x1="160" y1="20" x2="160" y2="96" stroke="#15803d" stroke-width="1"/>
+        <!-- Lesión necrótica en hoja -->
+        <path d="M155,50 Q165,44 178,52 Q182,64 175,72 Q163,76 152,68 Q146,60 155,50 Z" fill="#78350f" stroke="#451a03" stroke-width="1" opacity="0.9"/>
+        <!-- Halo clorótico -->
+        <path d="M150,46 Q162,39 180,48 Q187,62 179,74 Q165,82 148,72 Q140,62 150,46 Z" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="2,1"/>
+        <text x="167" y="115" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#9f1239">Hoja</text>
+        <!-- Flor/pedúnculo -->
+        <path d="M248,20 Q255,18 260,25 Q262,40 258,55 Q254,65 248,68 Q242,65 238,55 Q234,40 236,25 Q241,18 248,20 Z" fill="#fde68a" stroke="#d97706" stroke-width="1"/>
+        <!-- Lesión en pedúnculo -->
+        <ellipse cx="248" cy="58" rx="12" ry="8" fill="#9f1239" opacity="0.85"/>
+        <ellipse cx="248" cy="56" rx="8" ry="5" fill="#9ca3af" opacity="0.8"/>
+        <text x="248" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="700" fill="#9f1239">Flor/Pedúnc.</text>
+        <!-- Texto micelio gris -->
+        <text x="18" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">micelio gris</text>
+        <text x="90" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">podrición blanda</text>
+      </svg>
+    </div>
+    <div style="padding:8px 13px;display:flex;flex-direction:column;gap:5px;font-size:12px">
+      <div><b>🪴 Tallo:</b> cancro pardo-rojizo → anillo que estrangula → muerte descendente. Frecuente en heridas de desbrote.</div>
+      <div><b>🍅 Fruto:</b> lesión acuosa gris-marrón → micelio gris polvoriento → pudrición blanda total.</div>
+      <div><b>🍃 Hoja:</b> mancha necrótica marrón con halo clorótico amarillo · tejido senescente más susceptible.</div>
+      <div><b>🌸 Flor/Pedúnculo:</b> flores senescentes infectadas → puerta de entrada al tallo.</div>
+    </div>
+  </div>
+
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">⚡ Condiciones favorables</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+      <div style="background:#fee2e2;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#b91c1c;margin-bottom:4px">🌡️ Temperatura</div>
+        <div>Óptima: <b>15–22°C</b></div>
+        <div>Rango: 2–30°C</div>
+        <div style="color:#dc2626">Noches frías + días cálidos = máximo riesgo</div>
+      </div>
+      <div style="background:#e0f2fe;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#0369a1;margin-bottom:4px">💧 Humedad</div>
+        <div>HR &gt; <b>85–90%</b></div>
+        <div>Agua libre en tejido</div>
+        <div style="color:#0369a1">Riego nocturno + invernadero cerrado = riesgo alto</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">tallos en zona de desbrote</b> después de cada poda</div>
+      <div>• Buscar <b style="color:white">micelio gris polvoriento</b> = esporulación activa → dispersión</div>
+      <div>• Flores senescentes caídas sobre hojas = fuente de infección</div>
+      <div>• <b style="color:white">Incidencia:</b> % de plantas con al menos un órgano afectado</div>
+      <div>• <b style="color:white">Severidad:</b> extensión del daño en el órgano afectado (1–5)</div>
+      <div>• Registrar órgano: tallo / fruto / hoja / flor — prioridad clínica diferente</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL 7: OIDIO ===== -->
+<!-- ===== PANEL 7: OÍDIO — DOS ESPECIES ===== -->
+<div class="cpanel" id="cp7" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Oídio del tomate</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Dos especies — comportamiento muy diferente</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ascomycota · Erysiphaceae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Biotrófico obligado</span>
+  </div>
+</div>
+
+<!-- Tabla comparativa rápida -->
+<div style="margin:10px 16px 0;background:white;border-radius:12px;border:1px solid #ddd8cf;overflow:hidden">
+  <div style="background:#1b4332;padding:9px 13px">
+    <div style="color:white;font-weight:900;font-size:13px">⚖️ Comparación rápida — identificación en campo</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;font-size:11px">
+    <!-- Encabezados -->
+    <div style="background:#dcfce7;padding:8px 10px;border-right:1px solid #ddd8cf">
+      <div style="font-weight:900;font-size:12px;color:#15803d">O. neolycopersici</div>
+      <div style="color:#6b7280;font-style:italic">Epifítico · superficial</div>
+    </div>
+    <div style="background:#fef9c3;padding:8px 10px">
+      <div style="font-weight:900;font-size:12px;color:#92400e">L. taurica</div>
+      <div style="color:#6b7280;font-style:italic">Endofítico · interno</div>
+    </div>
+    <!-- Fila micelio -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6">
+      <b>Micelio:</b> <span style="color:#15803d">blanco superficial</span><br>visible a simple vista en el haz
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6">
+      <b>Micelio:</b> <span style="color:#92400e">interno en tejido</span><br>solo emerge para esporular
+    </div>
+    <!-- Fila síntoma haz -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>Haz:</b> polvo blanco denso y visible directamente
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>Haz:</b> manchas amarillas cloróticas irregulares
+    </div>
+    <!-- Fila síntoma envés -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6">
+      <b>Envés:</b> micelio también superficial (menos denso)
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6">
+      <b>Envés:</b> polvo blanco fino donde emerge el micelio
+    </div>
+    <!-- Fila penetración -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>Penetración:</b> apresorios en epidermis · no penetra estomas
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>Penetración:</b> a través de <b>estomas</b> · crece endofíticamente
+    </div>
+    <!-- Fila humedad -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6">
+      <b>HR óptima:</b> 50–70% · no necesita agua libre
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6">
+      <b>HR óptima:</b> 40–70% · tolera condiciones más secas
+    </div>
+    <!-- Fila temperatura -->
+    <div style="padding:7px 10px;border-right:1px solid #ddd8cf;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>T° óptima:</b> 15–22°C
+    </div>
+    <div style="padding:7px 10px;border-top:1px solid #f3f4f6;background:#f9fafb">
+      <b>T° óptima:</b> 20–28°C · más termorresistente
+    </div>
+  </div>
+</div>
+
+<!-- ====== ESPECIE 1: O. neolycopersici ====== -->
+<div style="padding:16px 16px 4px">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="background:#dcfce7;width:4px;height:28px;border-radius:2px;flex-shrink:0"></div>
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#15803d">Oidium neolycopersici</div>
+      <div style="font-size:11px;color:#6b7280;font-style:italic">L.B. Kiss, 2001 · Epifítico · micelio superficial</div>
+    </div>
+  </div>
+</div>
+
+<!-- Ciclo O. neolycopersici -->
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #86efac">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin-bottom:8px;text-align:center">Ciclo epifítico · El micelio vive SOBRE la hoja</div>
+  <svg viewBox="0 0 320 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="aN" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#15803d"/></marker></defs>
+    <!-- Superficie hoja (línea) -->
+    <rect x="0" y="70" width="320" height="8" fill="#22c55e" opacity="0.5" rx="2"/>
+    <text x="8" y="67" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#15803d">SUPERFICIE HOJA (haz)</text>
+    <text x="8" y="92" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#4d7c0f">INTERIOR HOJA</text>
+    <!-- Todo el ciclo SOBRE la superficie -->
+    <!-- 1. Conidio llega -->
+    <circle cx="35" cy="52" r="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="35" y="47" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#15803d">CONI</text>
+    <text x="35" y="57" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">DIO</text>
+    <text x="35" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">1. Llega</text>
+    <!-- Flecha 1→2 -->
+    <line x1="50" y1="52" x2="70" y2="52" stroke="#15803d" stroke-width="2" marker-end="url(#aN)"/>
+    <!-- 2. Germinación sobre superficie -->
+    <circle cx="88" cy="52" r="14" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+    <text x="88" y="47" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#14532d">GERMI</text>
+    <text x="88" y="57" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">NA</text>
+    <text x="88" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">2. Germina en superficie</text>
+    <!-- Flecha 2→3 (apresorio) -->
+    <line x1="103" y1="52" x2="123" y2="52" stroke="#15803d" stroke-width="2" marker-end="url(#aN)"/>
+    <text x="113" y="45" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">apresorio</text>
+    <!-- 3. Haustorio penetra epidermis (pequeña flecha hacia abajo) -->
+    <circle cx="142" cy="52" r="14" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+    <text x="142" y="47" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d">HAUS-</text>
+    <text x="142" y="57" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d">TORIO</text>
+    <!-- Flecha haustorio entra a célula (corta) -->
+    <line x1="142" y1="66" x2="142" y2="78" stroke="#15803d" stroke-width="1.5" marker-end="url(#aN)"/>
+    <text x="155" y="77" font-family="Nunito,sans-serif" font-size="6.5" fill="#15803d">solo el haustorio entra a la célula</text>
+    <text x="142" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">3. Haustorio (absorción)</text>
+    <!-- Flecha 3→4 micelio crece en superficie -->
+    <line x1="157" y1="52" x2="177" y2="52" stroke="#15803d" stroke-width="2" marker-end="url(#aN)"/>
+    <!-- 4. Micelio superficial crece -->
+    <ellipse cx="202" cy="52" rx="22" ry="13" fill="#4ade80" stroke="#15803d" stroke-width="2"/>
+    <text x="202" y="47" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d">MICELIO</text>
+    <text x="202" y="57" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">superficial</text>
+    <text x="202" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">4. Micelio sobre haz</text>
+    <!-- Flecha 4→5 esporulación -->
+    <line x1="225" y1="52" x2="248" y2="52" stroke="#15803d" stroke-width="2" marker-end="url(#aN)"/>
+    <!-- 5. Conidióforos y conidios -->
+    <ellipse cx="272" cy="52" rx="22" ry="13" fill="#16a34a" stroke="#14532d" stroke-width="2.5"/>
+    <text x="272" y="47" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">ESPORU-</text>
+    <text x="272" y="57" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">LACIÓN</text>
+    <text x="272" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">5. Conidios en haz</text>
+    <!-- Flecha retorno viento -->
+    <path d="M272,37 Q160,10 35,37" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#aN)"/>
+    <text x="155" y="14" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#15803d" font-weight="700">dispersión por viento a nuevas hojas</text>
+    <!-- Nota micelio NO entra a la hoja -->
+    <text x="160" y="145" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#15803d" font-weight="800">✓ Micelio vive SOBRE la superficie · solo haustorio entra a la célula</text>
+  </svg>
+</div>
+
+<!-- Ilustración diagnóstica O. neolycopersici -->
+<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #86efac;overflow:hidden">
+  <div style="background:#dcfce7;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#15803d">Aspecto visual en campo — O. neolycopersici</div></div>
+  <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <svg viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fdf4">
+      <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#15803d">HAZ — polvo blanco denso</text>
+      <path d="M65,20 Q93,24 106,50 Q108,70 96,88 Q78,100 65,98 Q52,100 34,88 Q22,70 24,50 Q37,24 65,20 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.2"/>
+      <line x1="65" y1="20" x2="65" y2="98" stroke="#15803d" stroke-width="1"/>
+      <!-- Micelio blanco denso y extenso en haz -->
+      <ellipse cx="48" cy="48" rx="16" ry="11" fill="white" stroke="#9ca3af" stroke-width="1.5" opacity="0.95"/>
+      <text x="48" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="#d1d5db">≋≋</text>
+      <ellipse cx="78" cy="62" rx="14" ry="10" fill="white" stroke="#9ca3af" stroke-width="1.5" opacity="0.95"/>
+      <text x="78" y="66" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#d1d5db">≋≋</text>
+      <ellipse cx="60" cy="76" rx="13" ry="9" fill="white" stroke="#9ca3af" stroke-width="1.2" opacity="0.95"/>
+      <text x="60" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#d1d5db">≋≋</text>
+      <text x="65" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">BLANCO VISIBLE EN HAZ</text>
+      <text x="65" y="117" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">sin amarillamiento previo</text>
+    </svg>
+    <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:6px">
+      <div><b style="color:#15803d">🔑 Diagnóstico inmediato:</b> polvo blanco <b>directamente visible en el haz</b> sin necesidad de dar vuelta la hoja</div>
+      <div><b>📍 Inicio:</b> manchas blancas discretas → coalescen hasta cubrir la lámina completa</div>
+      <div><b>🌡️ Condiciones:</b> T° 15–22°C, HR 50–70%, sin agua libre en hoja</div>
+      <div><b>📅 Época:</b> primavera-otoño en invernadero · puede aparecer todo el año</div>
+      <div><b>🍃 Hoja:</b> bajo el micelio la hoja se decolora y necrosa progresivamente</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ESPECIE 2: L. taurica ====== -->
+<div style="padding:16px 16px 4px">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="background:#fef9c3;width:4px;height:28px;border-radius:2px;flex-shrink:0"></div>
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#92400e">Leveillula taurica</div>
+      <div style="font-size:11px;color:#6b7280;font-style:italic">(Lév.) G. Arnaud, 1921 · Endofítico · penetra estomas</div>
+    </div>
+  </div>
+</div>
+
+<!-- Ciclo L. taurica -->
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #fde68a">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:8px;text-align:center">Ciclo endofítico · El micelio crece DENTRO de la hoja</div>
+  <svg viewBox="0 0 320 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="aT" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#92400e"/></marker></defs>
+    <!-- Superficie superior (haz) -->
+    <rect x="0" y="40" width="320" height="7" fill="#22c55e" opacity="0.6"/>
+    <text x="8" y="36" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#15803d">HAZ</text>
+    <!-- Interior hoja -->
+    <rect x="0" y="47" width="320" height="60" fill="#dcfce7" opacity="0.3"/>
+    <text x="8" y="60" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#15803d">INTERIOR DE LA HOJA</text>
+    <!-- Superficie inferior (envés) -->
+    <rect x="0" y="107" width="320" height="7" fill="#22c55e" opacity="0.6"/>
+    <text x="8" y="124" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#15803d">ENVÉS</text>
+    <!-- 1. Conidio llega al haz -->
+    <circle cx="30" cy="25" r="13" fill="#fffde7" stroke="#d97706" stroke-width="2"/>
+    <text x="30" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#92400e">CONI</text>
+    <text x="30" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">DIO</text>
+    <!-- Flecha conidio germina y busca estoma -->
+    <path d="M30,38 L30,55" fill="none" stroke="#92400e" stroke-width="1.5" marker-end="url(#aT)" stroke-dasharray="2,1"/>
+    <text x="38" y="50" font-family="Nunito,sans-serif" font-size="6.5" fill="#92400e">germina · busca estoma</text>
+    <!-- Estoma en haz (o envés) -->
+    <ellipse cx="30" cy="60" rx="8" ry="5" fill="#4ade80" stroke="#15803d" stroke-width="1.5"/>
+    <text x="30" y="63" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6" fill="#14532d">EST.</text>
+    <!-- Flecha penetra por estoma al interior -->
+    <line x1="30" y1="65" x2="30" y2="78" stroke="#92400e" stroke-width="2" marker-end="url(#aT)"/>
+    <text x="42" y="74" font-family="Nunito,sans-serif" font-size="6.5" fill="#92400e">penetra</text>
+    <!-- 2. Micelio creciendo interno -->
+    <ellipse cx="110" cy="80" rx="50" ry="18" fill="#fde68a" stroke="#d97706" stroke-width="2" opacity="0.9"/>
+    <text x="110" y="76" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">MICELIO ENDOFÍTICO</text>
+    <text x="110" y="87" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">crece entre células · haustorio en cada célula</text>
+    <!-- Haustorio penetra células -->
+    <line x1="80" y1="88" x2="75" y2="100" stroke="#d97706" stroke-width="1.2"/>
+    <line x1="100" y1="90" x2="97" y2="101" stroke="#d97706" stroke-width="1.2"/>
+    <line x1="120" y1="90" x2="120" y2="101" stroke="#d97706" stroke-width="1.2"/>
+    <line x1="140" y1="88" x2="143" y2="100" stroke="#d97706" stroke-width="1.2"/>
+    <!-- Flecha micelio avanza -->
+    <line x1="162" y1="80" x2="200" y2="80" stroke="#92400e" stroke-width="2" marker-end="url(#aT)"/>
+    <!-- Micelio llega al envés -->
+    <ellipse cx="240" cy="80" rx="32" ry="16" fill="#fbbf24" stroke="#d97706" stroke-width="2.5"/>
+    <text x="240" y="76" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#78350f">AVANZA</text>
+    <text x="240" y="86" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#78350f">hacia estomas envés</text>
+    <!-- Flecha emerge por estoma del envés -->
+    <line x1="240" y1="97" x2="240" y2="110" stroke="#92400e" stroke-width="2" marker-end="url(#aT)"/>
+    <text x="255" y="108" font-family="Nunito,sans-serif" font-size="6.5" fill="#92400e">emerge</text>
+    <!-- 3. Esporulación en envés -->
+    <ellipse cx="240" cy="128" rx="32" ry="16" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
+    <text x="240" y="123" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">ESPORULA</text>
+    <text x="240" y="133" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="white">en ENVÉS</text>
+    <!-- Síntoma en haz (amarillo) resultante de micelio interno -->
+    <ellipse cx="110" cy="25" rx="35" ry="12" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+    <text x="110" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#854d0e">MANCHA AMARILLA</text>
+    <text x="110" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#854d0e">visible en HAZ</text>
+    <!-- Flecha micelio → síntoma haz -->
+    <line x1="100" y1="62" x2="100" y2="37" stroke="#ca8a04" stroke-width="1.5" stroke-dasharray="3,1" marker-end="url(#aT)"/>
+    <text x="60" y="52" font-family="Nunito,sans-serif" font-size="6.5" fill="#ca8a04">clorosis por</text>
+    <text x="60" y="60" font-family="Nunito,sans-serif" font-size="6.5" fill="#ca8a04">daño celular</text>
+    <!-- Dispersión conidios desde envés -->
+    <path d="M215,130 Q130,155 55,130 Q30,118 18,90" fill="none" stroke="#92400e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#aT)"/>
+    <text x="95" y="162" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e" font-weight="700">conidios del envés → viento → nuevas infecciones</text>
+  </svg>
+</div>
+
+<!-- Ilustración diagnóstica L. taurica -->
+<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #fde68a;overflow:hidden">
+  <div style="background:#fef9c3;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#92400e">Aspecto visual en campo — L. taurica</div></div>
+  <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+    <div>
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fdf4">
+        <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#15803d">HAZ → manchas AMARILLAS</text>
+        <path d="M65,20 Q93,24 106,50 Q108,70 96,88 Q78,100 65,98 Q52,100 34,88 Q22,70 24,50 Q37,24 65,20 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.2"/>
+        <line x1="65" y1="20" x2="65" y2="98" stroke="#15803d" stroke-width="1"/>
+        <!-- Manchas amarillas cloróticas -->
+        <ellipse cx="50" cy="50" rx="13" ry="10" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+        <ellipse cx="76" cy="64" rx="11" ry="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.2"/>
+        <ellipse cx="55" cy="75" rx="10" ry="7" fill="#fef08a" stroke="#d97706" stroke-width="1.2"/>
+        <text x="65" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e" font-weight="700">Manchas AMARILLAS</text>
+        <text x="65" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">sin polvo blanco visible</text>
+      </svg>
+    </div>
+    <div>
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#92400e">ENVÉS → polvo BLANCO fino</text>
+        <path d="M65,20 Q93,24 106,50 Q108,70 96,88 Q78,100 65,98 Q52,100 34,88 Q22,70 24,50 Q37,24 65,20 Z" fill="#bbf7d0" stroke="#15803d" stroke-width="1.2"/>
+        <line x1="65" y1="20" x2="65" y2="98" stroke="#15803d" stroke-width="1"/>
+        <!-- Polvo blanco tenue en envés (exactamente debajo de las manchas amarillas) -->
+        <ellipse cx="50" cy="50" rx="13" ry="10" fill="white" stroke="#9ca3af" stroke-width="1.5" opacity="0.9"/>
+        <text x="50" y="54" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#e5e7eb">≋</text>
+        <ellipse cx="76" cy="64" rx="11" ry="8" fill="white" stroke="#9ca3af" stroke-width="1.2" opacity="0.85"/>
+        <text x="76" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#e5e7eb">≋</text>
+        <ellipse cx="55" cy="75" rx="10" ry="7" fill="white" stroke="#9ca3af" stroke-width="1.2" opacity="0.8"/>
+        <text x="65" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e" font-weight="700">Polvo blanco FINO en envés</text>
+        <text x="65" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">coincide con manchas del haz</text>
+      </svg>
+    </div>
+  </div>
+  <div style="padding:6px 13px 10px;font-size:11px;color:#374151;background:#fffbeb">
+    <b style="color:#92400e">🔑 Clave diagnóstica en campo:</b> dar vuelta la hoja → si el polvo blanco está en el <b>envés</b> y coincide con manchas amarillas en el <b>haz</b> = L. taurica. Si el blanco está en el <b>haz</b> directamente = O. neolycopersici.
+  </div>
+</div>
+
+<!-- Condiciones y monitoreo conjunto -->
+<div style="margin:0 16px 16px;background:#1b4332;border-radius:12px;padding:13px">
+  <div style="color:white;font-weight:900;font-size:13px;margin-bottom:10px">🎯 Claves de monitoreo — ambas especies</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
+      <div style="color:#86efac;font-weight:900;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">O. neolycopersici</div>
+      <div style="font-size:11px;color:#d8f3dc;line-height:1.7">
+        <div>• Buscar polvo blanco en HAZ</div>
+        <div>• Inicio en hojas medias-bajas</div>
+        <div>• Visible a simple vista</div>
+        <div>• T° 15–22°C · HR 50–70%</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
+      <div style="color:#fde68a;font-weight:900;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px">L. taurica</div>
+      <div style="font-size:11px;color:#d8f3dc;line-height:1.7">
+        <div>• Buscar manchas amarillas en haz</div>
+        <div>• Confirmar polvo en envés</div>
+        <div>• Más difícil de detectar temprano</div>
+        <div>• T° 20–28°C · tolera más calor</div>
+      </div>
+    </div>
+  </div>
+  <div style="color:#d8f3dc;font-size:12px;margin-top:10px;line-height:1.7">
+    <div>• <b style="color:white">Incidencia:</b> % hojas con síntomas de oídio (indicar especie si se conoce)</div>
+    <div>• <b style="color:white">Severidad:</b> % superficie foliar afectada (1–5)</div>
+    <div>• Resistencia a fungicidas: rotar grupos FRAC — ambas pueden desarrollar resistencia rápido</div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL 8: FUSARIUM ===== -->
+<div class="cpanel" id="cp8" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Marchitez por Fusarium</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Fusarium oxysporum f. sp. lycopersici</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ascomycota · Nectriaceae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Vascular · Persistente en suelo</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo de infección · Monocíclico · Inóculo persiste años en suelo</div>
+  <svg viewBox="0 0 320 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amF" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#b45309"/></marker></defs>
+    <!-- Suelo -->
+    <rect x="0" y="115" width="320" height="60" fill="#fef3c7" opacity="0.4"/>
+    <text x="8" y="128" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#92400e">🟫 SUELO</text>
+    <!-- Planta -->
+    <rect x="0" y="0" width="320" height="113" fill="#dcfce7" opacity="0.3"/>
+    <text x="8" y="14" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#15803d">🌱 PLANTA</text>
+    <!-- 1. Clamidospora en suelo -->
+    <ellipse cx="55" cy="145" rx="24" ry="15" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+    <text x="55" y="140" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#92400e">CLAMIDO-</text>
+    <text x="55" y="150" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#92400e">ESPORA</text>
+    <!-- Flecha germinación -->
+    <path d="M72,138 Q95,120 110,100" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#amF)"/>
+    <text x="80" y="115" font-family="Nunito,sans-serif" font-size="7.5" fill="#b45309" font-weight="700">germinación</text>
+    <!-- 2. Infección raíz -->
+    <ellipse cx="130" cy="90" rx="22" ry="13" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+    <text x="130" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#9a3412">INFECCIÓN</text>
+    <text x="130" y="95" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">raíz / cuello</text>
+    <!-- Flecha colonización vascular -->
+    <path d="M152,90 Q175,85 192,75" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#amF)"/>
+    <text x="162" y="78" font-family="Nunito,sans-serif" font-size="7.5" fill="#b45309" font-weight="700">xilema</text>
+    <!-- 3. Colonización vascular -->
+    <ellipse cx="215" cy="65" rx="25" ry="15" fill="#fb923c" stroke="#c2410c" stroke-width="2.5"/>
+    <text x="215" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">COLONIZA</text>
+    <text x="215" y="70" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="white">VASCULAR</text>
+    <!-- Flecha marchitez -->
+    <path d="M225,52 Q240,40 255,30" fill="none" stroke="#b45309" stroke-width="2" marker-end="url(#amF)"/>
+    <!-- 4. Síntoma marchitez -->
+    <ellipse cx="272" cy="22" rx="24" ry="14" fill="#dc2626" stroke="#b91c1c" stroke-width="2.5"/>
+    <text x="272" y="17" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">MARCH-</text>
+    <text x="272" y="27" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">ITEZ</text>
+    <!-- Flecha muerte → suelo -->
+    <path d="M268,35 Q265,80 200,125 Q160,145 95,150" fill="none" stroke="#b45309" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amF)"/>
+    <text x="190" y="120" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e" font-weight="700">planta muerta → inóculo</text>
+    <!-- Macro / microconidios en suelo -->
+    <ellipse cx="190" cy="148" rx="24" ry="13" fill="#fef9c3" stroke="#d97706" stroke-width="1.5"/>
+    <text x="190" y="143" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#92400e">MACRO/MICRO</text>
+    <text x="190" y="153" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#92400e">CONIDIOS suelo</text>
+    <!-- Flecha macro/micro → clamidospora -->
+    <path d="M166,148 Q110,150 80,150" fill="none" stroke="#b45309" stroke-width="1.5" marker-end="url(#amF)"/>
+    <text x="120" y="162" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">→ clamidospora persistente</text>
+    <!-- Centro temperatura -->
+    <text x="60" y="55" font-family="Nunito,sans-serif" font-size="8" fill="#c2410c" font-weight="800">T° óptima 27–30°C</text>
+    <text x="60" y="67" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">suelo ácido pH 5–6</text>
+  </svg>
+</div>
+
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:8px 0 8px">🎨 Síntomas diagnósticos</div>
+
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fff7ed;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Sintomatología progresiva</div></div>
+    <div style="padding:10px 13px;display:flex;flex-direction:column;gap:7px;font-size:12px">
+      <div style="background:#fef9c3;border-radius:8px;padding:9px">
+        <b style="color:#92400e">1. Amarillamiento unilateral:</b> primero amarillean hojas de un solo lado del tallo o de ramas individuales. Signo patognomónico temprano.
+      </div>
+      <div style="background:#ffedd5;border-radius:8px;padding:9px">
+        <b style="color:#c2410c">2. Marchitez diurna sin recuperación nocturna:</b> diferencia clave con nematodos (que sí recupera de noche). La planta pierde turgencia definitivamente.
+      </div>
+      <div style="background:#fee2e2;border-radius:8px;padding:9px">
+        <b style="color:#dc2626">3. Decoloración vascular marrón:</b> cortar tallo transversalmente → anillo marrón-rojizo en el xilema. Cortar longitudinalmente → rayas marrones en vasos.
+      </div>
+      <div style="background:#450a0a;border-radius:8px;padding:9px">
+        <b style="color:#fca5a5">4. Muerte de la planta:</b> progresión ascendente hasta muerte total. Sin tratamiento curativo una vez colonizado el vascular.
+      </div>
+    </div>
+  </div>
+
+  <!-- Corte tallo ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fff7ed;padding:8px 13px"><div style="font-weight:900;font-size:13px">Corte transversal de tallo — diagnóstico definitivo</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#15803d">Sano</text>
+        <circle cx="65" cy="60" r="35" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+        <circle cx="65" cy="60" r="28" fill="#16a34a" stroke="#15803d" stroke-width="1"/>
+        <!-- Xilema sano (blanco) -->
+        <circle cx="65" cy="60" r="10" fill="white" stroke="#15803d" stroke-width="0.8"/>
+        <circle cx="52" cy="55" r="3" fill="white" stroke="#15803d" stroke-width="0.8"/>
+        <circle cx="78" cy="55" r="3" fill="white" stroke="#15803d" stroke-width="0.8"/>
+        <circle cx="52" cy="68" r="3" fill="white" stroke="#15803d" stroke-width="0.8"/>
+        <circle cx="78" cy="68" r="3" fill="white" stroke="#15803d" stroke-width="0.8"/>
+        <text x="65" y="106" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#15803d" font-weight="700">Xilema blanco</text>
+      </svg>
+      <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#c2410c">Con Fusarium</text>
+        <circle cx="65" cy="60" r="35" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+        <circle cx="65" cy="60" r="28" fill="#16a34a" stroke="#15803d" stroke-width="1"/>
+        <!-- Xilema marrón/necrótico -->
+        <circle cx="65" cy="60" r="10" fill="#92400e" stroke="#78350f" stroke-width="0.8"/>
+        <circle cx="52" cy="55" r="3" fill="#b45309" stroke="#78350f" stroke-width="0.8"/>
+        <circle cx="78" cy="55" r="3" fill="#b45309" stroke="#78350f" stroke-width="0.8"/>
+        <circle cx="52" cy="68" r="3" fill="#92400e" stroke="#78350f" stroke-width="0.8"/>
+        <circle cx="78" cy="68" r="3" fill="#78350f" stroke="#78350f" stroke-width="0.8"/>
+        <!-- Anillo marrón -->
+        <circle cx="65" cy="60" r="22" fill="none" stroke="#c2410c" stroke-width="2.5" stroke-dasharray="3,1"/>
+        <text x="65" y="106" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#c2410c" font-weight="700">Xilema MARRÓN</text>
+      </svg>
+    </div>
+    <div style="padding:4px 12px 10px;font-size:11px;color:#374151"><b>Técnica:</b> cortar tallo a 10cm del suelo · comparar color del anillo vascular. Marrón/rojizo = diagnóstico positivo.</div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Amarillamiento unilateral</b> de hoja o rama = primera señal</div>
+      <div>• Cortar tallo a ras de suelo → anillo marrón = confirmado</div>
+      <div>• <b style="color:white">NO recupera de noche</b> (vs. nematodos que sí recuperan)</div>
+      <div>• Focos en suelos con historial · T° alta + suelo ácido = máximo riesgo</div>
+      <div>• Registrar incidencia (% plantas) y severidad visual (1–5)</div>
+      <div>• <b style="color:white">Sin control curativo</b> — clave el uso de portainjertos resistentes</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL 9: VERTICILLIUM ===== -->
+<div class="cpanel" id="cp9" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Marchitez por Verticillium</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Verticillium dahliae Kleb. / V. albo-atrum</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ascomycota · Plectosphaerellaceae</span>
+    <span style="background:#fef9c3;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Vascular · Microsclerotia en suelo</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo de infección · Similar a Fusarium pero más lento</div>
+  <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amV" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#7c3aed"/></marker></defs>
+    <rect x="0" y="110" width="320" height="60" fill="#fef3c7" opacity="0.4"/>
+    <text x="8" y="123" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#92400e">🟫 SUELO (microsclerocios persisten hasta 15 años)</text>
+    <rect x="0" y="0" width="320" height="108" fill="#ede9fe" opacity="0.3"/>
+    <text x="8" y="14" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#5b21b6">🌱 PLANTA</text>
+    <!-- 1. Microsclerocio -->
+    <ellipse cx="55" cy="138" rx="26" ry="15" fill="#1c1c1c" stroke="#374151" stroke-width="1.5"/>
+    <text x="55" y="133" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="white">MICRO-</text>
+    <text x="55" y="143" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="white">ESCLEROCIO</text>
+    <!-- Flecha germinación estimulada por raíz -->
+    <path d="M68,128 Q90,110 110,95" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amV)"/>
+    <text x="75" y="108" font-family="Nunito,sans-serif" font-size="7" fill="#7c3aed" font-weight="700">exudados raíz</text>
+    <!-- 2. Infección raíz -->
+    <ellipse cx="130" cy="82" rx="22" ry="13" fill="#ddd6fe" stroke="#6d28d9" stroke-width="2"/>
+    <text x="130" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#4c1d95">INFECCIÓN</text>
+    <text x="130" y="87" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">raíz</text>
+    <!-- Flecha colonización -->
+    <path d="M152,82 Q175,72 195,65" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amV)"/>
+    <!-- 3. Colonización lenta -->
+    <ellipse cx="218" cy="55" rx="26" ry="15" fill="#c4b5fd" stroke="#6d28d9" stroke-width="2.5"/>
+    <text x="218" y="50" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#4c1d95">COLONIZA</text>
+    <text x="218" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">lenta · xilema</text>
+    <!-- Flecha síntoma -->
+    <path d="M238,48 Q260,35 275,26" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#amV)"/>
+    <!-- 4. Amarillamiento V -->
+    <ellipse cx="288" cy="18" rx="24" ry="13" fill="#7c3aed" stroke="#4c1d95" stroke-width="2"/>
+    <text x="288" y="13" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">AMARILL.</text>
+    <text x="288" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">en "V"</text>
+    <!-- Flecha producción microsclerotia en tejido -->
+    <path d="M275,28 Q250,60 200,95 Q160,118 130,130 Q100,140 80,142" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amV)"/>
+    <text x="180" y="115" font-family="Nunito,sans-serif" font-size="7" fill="#7c3aed" font-weight="700">microsclerotia en tejido muerto → suelo</text>
+    <!-- Conidios en suelo -->
+    <ellipse cx="195" cy="140" rx="24" ry="13" fill="#e9d5ff" stroke="#6d28d9" stroke-width="1.5"/>
+    <text x="195" y="135" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#4c1d95">CONIDIOS</text>
+    <text x="195" y="145" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#4c1d95">en suelo</text>
+    <path d="M170,140 Q110,142 82,142" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#amV)"/>
+    <!-- Nota T° -->
+    <text x="60" y="60" font-family="Nunito,sans-serif" font-size="8" fill="#6d28d9" font-weight="800">T° óptima 20–24°C</text>
+    <text x="60" y="72" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">más lento que Fusarium</text>
+  </svg>
+</div>
+
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:8px 0 8px">⚖️ Diferencias clave con Fusarium</div>
+
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px">
+      <div>
+        <div style="font-weight:900;color:#c2410c;font-size:12px;margin-bottom:6px">Fusarium oxysporum</div>
+        <div style="display:flex;flex-direction:column;gap:4px;color:#374151">
+          <div>• Progresión <b>rápida</b> (días)</div>
+          <div>• T° óptima <b>27–30°C</b></div>
+          <div>• Xilema <b>marrón intenso</b></div>
+          <div>• Amarillamiento <b>unilateral</b></div>
+          <div>• Macroconidios fusiformes</div>
+          <div>• Marchitez sin recuperación</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:900;color:#6d28d9;font-size:12px;margin-bottom:6px">Verticillium dahliae</div>
+        <div style="display:flex;flex-direction:column;gap:4px;color:#374151">
+          <div>• Progresión <b>lenta</b> (semanas)</div>
+          <div>• T° óptima <b>20–24°C</b></div>
+          <div>• Xilema <b>marrón claro</b></div>
+          <div>• Amarillamiento en <b>"V"</b> foliar</div>
+          <div>• Microsclerotia negros</div>
+          <div>• Marchitez parcial, no siempre mata</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Síntoma V foliar -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#ede9fe;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Síntoma patognomónico: amarillamiento en "V"</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 115" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <text x="65" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#5b21b6">Hoja con Verticillium</text>
+        <!-- Hoja -->
+        <path d="M65,18 Q95,22 108,48 Q110,68 98,86 Q80,98 65,96 Q50,98 32,86 Q20,68 22,48 Q35,22 65,18 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+        <line x1="65" y1="18" x2="65" y2="96" stroke="#15803d" stroke-width="1.5"/>
+        <!-- Nervaduras secundarias -->
+        <path d="M65,40 Q82,44 92,42" fill="none" stroke="#15803d" stroke-width="0.8"/>
+        <path d="M65,58 Q82,62 95,60" fill="none" stroke="#15803d" stroke-width="0.8"/>
+        <path d="M65,40 Q48,44 38,42" fill="none" stroke="#15803d" stroke-width="0.8"/>
+        <path d="M65,58 Q48,62 35,60" fill="none" stroke="#15803d" stroke-width="0.8"/>
+        <!-- Necrosis en V (desde punta) -->
+        <path d="M65,18 Q85,22 98,35 Q103,45 98,52 Q85,50 65,46 Q45,50 32,52 Q27,45 32,35 Q45,22 65,18 Z" fill="#fbbf24" stroke="#d97706" stroke-width="1" opacity="0.85"/>
+        <!-- Centro V (punta punta) -->
+        <path d="M65,18 L85,45 L65,45 L45,45 Z" fill="#78350f" opacity="0.5"/>
+        <text x="65" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6d28d9" font-weight="700">Necrosis en "V"</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b style="color:#6d28d9">🔑 Diagnóstico:</b> necrosis en forma de "V" desde la punta o margen foliar hacia la nervadura</div>
+        <div><b>📍 Distribución:</b> comienza en hojas basales y progresa lentamente hacia arriba</div>
+        <div><b>🌡️ Más frecuente:</b> primavera y otoño con T° 20–24°C</div>
+        <div><b>✂️ Confirmar:</b> corte tallo → decoloración vascular marrón claro (menos intensa que Fusarium)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Microsclerocios -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">🔬 Microsclerocios — estructura de sobrevivencia</div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:5px">
+      <div>• Estructuras negras muy pequeñas (50–200 µm) visibles en tejido infectado a lupa</div>
+      <div>• <b>Persisten en suelo hasta 15 años</b> sin hospedante</div>
+      <div>• Germinan estimulados por exudados de raíces de tomate</div>
+      <div>• Se dispersan con agua de riego, herramientas, suelo adherido al calzado</div>
+      <div style="color:#dc2626;font-weight:700">• Sin umbral de concentración segura — suelo contaminado = riesgo permanente</div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Necrosis en "V"</b> desde el margen foliar = señal diagnóstica clave</div>
+      <div>• Corte tallo → decoloración vascular marrón (más tenue que Fusarium)</div>
+      <div>• Avance <b style="color:white">lento de semanas</b> (vs. días en Fusarium)</div>
+      <div>• T° fresca 20–24°C = condición de mayor riesgo</div>
+      <div>• Historial de cultivo en el suelo = factor de riesgo persistente</div>
+      <div>• <b style="color:white">Portainjertos resistentes</b> = única protección efectiva</div>
+    </div>
+  </div>
+</div>
+</div>
 <!-- ===== CIERRE MODAL CAPACITACIÓN ===== -->
 </div><!-- fin container fafaf8 -->
 </div><!-- fin scroll -->
