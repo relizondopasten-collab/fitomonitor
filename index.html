@@ -1,0 +1,2559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1b4332">
+<title>FitoMonitor — Tomate Invernadero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{
+  --g-dark:#1b4332;--g-mid:#2d6a4f;--g-light:#52b788;--g-pale:#d8f3dc;
+  --amber:#f59e0b;--amber-d:#d97706;
+  --bg:#fafaf8;--bg2:#f0ede5;--bg3:#e8e4db;
+  --text:#1c1c1c;--muted:#6b7280;--border:#ddd8cf;
+  --danger:#dc2626;--warn:#ea580c;--ok:#16a34a;
+  --r:12px;--shadow:0 2px 8px rgba(0,0,0,.1);--shadow-lg:0 8px 24px rgba(0,0,0,.15)
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;-webkit-tap-highlight-color:transparent}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5}
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto}
+/* Header */
+.hdr{background:var(--g-dark);color:white;padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.hdr-t{font-family:'DM Serif Display',serif;font-size:21px}
+.hdr-s{font-size:10px;opacity:.6;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-top:1px}
+.hdr-d{font-size:11px;opacity:.8;font-weight:700;text-align:right;line-height:1.3}
+/* Main */
+.main{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+/* Bottom nav */
+.bnav{display:flex;background:white;border-top:1px solid var(--border);flex-shrink:0;box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;border:none;background:none;cursor:pointer;color:var(--muted);font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;gap:2px;transition:color .2s;letter-spacing:.3px;text-transform:uppercase}
+.nb.active{color:var(--g-dark)}
+.nb svg{width:22px;height:22px;stroke-width:2}
+/* Views */
+.view{display:none}.view.active{display:block}
+/* Accordion */
+.ach{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:var(--bg2);border-bottom:1px solid var(--border);cursor:pointer;font-weight:800;font-size:13px;color:var(--g-dark);user-select:none}
+.bn{font-size:11px;background:var(--g-pale);color:var(--g-dark);padding:2px 8px;border-radius:10px;margin-left:6px;font-weight:700}
+.acb{display:none}.acb.open{display:block}
+/* Sections */
+.sh{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
+.st{font-family:'DM Serif Display',serif;font-size:19px;color:var(--g-dark)}
+/* Cards */
+.card{background:white;border-radius:var(--r);margin:7px 16px;padding:13px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.ct{font-weight:800;font-size:14px;color:var(--g-dark)}
+.cs{font-size:12px;color:var(--muted);margin-top:2px}
+.ca{display:flex;gap:8px;margin-top:9px}
+/* Buttons */
+.badd{background:var(--g-dark);color:white;border:none;border-radius:8px;padding:7px 14px;font-family:'Nunito',sans-serif;font-weight:800;font-size:12px;cursor:pointer}
+.bsm{border:none;border-radius:6px;padding:5px 10px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.bdel{background:#fee2e2;color:var(--danger)}
+.bfull{width:100%;padding:13px;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:8px}
+.bg{background:var(--g-dark);color:white}
+.bcan{background:var(--bg2);color:var(--muted)}
+/* Modals */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;justify-content:center}
+.mov.open{display:flex}
+.modal{background:white;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;padding:20px 16px 32px;-webkit-overflow-scrolling:touch}
+.mh{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.mt{font-family:'DM Serif Display',serif;font-size:21px;color:var(--g-dark);margin-bottom:16px}
+/* Forms */
+.fg{margin-bottom:13px}
+.fl{display:block;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.fi,.fs,.fta{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color .2s}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--g-mid)}
+.fta{resize:none;min-height:75px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bgps{display:flex;align-items:center;gap:8px;background:var(--g-pale);border:1.5px solid var(--g-light);border-radius:8px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--g-dark);cursor:pointer;width:100%;justify-content:center;margin-bottom:8px}
+.gtxt{font-size:12px;color:var(--g-mid);text-align:center;font-weight:700}
+/* Toggle */
+.tog{position:relative;width:44px;height:24px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0}
+.tsl{position:absolute;cursor:pointer;inset:0;background:#d1d5db;border-radius:24px;transition:.3s}
+.tsl:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+input:checked+.tsl{background:var(--g-mid)}
+input:checked+.tsl:before{transform:translateX(20px)}
+/* Monitor blocks */
+.mblk{background:var(--bg2);border-radius:10px;padding:12px;margin-bottom:11px;border:1.5px solid var(--border)}
+.mblkt{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--g-dark);margin-bottom:10px}
+.prow{background:white;border-radius:8px;padding:11px;margin-bottom:7px;border:1px solid var(--border)}
+.phdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:0}
+.pnm{font-weight:800;font-size:14px}
+.pit{font-size:11px;color:var(--muted);font-style:italic;font-weight:400}
+.pfld{display:none}.pfld.open{display:block;margin-top:11px}
+
+/* === MÉTRICAS ESPECÍFICAS === */
+
+/* Selector 3 opciones (mosquita) */
+.opt3-row{display:flex;gap:6px;margin-top:4px}
+.opt3{flex:1;border:1.5px solid var(--border);background:white;border-radius:8px;padding:10px 4px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;text-align:center;color:var(--muted);transition:all .15s;line-height:1.2}
+.opt3.sel0{background:#f0fdf4;border-color:#16a34a;color:#15803d}
+.opt3.sel1{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
+.opt3.sel2{background:#fee2e2;border-color:#dc2626;color:#b91c1c}
+
+/* Número entero +/- */
+.nw{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;background:white}
+.nbb{background:var(--bg2);border:none;padding:8px 14px;font-size:18px;cursor:pointer;color:var(--g-dark);font-weight:900;line-height:1}
+.nin{flex:1;border:none;text-align:center;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;background:white;outline:none;padding:8px 0}
+
+/* Severidad 1-5 */
+.sv-row{display:flex;gap:4px}
+.sv{flex:1;border:1.5px solid var(--border);background:white;border-radius:6px;padding:8px 2px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;text-align:center;transition:all .15s;color:var(--muted)}
+.sv.s1{background:#dcfce7;border-color:#16a34a;color:#15803d}
+.sv.s2{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
+.sv.s3{background:#ffedd5;border-color:#ea580c;color:#c2410c}
+.sv.s4{background:#fee2e2;border-color:#dc2626;color:#b91c1c}
+.sv.s5{background:#450a0a;border-color:#7f1d1d;color:white}
+
+/* Órganos */
+.org-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.orgb{border:1.5px solid var(--border);background:white;border-radius:20px;padding:4px 10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s}
+.orgb.sel{background:var(--g-pale);border-color:var(--g-mid);color:var(--g-dark)}
+
+/* Sev legend */
+.svleg{display:flex;flex-wrap:wrap;gap:4px;padding:8px 12px;background:#f8f6f0;border-radius:8px;margin-bottom:10px;border:1px solid var(--border)}
+.sl{font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px}
+.sl1{background:#dcfce7;color:#15803d}.sl2{background:#fef9c3;color:#854d0e}
+.sl3{background:#ffedd5;color:#c2410c}.sl4{background:#fee2e2;color:#b91c1c}
+.sl5{background:#450a0a;color:white}
+
+/* Trampa agua */
+.tbox{background:#e0f2fe;border:1.5px solid #38bdf8;border-radius:8px;padding:11px;margin-top:8px}
+.tboxt{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#0369a1;margin-bottom:8px}
+.tumb{font-size:11px;color:#0369a1;margin-top:6px;font-weight:700}
+
+/* Presencia/ausencia badge */
+.pabtn-row{display:flex;gap:8px;margin-top:4px}
+.pabtn{flex:1;border:1.5px solid var(--border);background:white;border-radius:8px;padding:10px;font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;cursor:pointer;text-align:center;color:var(--muted);transition:all .15s}
+.pabtn.pres{background:#fff7ed;border-color:#ea580c;color:#c2410c}
+.pabtn.aus{background:#f0fdf4;border-color:#16a34a;color:#15803d}
+
+/* Info box */
+.infobox{background:var(--bg2);border-radius:8px;padding:8px 11px;font-size:11px;color:var(--muted);font-weight:700;margin-top:6px;line-height:1.5}
+.infobox b{color:var(--g-dark)}
+
+/* Subfield block */
+.subfld{background:#f8f6f0;border-radius:8px;padding:11px;margin-top:8px;border:1px solid var(--border)}
+.subfld-t{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px}
+
+/* Stats */
+.stats-row{display:flex;gap:10px;padding:0 16px 12px;overflow-x:auto;scrollbar-width:none}
+.stats-row::-webkit-scrollbar{display:none}
+.schip{background:white;border-radius:10px;padding:12px 16px;flex-shrink:0;box-shadow:var(--shadow);border:1px solid var(--border);min-width:110px}
+.snum{font-size:24px;font-weight:900;line-height:1.1}
+.slbl{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+
+/* Record cards */
+.rcard{background:white;border-radius:var(--r);margin:7px 16px;padding:13px;box-shadow:var(--shadow);border:1px solid var(--border);border-left:4px solid var(--g-light);cursor:pointer;transition:transform .1s}
+.rcard:active{transform:scale(.98)}
+.rcard.wi{border-left-color:var(--amber)}
+.rcard.cr{border-left-color:var(--danger)}
+.rdt{font-size:12px;color:var(--muted);font-weight:700}
+.rloc{font-weight:800;font-size:14px;color:var(--g-dark);margin:2px 0}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{font-size:11px;font-weight:800;padding:3px 8px;border-radius:20px}
+.tpl{background:#fef3c7;color:#92400e}
+.tes{background:#ede9fe;color:#5b21b6}
+.tea{background:#fce7f3;color:#9d174d}
+
+/* Status badges */
+.sb{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;padding:3px 8px;border-radius:20px}
+.sb-ok{background:#dcfce7;color:#15803d}.sb-w{background:#fef9c3;color:#854d0e}
+.sb-a{background:#ffedd5;color:#c2410c}.sb-c{background:#fee2e2;color:#b91c1c}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dok{background:#16a34a}.dw{background:#ca8a04}.da{background:#ea580c}.dc{background:#dc2626}
+
+/* Filter */
+.fbar{display:flex;gap:8px;padding:10px 16px 4px;overflow-x:auto;scrollbar-width:none}
+.fbar::-webkit-scrollbar{display:none}
+.fchip{flex-shrink:0;border:1.5px solid var(--border);background:white;border-radius:20px;padding:5px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;color:var(--muted);transition:all .15s}
+.fchip.active{background:var(--g-dark);border-color:var(--g-dark);color:white}
+
+/* Export */
+.erow{display:flex;gap:8px;padding:0 16px 4px}
+.erow button{flex:1;padding:9px 8px;border:none;border-radius:9px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer}
+
+/* Map */
+#map{height:calc(100vh - 120px);width:100%}
+.mleg{position:absolute;bottom:70px;right:12px;background:white;border-radius:10px;padding:10px 13px;box-shadow:var(--shadow-lg);z-index:500;font-size:11px;border:1px solid var(--border)}
+.mleg-t{font-weight:900;font-size:11px;margin-bottom:7px;color:var(--g-dark);text-transform:uppercase;letter-spacing:.5px}
+.mleg-i{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-weight:700}
+.mleg-d{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+
+/* Summary table */
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl th{background:var(--g-dark);color:white;padding:8px 6px;text-align:left;font-size:11px;font-weight:800;letter-spacing:.3px}
+.stbl td{padding:7px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.stbl tr:nth-child(even) td{background:#f8f6f0}
+.swrp{overflow-x:auto;margin:8px 16px;border-radius:var(--r);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
+
+/* Trend */
+.tbar{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:4px}
+.tcol{width:16px;border-radius:3px 3px 0 0;min-height:3px;flex-shrink:0}
+
+/* Detail */
+.ds{font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:10px 0 6px}
+.di{background:var(--bg);border-radius:8px;padding:10px;margin-bottom:6px}
+.dn{font-weight:800;font-size:13px;margin-bottom:5px}
+.drow{display:flex;gap:16px;font-size:12px;flex-wrap:wrap}
+
+/* Photo */
+.phbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;border:2px dashed var(--border);border-radius:10px;background:var(--bg2);font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer;margin-bottom:8px}
+.phpwrap{position:relative;margin-bottom:10px;display:none}
+.phpwrap img{width:100%;border-radius:10px;max-height:200px;object-fit:cover;border:2px solid var(--border)}
+.phdel{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:white;border:none;border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:900}
+
+/* Empty */
+.empty{text-align:center;padding:40px 24px;color:var(--muted);font-size:13px;font-weight:600}
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div><div class="hdr-t">🌿 FitoMonitor</div><div class="hdr-s" id="hdrSub">Tomate Invernadero</div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="hdrUser" style="text-align:right"></div>
+      <div class="hdr-d" id="hdrDate"></div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- ===== CONFIG ===== -->
+    <div class="view active" id="viewConfig">
+      <div id="adminBar" style="display:none;background:#1b4332;padding:10px 16px;display:none;align-items:center;justify-content:space-between">
+        <div style="color:white;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px">👁️ Viendo datos de:</div>
+        <select id="adminViewSel" onchange="adminSwitchView(this.value)" style="background:rgba(255,255,255,.15);color:white;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 8px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;outline:none">
+          <option value="admin">— Mi panel admin —</option>
+        </select>
+      </div>
+      <div><div class="ach" onclick="tacc('accE')"><span>🏢 Empresas <span class="bn" id="cntE">0</span></span><button class="badd" onclick="event.stopPropagation();om('mEmpresa')">+ Agregar</button></div><div class="acb open" id="accE"><div id="lstE"></div></div></div>
+      <div><div class="ach" onclick="tacc('accC')"><span>🌾 Campos <span class="bn" id="cntC">0</span></span><button class="badd" onclick="event.stopPropagation();om('mCampo')">+ Agregar</button></div><div class="acb open" id="accC"><div id="lstC"></div></div></div>
+      <div><div class="ach" onclick="tacc('accM')"><span>🏗️ Módulos <span class="bn" id="cntM">0</span></span><button class="badd" onclick="event.stopPropagation();om('mModulo')">+ Agregar</button></div><div class="acb open" id="accM"><div id="lstM"></div></div></div>
+      <div><div class="ach" onclick="tacc('accP')"><span>📍 Puntos de Monitoreo <span class="bn" id="cntP">0</span></span><button class="badd" onclick="event.stopPropagation();om('mPunto')">+ Agregar</button></div><div class="acb open" id="accP"><div id="lstP"></div></div></div>
+      <!-- Gestión de accesos: solo admin -->
+      <div id="accAccesoWrap" style="display:none">
+        <div class="ach" onclick="tacc('accAcceso')"><span>🔐 Gestión de Accesos</span></div>
+        <div class="acb open" id="accAcceso"><div id="lstAcceso"></div></div>
+      </div>
+      <div style="height:24px"></div>
+    </div>
+
+    <!-- ===== MONITOREO ===== -->
+    <div class="view" id="viewMonitoreo">
+      <div class="sh"><div class="st">Monitoreo</div><button class="badd" onclick="om('mMon')">+ Nuevo Registro</button></div>
+      <div class="stats-row">
+        <div class="schip"><div class="snum" id="stTot" style="color:var(--g-dark)">0</div><div class="slbl">Registros totales</div></div>
+        <div class="schip"><div class="snum" id="stProb" style="color:var(--amber)">0</div><div class="slbl">Con problemas</div></div>
+        <div class="schip"><div class="snum" id="stCrit" style="color:var(--danger)">0</div><div class="slbl">Críticos</div></div>
+        <div class="schip"><div class="snum" id="stTrap" style="color:#0369a1">0</div><div class="slbl">Polilla (trampa hoy)</div></div>
+      </div>
+      <div id="recentRecs"></div>
+      <div style="height:24px"></div>
+    </div>
+
+    <!-- ===== MAPA ===== -->
+    <div class="view" id="viewMapa" style="position:relative">
+      <div id="map"></div>
+      <div class="mleg">
+        <div class="mleg-t">Leyenda</div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#16a34a"></div>Sin problemas</div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#ca8a04"></div>Vigilancia</div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#ea580c"></div>Alerta</div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#dc2626"></div>Crítico</div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#9ca3af"></div>Sin registro</div>
+      </div>
+    </div>
+
+    <!-- ===== HISTORIAL ===== -->
+    <div class="view" id="viewHistorial">
+      <div class="sh"><div class="st">Historial</div></div>
+      <div class="erow">
+        <button onclick="expJSON()" style="background:var(--g-pale);color:var(--g-dark)">📦 JSON</button>
+        <button onclick="expCSV()" style="background:#e8f5e9;color:#1b5e20">📊 CSV Excel</button>
+        <button onclick="expResumen()" style="background:#fff8e1;color:#e65100">📋 Resumen</button>
+      </div>
+      <div class="fbar">
+        <button class="fchip active" onclick="setFlt('all',this)">Todos</button>
+        <button class="fchip" onclick="setFlt('semanal',this)">Semanal</button>
+        <button class="fchip" onclick="setFlt('contingencia',this)">Contingencia</button>
+        <button class="fchip" onclick="setFlt('plagas',this)">Plagas</button>
+        <button class="fchip" onclick="setFlt('enf',this)">Enfermedades</button>
+        <button class="fchip" onclick="setFlt('criticos',this)">Críticos</button>
+        <button class="fchip" onclick="setFlt('trampa',this)">💧 Trampa</button>
+        <button class="fchip" onclick="setFlt('resumen',this)">📊 Resumen</button>
+      </div>
+      <div id="histList"></div>
+      <div style="height:24px"></div>
+    </div>
+  </main>
+
+  <nav class="bnav">
+    <button class="nb active" id="navConfig" onclick="sv('Config')">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>Config
+    </button>
+    <button class="nb" id="navMonitoreo" onclick="sv('Monitoreo')">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>Monitoreo
+    </button>
+    <button class="nb" id="navMapa" onclick="sv('Mapa')">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>Mapa
+    </button>
+    <button class="nb" id="navHistorial" onclick="sv('Historial')">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Historial
+    </button>
+  </nav>
+</div>
+
+<!-- ========== MODALES CONFIG ========== -->
+<div class="mov" id="mEmpresa"><div class="modal">
+  <div class="mh"></div><div class="mt">Nueva Empresa</div>
+  <div class="fg"><label class="fl">Nombre</label><input class="fi" id="eN" placeholder="Ej: Agrícola Origen"></div>
+  <div class="fg"><label class="fl">Notas</label><textarea class="fta" id="eNo" placeholder="RUT, contacto..."></textarea></div>
+  <button class="bfull bg" onclick="saveE()">Guardar</button>
+  <button class="bfull bcan" onclick="cm('mEmpresa')">Cancelar</button>
+</div></div>
+
+<div class="mov" id="mCampo"><div class="modal">
+  <div class="mh"></div><div class="mt">Nuevo Campo</div>
+  <div class="fg"><label class="fl">Empresa</label><select class="fs" id="cE"></select></div>
+  <div class="fg"><label class="fl">Nombre del campo</label><input class="fi" id="cN" placeholder="Ej: El Tránsito"></div>
+  <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="cU" placeholder="Ej: Quillota, V Región"></div>
+  <button class="bfull bg" onclick="saveC()">Guardar</button>
+  <button class="bfull bcan" onclick="cm('mCampo')">Cancelar</button>
+</div></div>
+
+<div class="mov" id="mModulo"><div class="modal">
+  <div class="mh"></div><div class="mt">Nuevo Módulo / Invernadero</div>
+  <div class="fg"><label class="fl">Campo</label><select class="fs" id="mC"></select></div>
+  <div class="fg"><label class="fl">Nombre del módulo</label><input class="fi" id="mN" placeholder="Ej: Módulo 1 Norte"></div>
+  <div class="f2">
+    <div class="fg"><label class="fl">N° mesas/hileras</label><input type="number" class="fi" id="mMs" placeholder="24" min="1"></div>
+    <div class="fg"><label class="fl">Superficie (m²)</label><input type="number" class="fi" id="mSu" placeholder="2000"></div>
+  </div>
+  <div class="fg"><label class="fl">Variedad / Cultivar</label><input class="fi" id="mVa" placeholder="Ej: Zeemann, RAF..."></div>
+  <button class="bfull bg" onclick="saveMo()">Guardar</button>
+  <button class="bfull bcan" onclick="cm('mModulo')">Cancelar</button>
+</div></div>
+
+<div class="mov" id="mPunto"><div class="modal">
+  <div class="mh"></div><div class="mt">Nuevo Punto de Monitoreo</div>
+  <div class="fg"><label class="fl">Módulo</label><select class="fs" id="pMod"></select></div>
+  <div class="f2">
+    <div class="fg"><label class="fl">Código</label><input class="fi" id="pN" placeholder="P1, M-5"></div>
+    <div class="fg"><label class="fl">Mesa / Hilera nº</label><input type="number" class="fi" id="pMe" placeholder="Nº" min="1"></div>
+  </div>
+  <div class="fg"><label class="fl">Descripción / posición</label><input class="fi" id="pDe" placeholder="Ej: Sector centro, extremo norte"></div>
+  <div class="fg">
+    <label class="fl">GPS</label>
+    <button class="bgps" onclick="capGPS()">📡 Capturar coordenadas GPS</button>
+    <div class="gtxt" id="gpsInfo">Sin coordenadas — capturar en campo</div>
+    <input type="hidden" id="pLa"><input type="hidden" id="pLo">
+  </div>
+  <button class="bfull bg" onclick="savePu()">Guardar Punto</button>
+  <button class="bfull bcan" onclick="cm('mPunto')">Cancelar</button>
+</div></div>
+
+<!-- ========== MODAL MONITOREO ========== -->
+<div class="mov" id="mMon"><div class="modal">
+  <div class="mh"></div>
+  <div class="mt">Registro de Monitoreo</div>
+
+  <div class="fg"><label class="fl">Empresa</label><select class="fs" id="mnE" onchange="mnUpC()"></select></div>
+  <div class="fg"><label class="fl">Campo</label><select class="fs" id="mnC" onchange="mnUpM()"></select></div>
+  <div class="fg"><label class="fl">Módulo</label><select class="fs" id="mnM" onchange="mnUpP()"></select></div>
+  <div class="fg"><label class="fl">Punto de Monitoreo</label><select class="fs" id="mnP"></select></div>
+  <div class="f2">
+    <div class="fg"><label class="fl">Fecha</label><input type="date" class="fi" id="mnFe"></div>
+    <div class="fg"><label class="fl">Tipo visita</label>
+      <select class="fs" id="mnTi"><option value="semanal">📅 Semanal</option><option value="contingencia">⚡ Contingencia</option></select>
+    </div>
+  </div>
+
+  <!-- ===== PLAGAS ===== -->
+  <div class="mblk">
+    <div class="mblkt">🐛 Plagas</div>
+
+    <!-- MOSQUITA BLANCA -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Mosquita blanca</div><div class="pit">Bemisia / Trialeurodes</div></div>
+        <label class="tog"><input type="checkbox" id="ckMo" onchange="tp('Mo')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldMo">
+        <div class="fl" style="margin-top:10px">Adultos por planta observada</div>
+        <div class="opt3-row">
+          <button class="opt3" id="mo0" onclick="setOpt3('Mo','0')">0<br><span style="font-size:10px;font-weight:600">Ausente</span></button>
+          <button class="opt3" id="mo1" onclick="setOpt3('Mo','1-5')">1 – 5<br><span style="font-size:10px;font-weight:600">Bajo</span></button>
+          <button class="opt3" id="mo2" onclick="setOpt3('Mo','>5')">&gt; 5<br><span style="font-size:10px;font-weight:600">Alto</span></button>
+        </div>
+        <div class="infobox">Revisar envés de hojas jóvenes. <b>Umbral:</b> &gt;5 adultos/planta → evaluar acción.</div>
+      </div>
+    </div>
+
+    <!-- POLILLA -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Polilla del tomate</div><div class="pit">Tuta absoluta</div></div>
+        <label class="tog"><input type="checkbox" id="ckPo" onchange="tp('Po')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldPo">
+        <!-- Daño foliar / fruto -->
+        <div class="fg" style="margin-top:10px">
+          <div class="fl">Presencia de daño foliar / fruto</div>
+          <div class="pabtn-row">
+            <button class="pabtn" id="poDa0" onclick="setPA('poDa','aus')">✓ Ausente</button>
+            <button class="pabtn" id="poDa1" onclick="setPA('poDa','pres')">⚠ Presente</button>
+          </div>
+          <div class="pfld open" id="fldPoDa" style="margin-top:8px">
+            <div class="subfld">
+              <div class="subfld-t">Severidad del daño</div>
+              <div class="sv-row" id="svPo">
+                <button class="sv" onclick="setSv('svPo',1,this)">1</button>
+                <button class="sv" onclick="setSv('svPo',2,this)">2</button>
+                <button class="sv" onclick="setSv('svPo',3,this)">3</button>
+                <button class="sv" onclick="setSv('svPo',4,this)">4</button>
+                <button class="sv" onclick="setSv('svPo',5,this)">5</button>
+              </div>
+              <div class="svleg" style="margin-top:8px;margin-bottom:0">
+                <span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span>
+                <span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Trampa de agua -->
+        <div class="tbox">
+          <div class="tboxt">💧 Trampa de agua con detergente — Capturas de machos</div>
+          <div class="f2">
+            <div>
+              <div class="fl">N° adultos capturados</div>
+              <div class="nw"><button class="nbb" onclick="adj('nTrap',-1)">−</button><input type="number" class="nin" id="nTrap" value="0" min="0"><button class="nbb" onclick="adj('nTrap',1)">+</button></div>
+            </div>
+            <div>
+              <div class="fl">N° trampas activas</div>
+              <div class="nw"><button class="nbb" onclick="adj('nTrapN',-1)">−</button><input type="number" class="nin" id="nTrapN" value="1" min="0"><button class="nbb" onclick="adj('nTrapN',1)">+</button></div>
+            </div>
+          </div>
+          <div class="tumb">Solo captura machos. Umbral referencial: ≥ 5 adultos/trampa/semana → acción.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIPS -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Trips</div><div class="pit">Frankliniella / Thrips</div></div>
+        <label class="tog"><input type="checkbox" id="ckTr" onchange="tp('Tr')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldTr">
+        <div class="fg" style="margin-top:10px">
+          <div class="fl">Presencia / Ausencia</div>
+          <div class="pabtn-row">
+            <button class="pabtn" id="trPA0" onclick="setPA('trPA','aus')">✓ Ausente</button>
+            <button class="pabtn" id="trPA1" onclick="setPA('trPA','pres')">⚠ Presente</button>
+          </div>
+        </div>
+        <div class="subfld" id="fldTrSub" style="display:none">
+          <div class="subfld-t">Nivel poblacional</div>
+          <div class="sv-row" id="svTr">
+            <button class="sv" onclick="setSv('svTr',1,this)">1</button>
+            <button class="sv" onclick="setSv('svTr',2,this)">2</button>
+            <button class="sv" onclick="setSv('svTr',3,this)">3</button>
+            <button class="sv" onclick="setSv('svTr',4,this)">4</button>
+            <button class="sv" onclick="setSv('svTr',5,this)">5</button>
+          </div>
+          <div class="svleg" style="margin-top:8px;margin-bottom:0">
+            <span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span>
+            <span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span>
+          </div>
+        </div>
+        <div class="infobox">Revisar flores y hojas jóvenes. Vector de <b>TSWV</b>.</div>
+      </div>
+    </div>
+
+    <!-- ARAÑITA -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Arañita</div><div class="pit">Tetranychus urticae</div></div>
+        <label class="tog"><input type="checkbox" id="ckAr" onchange="tp('Ar')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldAr">
+        <div class="fg" style="margin-top:10px">
+          <div class="fl">Presencia / Ausencia</div>
+          <div class="pabtn-row">
+            <button class="pabtn" id="arPA0" onclick="setPA('arPA','aus')">✓ Ausente</button>
+            <button class="pabtn" id="arPA1" onclick="setPA('arPA','pres')">⚠ Presente</button>
+          </div>
+        </div>
+        <div class="subfld" id="fldArSub" style="display:none">
+          <div class="subfld-t">Plantas afectadas y severidad</div>
+          <div class="f2" style="margin-bottom:10px">
+            <div>
+              <div class="fl">N° plantas afectadas</div>
+              <div class="nw"><button class="nbb" onclick="adj('nArPl',-1)">−</button><input type="number" class="nin" id="nArPl" value="0" min="0"><button class="nbb" onclick="adj('nArPl',1)">+</button></div>
+            </div>
+            <div>
+              <div class="fl">Total plantas revisadas</div>
+              <div class="nw"><button class="nbb" onclick="adj('nArTot',-1)">−</button><input type="number" class="nin" id="nArTot" value="10" min="1"><button class="nbb" onclick="adj('nArTot',1)">+</button></div>
+            </div>
+          </div>
+          <div class="fl">Severidad del daño (1–5)</div>
+          <div class="sv-row" id="svAr">
+            <button class="sv" onclick="setSv('svAr',1,this)">1</button>
+            <button class="sv" onclick="setSv('svAr',2,this)">2</button>
+            <button class="sv" onclick="setSv('svAr',3,this)">3</button>
+            <button class="sv" onclick="setSv('svAr',4,this)">4</button>
+            <button class="sv" onclick="setSv('svAr',5,this)">5</button>
+          </div>
+          <div class="svleg" style="margin-top:8px;margin-bottom:0">
+            <span class="sl sl1">1 Manchas escasas</span><span class="sl sl2">2 Hoja moteada</span>
+            <span class="sl sl3">3 Bronceado parcial</span><span class="sl sl4">4 Bronceado severo</span><span class="sl sl5">5 Necrosis/telaraña</span>
+          </div>
+        </div>
+        <div class="infobox">Revisar envés de hojas medias. Condiciones de baja HR y alta T favorecen su desarrollo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ENF. SUELO ===== -->
+  <div class="mblk">
+    <div class="mblkt">🪱 Enfermedades de Suelo</div>
+
+    <!-- NEMATODOS -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Nematodos</div><div class="pit">Meloidogyne spp.</div></div>
+        <label class="tog"><input type="checkbox" id="ckNe" onchange="tp('Ne')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldNe">
+        <div class="fg" style="margin-top:10px">
+          <div class="fl">Presencia / Ausencia</div>
+          <div class="pabtn-row">
+            <button class="pabtn" id="nePA0" onclick="setPA('nePA','aus')">✓ Ausente</button>
+            <button class="pabtn" id="nePA1" onclick="setPA('nePA','pres')">⚠ Presente</button>
+          </div>
+        </div>
+        <div class="subfld" id="fldNeSub" style="display:none">
+          <div class="subfld-t">Severidad del daño radicular (1–5)</div>
+          <div class="sv-row" id="svNe">
+            <button class="sv" onclick="setSv('svNe',1,this)">1</button>
+            <button class="sv" onclick="setSv('svNe',2,this)">2</button>
+            <button class="sv" onclick="setSv('svNe',3,this)">3</button>
+            <button class="sv" onclick="setSv('svNe',4,this)">4</button>
+            <button class="sv" onclick="setSv('svNe',5,this)">5</button>
+          </div>
+          <div class="svleg" style="margin-top:8px;margin-bottom:0">
+            <span class="sl sl1">1 Agallas escasas</span><span class="sl sl2">2 Agallas dispersas</span>
+            <span class="sl sl3">3 Agallas frecuentes</span><span class="sl sl4">4 Sistema radicular comprometido</span><span class="sl sl5">5 Raíz destruida</span>
+          </div>
+          <div class="fg" style="margin-top:10px">
+            <div class="fl">N° plantas con síntomas radicales</div>
+            <div class="nw"><button class="nbb" onclick="adj('nNePl',-1)">−</button><input type="number" class="nin" id="nNePl" value="0" min="0"><button class="nbb" onclick="adj('nNePl',1)">+</button></div>
+          </div>
+        </div>
+        <div class="infobox">Confirmar con extracción de raíces. <b>Meloidogyne</b>: agallas visibles. Evaluar plantas con síntomas de marchitez y enanismo.</div>
+      </div>
+    </div>
+
+    <!-- FUSARIUM -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Fusarium</div><div class="pit">Fusarium oxysporum / solani</div></div>
+        <label class="tog"><input type="checkbox" id="ckFu" onchange="tp('Fu')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldFu">
+        <div class="f2" style="margin-top:10px">
+          <div>
+            <div class="fl">Incidencia (%)</div>
+            <div class="nw"><button class="nbb" onclick="adj('nFuI',-5)">−</button><input type="number" class="nin" id="nFuI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nFuI',5)">+</button></div>
+          </div>
+          <div>
+            <div class="fl">Severidad</div>
+            <div class="sv-row" id="svFu">
+              <button class="sv" onclick="setSv('svFu',1,this)">1</button><button class="sv" onclick="setSv('svFu',2,this)">2</button>
+              <button class="sv" onclick="setSv('svFu',3,this)">3</button><button class="sv" onclick="setSv('svFu',4,this)">4</button>
+              <button class="sv" onclick="setSv('svFu',5,this)">5</button>
+            </div>
+          </div>
+        </div>
+        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+      </div>
+    </div>
+
+    <!-- VERTICILLIUM -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Verticillium</div><div class="pit">Verticillium dahliae</div></div>
+        <label class="tog"><input type="checkbox" id="ckVe" onchange="tp('Ve')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldVe">
+        <div class="f2" style="margin-top:10px">
+          <div>
+            <div class="fl">Incidencia (%)</div>
+            <div class="nw"><button class="nbb" onclick="adj('nVeI',-5)">−</button><input type="number" class="nin" id="nVeI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nVeI',5)">+</button></div>
+          </div>
+          <div>
+            <div class="fl">Severidad</div>
+            <div class="sv-row" id="svVe">
+              <button class="sv" onclick="setSv('svVe',1,this)">1</button><button class="sv" onclick="setSv('svVe',2,this)">2</button>
+              <button class="sv" onclick="setSv('svVe',3,this)">3</button><button class="sv" onclick="setSv('svVe',4,this)">4</button>
+              <button class="sv" onclick="setSv('svVe',5,this)">5</button>
+            </div>
+          </div>
+        </div>
+        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ENF. AÉREAS ===== -->
+  <div class="mblk">
+    <div class="mblkt">🍄 Enfermedades Aéreas</div>
+
+    <!-- BOTRYTIS -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Botrytis</div><div class="pit">Botrytis cinerea</div></div>
+        <label class="tog"><input type="checkbox" id="ckBo" onchange="tp('Bo')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldBo">
+        <div class="f2" style="margin-top:10px">
+          <div>
+            <div class="fl">Incidencia (%)</div>
+            <div class="nw"><button class="nbb" onclick="adj('nBoI',-5)">−</button><input type="number" class="nin" id="nBoI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nBoI',5)">+</button></div>
+          </div>
+          <div>
+            <div class="fl">Severidad</div>
+            <div class="sv-row" id="svBo">
+              <button class="sv" onclick="setSv('svBo',1,this)">1</button><button class="sv" onclick="setSv('svBo',2,this)">2</button>
+              <button class="sv" onclick="setSv('svBo',3,this)">3</button><button class="sv" onclick="setSv('svBo',4,this)">4</button>
+              <button class="sv" onclick="setSv('svBo',5,this)">5</button>
+            </div>
+          </div>
+        </div>
+        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+        <div style="margin-top:4px"><div class="fl">Órganos afectados</div>
+          <div class="org-row" id="orgBo">
+            <button class="orgb" onclick="togOrg(this,'tallo')">🪴 Tallo</button>
+            <button class="orgb" onclick="togOrg(this,'fruto')">🍅 Fruto</button>
+            <button class="orgb" onclick="togOrg(this,'hoja')">🍃 Hoja</button>
+            <button class="orgb" onclick="togOrg(this,'flor')">🌸 Flor/Pedúnculo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OÍDIO -->
+    <div class="prow">
+      <div class="phdr">
+        <div><div class="pnm">Oídio</div><div class="pit">Leveillula taurica</div></div>
+        <label class="tog"><input type="checkbox" id="ckOi" onchange="tp('Oi')"><span class="tsl"></span></label>
+      </div>
+      <div class="pfld" id="fldOi">
+        <div class="f2" style="margin-top:10px">
+          <div>
+            <div class="fl">Incidencia (%)</div>
+            <div class="nw"><button class="nbb" onclick="adj('nOiI',-5)">−</button><input type="number" class="nin" id="nOiI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nOiI',5)">+</button></div>
+          </div>
+          <div>
+            <div class="fl">Severidad</div>
+            <div class="sv-row" id="svOi">
+              <button class="sv" onclick="setSv('svOi',1,this)">1</button><button class="sv" onclick="setSv('svOi',2,this)">2</button>
+              <button class="sv" onclick="setSv('svOi',3,this)">3</button><button class="sv" onclick="setSv('svOi',4,this)">4</button>
+              <button class="sv" onclick="setSv('svOi',5,this)">5</button>
+            </div>
+          </div>
+        </div>
+        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOTO -->
+  <div class="fg">
+    <label class="fl">📸 Foto de campo</label>
+    <input type="file" id="photoIn" accept="image/*" capture="environment" style="display:none" onchange="onPhoto(this)">
+    <div class="phbtn" onclick="document.getElementById('photoIn').click()">📷 Tomar foto / seleccionar imagen</div>
+    <div class="phpwrap" id="phpWrap"><img id="phpImg" src="" alt="Foto campo"><button class="phdel" onclick="clrPhoto()">✕</button></div>
+    <div style="font-size:11px;color:var(--muted)">Se comprime automáticamente para almacenamiento eficiente.</div>
+  </div>
+
+  <!-- OBSERVACIONES -->
+  <div class="fg">
+    <label class="fl">📝 Observaciones / Notas de campo</label>
+    <textarea class="fta" id="mnOb" placeholder="Condiciones del cultivo, síntomas particulares, distribución espacial en el módulo, acciones tomadas..."></textarea>
+  </div>
+
+  <button class="bfull bg" onclick="saveReg()">💾 Guardar Registro</button>
+  <button class="bfull bcan" onclick="cm('mMon')">Cancelar</button>
+  <div style="height:20px"></div>
+</div></div>
+
+<!-- DETALLE -->
+<div class="mov" id="mDet"><div class="modal">
+  <div class="mh"></div>
+  <div id="detCont"></div>
+  <button class="bfull bcan" style="margin-top:12px" onclick="cm('mDet')">Cerrar</button>
+</div></div>
+
+<!-- Firebase SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ===== AUTH & SESSION =====
+const AK='fito_auth_'; // auth prefix (no company-scoped)
+const SK='fito_session'; // sessionStorage key
+
+const COMPANIES_DEFAULT=[
+  {id:'mol',name:'Agrícola El Molino',     code:'',active:true},
+  {id:'arr',name:'Agrícola Los Arrayanes', code:'',active:true},
+  {id:'ori',name:'Agrícola Origen',        code:'',active:true},
+  {id:'agt',name:'Agrotres',               code:'',active:true},
+  {id:'mar',name:'Agrícola Marcotti',      code:'',active:true},
+  {id:'cis',name:'Agrícola Cisternas',     code:'',active:true},
+  {id:'fru',name:'Agrícola Il Frutteto',   code:'',active:true},
+];
+
+let sess=null; // {id, name, isAdmin}
+
+function getAuthCos(){return JSON.parse(localStorage.getItem(AK+'companies')||JSON.stringify(COMPANIES_DEFAULT));}
+function saveAuthCos(arr){localStorage.setItem(AK+'companies',JSON.stringify(arr));}
+function getAdminCode(){return localStorage.getItem(AK+'admin')||'';}
+function saveAdminCode(c){localStorage.setItem(AK+'admin',c);}
+function genCode(){return Math.floor(100000+Math.random()*900000).toString();}
+
+// ===== DB (session-aware) =====
+function getK(){return sess?`fito3_${sess.id}_`:'fito3_noauth_';}
+const db={
+  g:k=>JSON.parse(localStorage.getItem(getK()+k)||'[]'),
+  s:(k,v)=>localStorage.setItem(getK()+k,JSON.stringify(v)),
+  id:()=>Date.now().toString(36)+Math.random().toString(36).substr(2,5),
+  gFor:(cid,k)=>JSON.parse(localStorage.getItem(`fito3_${cid}_`+k)||'[]'), // admin: read any company
+};
+
+// ===== FIREBASE / FIRESTORE =====
+const firebaseConfig={
+  apiKey:"AIzaSyDVsFF2zA8H0-0L81D5jm8-_HdRYvDKMfc",
+  authDomain:"fitomonitor-d6dfe.firebaseapp.com",
+  projectId:"fitomonitor-d6dfe",
+  storageBucket:"fitomonitor-d6dfe.firebasestorage.app",
+  messagingSenderId:"383423232085",
+  appId:"1:383423232085:web:a4efbc5f62bc35cd2ebcdc"
+};
+firebase.initializeApp(firebaseConfig);
+const fdb=firebase.firestore();
+
+// Referencia a colección de una empresa
+function fsCol(cid,entity){return fdb.collection('companies').doc(cid).collection(entity);}
+function fsCur(entity){return fsCol(sess?.id||'noauth',entity);}
+
+// Escribe un item a Firestore (sin foto — demasiado grande)
+async function fsWrite(entity,item){
+  try{
+    const {foto,...data}=item; // strip photo
+    await fsCur(entity).doc(data.id).set(data);
+  }catch(e){console.warn('fsWrite error',e);}
+}
+
+// Elimina un item de Firestore
+async function fsDel(entity,id){
+  try{await fsCur(entity).doc(id).delete();}catch(e){console.warn('fsDel error',e);}
+}
+
+// Sincroniza Firestore → localStorage para una empresa (al hacer login)
+async function syncDown(cid){
+  showLoader('Sincronizando datos…');
+  const entities=['empresas','campos','modulos','puntos','registros'];
+  const prefix=`fito3_${cid}_`;
+  for(const e of entities){
+    try{
+      const snap=await fsCol(cid,e).get();
+      const data=snap.docs.map(d=>({...d.data(),id:d.id}));
+      // Merge: Firestore wins for non-photo fields, keep local photos
+      const local=JSON.parse(localStorage.getItem(prefix+e)||'[]');
+      const merged=data.map(fs=>{
+        const loc=local.find(l=>l.id===fs.id);
+        return loc?.foto?{...fs,foto:loc.foto}:fs;
+      });
+      localStorage.setItem(prefix+e,JSON.stringify(merged));
+    }catch(err){console.warn('syncDown error',e,err);}
+  }
+  hideLoader();
+}
+
+// Sincroniza todos los datos de una empresa hacia Firestore (batch)
+async function syncUp(cid){
+  showLoader('Subiendo datos…');
+  const entities=['empresas','campos','modulos','puntos','registros'];
+  const prefix=`fito3_${cid}_`;
+  for(const e of entities){
+    try{
+      const items=JSON.parse(localStorage.getItem(prefix+e)||'[]');
+      const batch=fdb.batch();
+      items.forEach(item=>{
+        const {foto,...data}=item;
+        batch.set(fsCol(cid,e).doc(data.id),data);
+      });
+      await batch.commit();
+    }catch(err){console.warn('syncUp error',e,err);}
+  }
+  hideLoader();
+}
+
+// Guarda y sincroniza auth config en Firestore
+async function fsAuthSync(){
+  try{
+    await fdb.collection('config').doc('auth').set({
+      adminCode:getAdminCode(),
+      companies:getAuthCos(),
+      updated:new Date().toISOString()
+    });
+  }catch(e){console.warn('fsAuthSync error',e);}
+}
+
+// Carga auth config desde Firestore (admin login)
+async function fsAuthLoad(){
+  try{
+    const doc=await fdb.collection('config').doc('auth').get();
+    if(doc.exists){
+      const d=doc.data();
+      if(d.adminCode)saveAdminCode(d.adminCode);
+      if(d.companies)saveAuthCos(d.companies);
+    }
+  }catch(e){console.warn('fsAuthLoad error',e);}
+}
+
+// Loader overlay
+function showLoader(msg){
+  let el=document.getElementById('fsLoader');
+  if(!el){el=document.createElement('div');el.id='fsLoader';el.style.cssText='position:fixed;inset:0;background:rgba(27,67,50,.85);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;font-family:Nunito,sans-serif';el.innerHTML=`<div style="width:44px;height:44px;border:4px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .8s linear infinite"></div><div style="color:white;font-size:14px;font-weight:800" id="fsLoaderMsg"></div>`;document.body.appendChild(el);if(!document.getElementById('spinStyle')){const s=document.createElement('style');s.id='spinStyle';s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);}}
+  document.getElementById('fsLoaderMsg').textContent=msg||'Cargando…';
+  el.style.display='flex';
+}
+function hideLoader(){const el=document.getElementById('fsLoader');if(el)el.style.display='none';}
+
+// ===== STATE =====
+let svVals={}, orgSel=[], fotoData=null, opt3Mo=null, paState={}, filtro='all', mapOk=false, leafMap=null;
+
+// ===== HEADER DATE =====
+(()=>{const d=new Date();document.getElementById('hdrDate').innerHTML=d.toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'}).replace(/ de /g,' ').toUpperCase().replace(',','<br>');})();
+
+// ===== AUTH FUNCTIONS =====
+function doLogin(code){
+  const c=code.trim();
+  if(!c){showLoginErr('Ingrese el código de acceso');return;}
+
+  // PRIMER ARRANQUE: si no hay código admin aún, mostrar pantalla de setup
+  const adminCode=getAdminCode();
+  if(!adminCode){
+    if(c==='FITO2025'){
+      sess={id:'admin',name:'Administrador',isAdmin:true};
+      sessionStorage.setItem(SK,JSON.stringify(sess));
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('app').style.display='flex';
+      updateHeader();
+      // Intentar cargar auth desde Firestore por si ya existe
+      fsAuthLoad().then(()=>{initAdminUI();renderCfg();renderStats();});
+      setTimeout(()=>alert('✅ Primer acceso. Ve a Config → 🔐 Gestión de Accesos para configurar tu código de administrador y los códigos de las empresas.'),600);
+      return;
+    }
+    // Quizás hay auth en Firestore aunque no en localStorage — intentar cargar
+    showLoader('Verificando…');
+    fsAuthLoad().then(()=>{
+      hideLoader();
+      const freshAdmin=getAdminCode();
+      if(freshAdmin && c===freshAdmin){
+        sess={id:'admin',name:'Administrador',isAdmin:true};
+        sessionStorage.setItem(SK,JSON.stringify(sess));
+        document.getElementById('loginScreen').style.display='none';
+        document.getElementById('app').style.display='flex';
+        updateHeader();initAdminUI();renderCfg();renderStats();
+      } else {
+        const cos=getAuthCos();
+        const co=cos.find(x=>x.active&&x.code&&x.code===c);
+        if(co){
+          loginAsCompany(co);
+        } else {
+          showLoginErr('Primera vez: use el código FITO2025 para configurar el sistema');
+        }
+      }
+    });
+    return;
+  }
+
+  // Check admin
+  if(c===adminCode){
+    sess={id:'admin',name:'Administrador',isAdmin:true};
+    sessionStorage.setItem(SK,JSON.stringify(sess));
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    // Cargar auth actualizada de Firestore y luego iniciar
+    fsAuthLoad().then(()=>{updateHeader();initAdminUI();renderCfg();renderStats();});
+    return;
+  }
+  // Check companies
+  const cos=getAuthCos();
+  const co=cos.find(x=>x.active && x.code && x.code===c);
+  if(co){loginAsCompany(co);return;}
+  showLoginErr('Código incorrecto. Contacte al administrador.');
+}
+
+function loginAsCompany(co){
+  sess={id:co.id,name:co.name,isAdmin:false};
+  sessionStorage.setItem(SK,JSON.stringify(sess));
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='flex';
+  updateHeader();
+  // Sincronizar datos desde Firestore antes de renderizar
+  syncDown(co.id).then(()=>{renderCfg();renderStats();});
+}
+}
+
+function doLogout(){
+  if(!confirm('¿Cerrar sesión?'))return;
+  sess=null;sessionStorage.removeItem(SK);
+  location.reload();
+}
+
+function hideLoginScreen(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='flex';
+}
+
+function showLoginErr(msg){
+  const el=document.getElementById('loginErr');
+  el.textContent=msg;el.style.display='block';
+  setTimeout(()=>el.style.display='none',3500);
+}
+
+function updateHeader(){
+  if(!sess)return;
+  document.getElementById('hdrSub').textContent=sess.isAdmin?'Administrador · Acceso total':sess.name;
+  document.getElementById('hdrUser').innerHTML=`
+    <div style="font-size:10px;font-weight:900;color:rgba(255,255,255,.7);text-align:right;line-height:1.3">${sess.isAdmin?'🔑 ADMIN':sess.name.split(' ').slice(-1)[0].toUpperCase()}</div>
+    <button onclick="doLogout()" style="background:rgba(255,255,255,.18);border:none;color:white;border-radius:6px;padding:3px 9px;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;margin-top:2px">Salir</button>`;
+}
+
+function initAdminUI(){
+  // Cargar auth actualizada desde Firestore
+  fsAuthLoad().then(()=>{
+    // Show admin bar
+    const bar=document.getElementById('adminBar');
+    bar.style.display='flex';
+    // Populate admin view selector
+    const sel=document.getElementById('adminViewSel');
+    sel.innerHTML='<option value="admin">— Mi panel admin —</option>';
+    getAuthCos().forEach(co=>{
+      const o=document.createElement('option');o.value=co.id;o.textContent=co.name;
+      sel.appendChild(o);
+    });
+    // Show access management section
+    document.getElementById('accAccesoWrap').style.display='block';
+    renderAccessMgmt();
+  });
+}
+
+function adminSwitchView(cid){
+  if(cid==='admin'){
+    sess={id:'admin',name:'Administrador',isAdmin:true};
+    sessionStorage.setItem(SK,JSON.stringify(sess));
+    mapOk=false;if(leafMap){leafMap.remove();leafMap=null;}
+    renderCfg();renderStats();
+  } else {
+    const co=getAuthCos().find(x=>x.id===cid);
+    sess={id:cid,name:co?co.name:cid,isAdmin:true};
+    sessionStorage.setItem(SK,JSON.stringify(sess));
+    mapOk=false;if(leafMap){leafMap.remove();leafMap=null;}
+    // Sincronizar datos de esa empresa desde Firestore antes de renderizar
+    syncDown(cid).then(()=>{renderCfg();renderStats();});
+  }
+}
+
+// ===== ADMIN: GESTIÓN DE ACCESOS =====
+function renderAccessMgmt(){
+  const el=document.getElementById('lstAcceso');
+  if(!el)return;
+  const cos=getAuthCos();
+  const adminCode=getAdminCode();
+  let html=`<div style="padding:12px 16px">`;
+  // Admin code
+  html+=`<div style="background:white;border-radius:12px;padding:13px;margin-bottom:10px;border:1px solid #ddd8cf;box-shadow:0 2px 8px rgba(0,0,0,.07)">
+    <div style="font-weight:900;font-size:14px;color:#1b4332;margin-bottom:8px">🔑 Código Administrador</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="font-family:monospace;font-size:22px;font-weight:900;letter-spacing:4px;color:#1b4332;background:#d8f3dc;padding:8px 16px;border-radius:8px;flex:1;text-align:center">${adminCode||'(no configurado)'}</div>
+      <button onclick="setAdminCode()" style="background:#1b4332;color:white;border:none;border-radius:8px;padding:8px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer">${adminCode?'Cambiar':'Configurar'}</button>
+    </div>
+    <div style="font-size:11px;color:#6b7280;margin-top:6px">Este código te da acceso total. Guárdalo de forma segura.</div>
+  </div>`;
+  // Companies
+  html+=`<div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin-bottom:8px">Códigos de acceso por empresa</div>`;
+  cos.forEach(co=>{
+    html+=`<div style="background:white;border-radius:10px;padding:11px;margin-bottom:7px;border:1px solid #ddd8cf">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+        <div>
+          <div style="font-weight:900;font-size:13px">${co.name}</div>
+          <div style="font-size:11px;color:#6b7280">ID: ${co.id} · ${co.active?'Activa':'Inactiva'}</div>
+        </div>
+        <label class="tog"><input type="checkbox" ${co.active?'checked':''} onchange="toggleCo('${co.id}',this.checked)"><span class="tsl"></span></label>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center">
+        <div id="cocode_${co.id}" style="font-family:monospace;font-size:18px;font-weight:900;letter-spacing:3px;${co.code?'color:#1b4332':'color:#9ca3af'};background:${co.code?'#d8f3dc':'#f3f4f6'};padding:7px 12px;border-radius:7px;flex:1;text-align:center">${co.code||'— sin código —'}</div>
+        <button onclick="copyCode('${co.code||''}')" title="Copiar" style="background:#e0f2fe;border:none;border-radius:7px;padding:7px 10px;font-size:16px;cursor:pointer" ${co.code?'':'disabled'}>📋</button>
+        <button onclick="regenCode('${co.id}')" style="background:#1b4332;color:white;border:none;border-radius:7px;padding:7px 11px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:900;cursor:pointer">${co.code?'↺':'Generar'}</button>
+      </div>
+    </div>`;
+  });
+  // Export codes button
+  html+=`<button onclick="exportCodes()" style="width:100%;margin-top:6px;padding:11px;background:#1b4332;color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">📄 Exportar hoja de códigos</button>`;
+  html+=`<button onclick="adminSyncAllUp()" style="width:100%;margin-top:8px;padding:11px;background:#0369a1;color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">☁️ Forzar sincronización → Firestore</button>`;
+  html+=`<div style="font-size:11px;color:#6b7280;margin-top:6px;text-align:center">Los datos se sincronizan automáticamente. Usa este botón solo si es necesario.</div>`;
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+function setAdminCode(){
+  const cur=getAdminCode();
+  const msg=cur?`Código actual: ${cur}\n\nIngrese el nuevo código admin (mínimo 6 caracteres):`:'Ingrese su código de administrador (mínimo 6 caracteres):';
+  const val=prompt(msg);
+  if(!val)return;
+  if(val.length<6){alert('El código debe tener al menos 6 caracteres');return;}
+  saveAdminCode(val);
+  fsAuthSync(); // guardar en Firestore
+  alert('✅ Código de administrador guardado');
+  renderAccessMgmt();
+}
+
+function regenCode(cid){
+  const cos=getAuthCos();
+  const co=cos.find(x=>x.id===cid);
+  if(!co)return;
+  if(co.code&&!confirm(`¿Generar nuevo código para ${co.name}?\nEl código anterior quedará inválido.`))return;
+  co.code=genCode();
+  saveAuthCos(cos);
+  fsAuthSync(); // guardar en Firestore
+  renderAccessMgmt();
+}
+
+function toggleCo(cid,val){
+  const cos=getAuthCos();
+  const co=cos.find(x=>x.id===cid);
+  if(co){co.active=val;saveAuthCos(cos);fsAuthSync();}
+}
+
+function copyCode(code){
+  if(!code)return;
+  navigator.clipboard?.writeText(code).then(()=>alert(`Código copiado: ${code}`)).catch(()=>alert(`Código: ${code}`));
+}
+
+async function adminSyncAllUp(){
+  if(!confirm('¿Subir todos los datos locales a Firestore? Esto sobreescribirá los datos en la nube.'))return;
+  const cos=getAuthCos();
+  for(const co of cos){
+    await syncUp(co.id);
+  }
+  alert('✅ Sincronización completa');
+}
+
+function exportCodes(){
+  const cos=getAuthCos();
+  const adminCode=getAdminCode();
+  const fecha=new Date().toLocaleDateString('es-CL');
+  let txt=`FITO MONITOR — CÓDIGOS DE ACCESO\nFecha: ${fecha}\n`;
+  txt+=`${'='.repeat(40)}\n\n`;
+  txt+=`ADMINISTRADOR (acceso total)\nCódigo: ${adminCode||'(no configurado)'}\n\n`;
+  txt+=`${'='.repeat(40)}\n\nEMPRESAS\n\n`;
+  cos.forEach(co=>{
+    txt+=`${co.name}\n`;
+    txt+=`  Código: ${co.code||'(sin código)'}\n`;
+    txt+=`  Estado: ${co.active?'Activa':'Inactiva'}\n\n`;
+  });
+  txt+=`${'='.repeat(40)}\n`;
+  txt+=`INSTRUCCIONES:\n- Ingrese su código en la pantalla de acceso de la app\n- No comparta su código con otras empresas\n- Contacte al administrador para renovar su código\n`;
+  dlFile(txt,'FitoMonitor_Codigos_'+new Date().toISOString().split('T')[0]+'.txt','text/plain;charset=utf-8');
+}
+
+// ===== INIT =====
+(()=>{const d=new Date();document.getElementById('hdrDate').innerHTML=d.toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'}).replace(/ de /g,' ').toUpperCase().replace(',','<br>');})();
+function initApp(){
+  const stored=sessionStorage.getItem(SK);
+  if(stored){
+    sess=JSON.parse(stored);
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    updateHeader();
+    if(sess.isAdmin)initAdminUI();
+    renderCfg();renderStats();
+  } else {
+    document.getElementById('app').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+  }
+}
+// Esperar a que todo el HTML (incluido #loginScreen) esté listo
+window.addEventListener('load', initApp);
+function sv(n){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view'+n).classList.add('active');
+  document.getElementById('nav'+n).classList.add('active');
+  if(n==='Mapa')initMap();
+  if(n==='Historial')renderHist();
+  if(n==='Monitoreo')renderStats();
+}
+function tacc(id){document.getElementById(id).classList.toggle('open');}
+
+// ===== MODALS =====
+function om(id){
+  if(id==='mCampo')fillSel('cE',db.g('empresas'),'nombre');
+  if(id==='mModulo')fillSel('mC',db.g('campos').map(c=>({...c,nombre:geN(c.empresaId)+' / '+c.nombre})),'nombre');
+  if(id==='mPunto')fillSel('pMod',db.g('modulos').map(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};return{...m,nombre:geN(c.empresaId)+' / '+(c.nombre||'')+' / '+m.nombre};}), 'nombre');
+  if(id==='mMon'){fillSel('mnE',db.g('empresas'),'nombre');mnUpC();document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];resetForm();}
+  document.getElementById(id).classList.add('open');
+}
+function cm(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ===== HELPERS =====
+function fillSel(id,items,lbl){const el=document.getElementById(id);el.innerHTML='<option value="">— Seleccionar —</option>';items.forEach(it=>{const o=document.createElement('option');o.value=it.id;o.textContent=it[lbl];el.appendChild(o);});}
+function geN(id){return(db.g('empresas').find(x=>x.id===id)||{}).nombre||'';}
+
+// ===== CRUD =====
+function saveE(){
+  const n=document.getElementById('eN').value.trim();if(!n){alert('Ingrese nombre');return;}
+  const item={id:db.id(),nombre:n,notas:document.getElementById('eNo').value};
+  const a=db.g('empresas');a.push(item);db.s('empresas',a);
+  fsWrite('empresas',item);
+  document.getElementById('eN').value='';document.getElementById('eNo').value='';cm('mEmpresa');renderCfg();
+}
+function saveC(){
+  const n=document.getElementById('cN').value.trim(),eid=document.getElementById('cE').value;if(!n||!eid){alert('Complete los campos');return;}
+  const item={id:db.id(),empresaId:eid,nombre:n,ubicacion:document.getElementById('cU').value};
+  const a=db.g('campos');a.push(item);db.s('campos',a);
+  fsWrite('campos',item);
+  cm('mCampo');renderCfg();
+}
+function saveMo(){
+  const n=document.getElementById('mN').value.trim(),cid=document.getElementById('mC').value;if(!n||!cid){alert('Complete los campos');return;}
+  const item={id:db.id(),campoId:cid,nombre:n,mesas:parseInt(document.getElementById('mMs').value)||0,superficie:parseInt(document.getElementById('mSu').value)||0,variedad:document.getElementById('mVa').value};
+  const a=db.g('modulos');a.push(item);db.s('modulos',a);
+  fsWrite('modulos',item);
+  cm('mModulo');renderCfg();
+}
+function savePu(){
+  const n=document.getElementById('pN').value.trim(),mid=document.getElementById('pMod').value;if(!n||!mid){alert('Complete los campos requeridos');return;}
+  const item={id:db.id(),moduloId:mid,nombre:n,mesa:document.getElementById('pMe').value,descripcion:document.getElementById('pDe').value,lat:parseFloat(document.getElementById('pLa').value)||null,lng:parseFloat(document.getElementById('pLo').value)||null};
+  const a=db.g('puntos');a.push(item);db.s('puntos',a);
+  fsWrite('puntos',item);
+  ['pN','pMe','pDe'].forEach(i=>document.getElementById(i).value='');document.getElementById('pLa').value='';document.getElementById('pLo').value='';document.getElementById('gpsInfo').textContent='Sin coordenadas — capturar en campo';cm('mPunto');renderCfg();
+}
+function delItem(t,id){
+  if(!confirm('¿Eliminar?'))return;
+  db.s(t,db.g(t).filter(i=>i.id!==id));
+  fsDel(t,id);
+  renderCfg();
+}
+
+// ===== GPS =====
+function capGPS(){if(!navigator.geolocation){alert('GPS no disponible');return;}const inf=document.getElementById('gpsInfo');inf.textContent='📡 Obteniendo posición...';navigator.geolocation.getCurrentPosition(pos=>{const la=pos.coords.latitude.toFixed(6),lo=pos.coords.longitude.toFixed(6);document.getElementById('pLa').value=la;document.getElementById('pLo').value=lo;inf.textContent=`✅ Lat:${la} Lng:${lo} (±${Math.round(pos.coords.accuracy)}m)`;},err=>{inf.textContent='❌ '+err.message;},{enableHighAccuracy:true,timeout:12000,maximumAge:0});}
+
+// ===== RENDER CONFIG =====
+function renderCfg(){
+  const E=db.g('empresas'),C=db.g('campos'),M=db.g('modulos'),P=db.g('puntos');
+  ['E','C','M','P'].forEach((k,i)=>document.getElementById('cnt'+k).textContent=[E,C,M,P][i].length);
+  const lE=document.getElementById('lstE');lE.innerHTML=E.length?'':'<div class="empty">No hay empresas configuradas</div>';E.forEach(e=>lE.innerHTML+=`<div class="card"><div class="ct">${e.nombre}</div><div class="cs">${C.filter(c=>c.empresaId===e.id).length} campo(s)${e.notas?' · '+e.notas:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('empresas','${e.id}')">Eliminar</button></div></div>`);
+  const lC=document.getElementById('lstC');lC.innerHTML=C.length?'':'<div class="empty">No hay campos configurados</div>';C.forEach(c=>lC.innerHTML+=`<div class="card"><div class="ct">${c.nombre}</div><div class="cs">${geN(c.empresaId)} · ${M.filter(m=>m.campoId===c.id).length} módulo(s)${c.ubicacion?' · '+c.ubicacion:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('campos','${c.id}')">Eliminar</button></div></div>`);
+  const lM=document.getElementById('lstM');lM.innerHTML=M.length?'':'<div class="empty">No hay módulos configurados</div>';M.forEach(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};lM.innerHTML+=`<div class="card"><div class="ct">${m.nombre}</div><div class="cs">${geN(c.empresaId)} / ${c.nombre||''} · ${m.mesas||0} mesas · ${P.filter(p=>p.moduloId===m.id).length} punto(s)${m.variedad?' · '+m.variedad:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('modulos','${m.id}')">Eliminar</button></div></div>`;});
+  const lP=document.getElementById('lstP');lP.innerHTML=P.length?'':'<div class="empty">No hay puntos de monitoreo</div>';P.forEach(p=>{const m=db.g('modulos').find(x=>x.id===p.moduloId)||{},c=db.g('campos').find(x=>x.id===m.campoId)||{};const gps=p.lat&&p.lng;lP.innerHTML+=`<div class="card"><div class="ct">${p.nombre} ${gps?'📍':'⬜'}</div><div class="cs">${geN(c.empresaId)} / ${c.nombre||''} / ${m.nombre||''}${p.mesa?' · Mesa '+p.mesa:''}</div>${p.descripcion?`<div style="font-size:12px;color:var(--muted)">${p.descripcion}</div>`:''}${gps?`<div style="font-size:11px;color:var(--g-mid);font-weight:700;margin-top:2px">📍 ${p.lat}, ${p.lng}</div>`:'<div style="font-size:11px;color:var(--muted)">Sin coordenadas GPS</div>'}<div class="ca"><button class="bsm bdel" onclick="delItem('puntos','${p.id}')">Eliminar</button></div></div>`;});
+}
+
+// ===== MONITOR FORM SELECTORS =====
+function mnUpC(){fillSel('mnC',db.g('campos').filter(c=>c.empresaId===document.getElementById('mnE').value),'nombre');mnUpM();}
+function mnUpM(){fillSel('mnM',db.g('modulos').filter(m=>m.campoId===document.getElementById('mnC').value),'nombre');mnUpP();}
+function mnUpP(){fillSel('mnP',db.g('puntos').filter(p=>p.moduloId===document.getElementById('mnM').value),'nombre');}
+
+// ===== TOGGLE PEST PANEL =====
+function tp(k){const c=document.getElementById('ck'+k),f=document.getElementById('fld'+k);c.checked?f.classList.add('open'):f.classList.remove('open');}
+
+// ===== NUMBER +/- =====
+function adj(id,d){const el=document.getElementById(id);el.value=Math.max(0,(parseInt(el.value)||0)+d);}
+
+// ===== OPT3 (mosquita) =====
+function setOpt3(key,val){
+  opt3Mo=val;
+  const map={'0':['mo0','sel0'],'1-5':['mo1','sel1'],'>5':['mo2','sel2']};
+  ['mo0','mo1','mo2'].forEach(id=>{const el=document.getElementById(id);el.classList.remove('sel0','sel1','sel2');});
+  if(map[val]){document.getElementById(map[val][0]).classList.add(map[val][1]);}
+}
+
+// ===== PRESENCIA/AUSENCIA =====
+function setPA(key,val){
+  paState[key]=val;
+  const b0=document.getElementById(key+'0'),b1=document.getElementById(key+'1');
+  if(val==='aus'){b0.classList.add('aus');b0.classList.remove('pres');b1.classList.remove('pres');b1.classList.remove('aus');}
+  else{b1.classList.add('pres');b1.classList.remove('aus');b0.classList.remove('aus');b0.classList.remove('pres');}
+  // Show/hide subfields
+  const subMap={trPA:'fldTrSub',arPA:'fldArSub',nePA:'fldNeSub',poDa:'fldPoDa'};
+  const sub=subMap[key];
+  if(sub){document.getElementById(sub).style.display=val==='pres'?'block':'none';}
+}
+
+// ===== SEVERITY =====
+function setSv(cid,v,btn){svVals[cid]=v;document.getElementById(cid).querySelectorAll('.sv').forEach(b=>b.className='sv');btn.classList.add('s'+v);}
+
+// ===== ORGANS =====
+function togOrg(btn,org){const i=orgSel.indexOf(org);if(i>=0){orgSel.splice(i,1);btn.classList.remove('sel');}else{orgSel.push(org);btn.classList.add('sel');}}
+
+// ===== PHOTO =====
+function onPhoto(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const MAX=900;let w=img.width,h=img.height;if(w>h){if(w>MAX){h=h*MAX/w;w=MAX;}}else{if(h>MAX){w=w*MAX/h;h=MAX;}}c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);fotoData=c.toDataURL('image/jpeg',.65);document.getElementById('phpImg').src=fotoData;document.getElementById('phpWrap').style.display='block';};img.src=ev.target.result;};r.readAsDataURL(f);}
+function clrPhoto(){fotoData=null;document.getElementById('phpWrap').style.display='none';document.getElementById('phpImg').src='';document.getElementById('photoIn').value='';}
+
+// ===== RESET FORM =====
+function resetForm(){
+  ['Mo','Po','Tr','Ar','Ne','Fu','Ve','Bo','Oi'].forEach(k=>{const c=document.getElementById('ck'+k),f=document.getElementById('fld'+k);if(c)c.checked=false;if(f)f.classList.remove('open');});
+  opt3Mo=null;['mo0','mo1','mo2'].forEach(id=>document.getElementById(id).classList.remove('sel0','sel1','sel2'));
+  paState={};
+  ['poDa','trPA','arPA','nePA'].forEach(k=>{const b0=document.getElementById(k+'0'),b1=document.getElementById(k+'1');if(b0){b0.classList.remove('aus','pres');}if(b1){b1.classList.remove('aus','pres');}});
+  ['fldTrSub','fldArSub','fldNeSub'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  document.getElementById('fldPoDa').style.display='block'; // siempre visible cuando polilla activa
+  ['nFuI','nVeI','nBoI','nOiI'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0;});
+  document.getElementById('nTrap').value=0;document.getElementById('nTrapN').value=1;
+  document.getElementById('nArPl').value=0;document.getElementById('nArTot').value=10;
+  document.getElementById('nNePl').value=0;
+  ['svPo','svTr','svAr','svNe','svFu','svVe','svBo','svOi'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.sv').forEach(b=>b.className='sv');delete svVals[id];});
+  orgSel=[];document.querySelectorAll('#orgBo .orgb').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('mnOb').value='';
+  clrPhoto();
+}
+
+// ===== GET DATA =====
+function getMoData(){
+  if(!document.getElementById('ckMo').checked)return null;
+  return{presente:true,adultosPorPlanta:opt3Mo||'no_reg'};
+}
+function getPoData(){
+  if(!document.getElementById('ckPo').checked)return null;
+  return{presente:true,dano:paState['poDa']||'aus',severidadDano:paState['poDa']==='pres'?(svVals['svPo']||0):0,trampa:parseInt(document.getElementById('nTrap').value)||0,nTrampas:parseInt(document.getElementById('nTrapN').value)||1};
+}
+function getTrData(){
+  if(!document.getElementById('ckTr').checked)return null;
+  const pres=paState['trPA']==='pres';
+  return{presente:true,presencia:paState['trPA']||'aus',nivelPoblacional:pres?(svVals['svTr']||0):0};
+}
+function getArData(){
+  if(!document.getElementById('ckAr').checked)return null;
+  const pres=paState['arPA']==='pres';
+  return{presente:true,presencia:paState['arPA']||'aus',plantasAfectadas:pres?parseInt(document.getElementById('nArPl').value)||0:0,plantasRevisadas:parseInt(document.getElementById('nArTot').value)||10,severidad:pres?(svVals['svAr']||0):0};
+}
+function getNeData(){
+  if(!document.getElementById('ckNe').checked)return null;
+  const pres=paState['nePA']==='pres';
+  return{presente:true,presencia:paState['nePA']||'aus',severidad:pres?(svVals['svNe']||0):0,plantasSint:pres?parseInt(document.getElementById('nNePl').value)||0:0};
+}
+function getIncSevData(k){
+  if(!document.getElementById('ck'+k).checked)return null;
+  return{presente:true,incidencia:parseInt(document.getElementById('n'+k+'I').value)||0,severidad:svVals['sv'+k]||0};
+}
+
+// ===== SAVE REGISTRO =====
+function saveReg(){
+  const pid=document.getElementById('mnP').value,fe=document.getElementById('mnFe').value;
+  if(!pid||!fe){alert('Seleccione punto y fecha');return;}
+  const bo=getIncSevData('Bo');if(bo)bo.organos=[...orgSel];
+  const reg={id:db.id(),puntoId:pid,fecha:fe,tipo:document.getElementById('mnTi').value,
+    plagas:{mosquita:getMoData(),polilla:getPoData(),trips:getTrData(),aranitas:getArData()},
+    enfermedades:{nematodos:getNeData(),fusarium:getIncSevData('Fu'),verticillium:getIncSevData('Ve'),botrytis:bo,oidio:getIncSevData('Oi')},
+    foto:fotoData,observaciones:document.getElementById('mnOb').value,ts:Date.now()
+  };
+  const a=db.g('registros');a.push(reg);db.s('registros',a);
+  fsWrite('registros',reg); // foto se stripea automáticamente en fsWrite
+  cm('mMon');renderStats();renderHist();if(mapOk)refMap();
+  alert('✅ Registro guardado');
+}
+
+// ===== STATUS CALC =====
+function calcStatus(reg){
+  // Para plagas, inferir "gravedad" según métricas específicas
+  let maxSev=0, hayProblema=false;
+
+  // Mosquita: >5 = severo
+  const mo=reg.plagas?.mosquita;
+  if(mo?.presente){hayProblema=true;if(mo.adultosPorPlanta==='>5')maxSev=Math.max(maxSev,4);else if(mo.adultosPorPlanta==='1-5')maxSev=Math.max(maxSev,2);}
+
+  // Polilla: daño o trampa > 0
+  const po=reg.plagas?.polilla;
+  if(po?.presente){if(po.dano==='pres'){hayProblema=true;maxSev=Math.max(maxSev,po.severidadDano||2);}if(po.trampa>0){hayProblema=true;if(po.trampa>=5)maxSev=Math.max(maxSev,3);else maxSev=Math.max(maxSev,1);}}
+
+  // Trips: presencia
+  const tr=reg.plagas?.trips;
+  if(tr?.presente&&tr.presencia==='pres'){hayProblema=true;maxSev=Math.max(maxSev,tr.nivelPoblacional||2);}
+
+  // Arañita: presencia
+  const ar=reg.plagas?.aranitas;
+  if(ar?.presente&&ar.presencia==='pres'){hayProblema=true;maxSev=Math.max(maxSev,ar.severidad||2);}
+
+  // Enfermedades: incidencia/severidad / presencia
+  const ne=reg.enfermedades?.nematodos;
+  if(ne?.presente&&ne.presencia==='pres'){hayProblema=true;maxSev=Math.max(maxSev,ne.severidad||2);}
+  [reg.enfermedades?.fusarium,reg.enfermedades?.verticillium,reg.enfermedades?.botrytis,reg.enfermedades?.oidio].forEach(x=>{
+    if(x?.presente){hayProblema=true;maxSev=Math.max(maxSev,x.severidad||0);}
+  });
+
+  if(!hayProblema)return{lv:'ok',label:'Sin problemas',color:'#16a34a',cls:'sb-ok',d:'dok'};
+  if(maxSev>=4)return{lv:'cr',label:'Crítico',color:'#dc2626',cls:'sb-c',d:'dc'};
+  if(maxSev>=3)return{lv:'a',label:'Alerta',color:'#ea580c',cls:'sb-a',d:'da'};
+  return{lv:'w',label:'Vigilancia',color:'#ca8a04',cls:'sb-w',d:'dw'};
+}
+
+// ===== STATS =====
+function renderStats(){
+  const regs=db.g('registros');let prob=0,crit=0,trap=0;
+  const hoy=new Date().toISOString().split('T')[0];
+  regs.forEach(r=>{const s=calcStatus(r);if(s.lv!=='ok')prob++;if(s.lv==='cr')crit++;if(r.plagas?.polilla?.presente&&r.fecha===hoy)trap+=(r.plagas.polilla.trampa||0);});
+  document.getElementById('stTot').textContent=regs.length;document.getElementById('stProb').textContent=prob;document.getElementById('stCrit').textContent=crit;document.getElementById('stTrap').textContent=trap;
+  renderRecent();
+}
+function renderRecent(){
+  const regs=db.g('registros').slice().reverse().slice(0,5);
+  const el=document.getElementById('recentRecs');
+  if(!regs.length){el.innerHTML='<div class="empty">No hay registros aún.<br>Inicia un nuevo monitoreo.</div>';return;}
+  el.innerHTML='<div style="padding:10px 16px 4px;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)">Últimos registros</div>';
+  regs.forEach(r=>el.innerHTML+=buildCard(r));
+}
+
+// ===== BUILD CARD =====
+function buildCard(r){
+  const P=db.g('puntos').find(p=>p.id===r.puntoId)||{};
+  const M=db.g('modulos').find(m=>m.id===P.moduloId)||{};
+  const C=db.g('campos').find(c=>c.id===M.campoId)||{};
+  const E=db.g('empresas').find(e=>e.id===C.empresaId)||{};
+  const s=calcStatus(r); let tags='';
+  const mo=r.plagas?.mosquita;if(mo?.presente)tags+=`<span class="tag tpl">Mosquita ${mo.adultosPorPlanta||'?'}/pl</span>`;
+  const po=r.plagas?.polilla;if(po?.presente){if(po.dano==='pres')tags+=`<span class="tag tpl">Polilla daño sev${po.severidadDano}</span>`;if(po.trampa>0)tags+=`<span class="tag tpl">💧${po.trampa} machos</span>`;}
+  const tr=r.plagas?.trips;if(tr?.presente&&tr.presencia==='pres')tags+=`<span class="tag tpl">Trips sev${tr.nivelPoblacional}</span>`;
+  const ar=r.plagas?.aranitas;if(ar?.presente&&ar.presencia==='pres')tags+=`<span class="tag tpl">Arañita ${ar.plantasAfectadas}pl sev${ar.severidad}</span>`;
+  const ne=r.enfermedades?.nematodos;if(ne?.presente&&ne.presencia==='pres')tags+=`<span class="tag tes">Nematodos sev${ne.severidad}</span>`;
+  const fu=r.enfermedades?.fusarium;if(fu?.presente)tags+=`<span class="tag tes">Fusarium ${fu.incidencia}% sev${fu.severidad}</span>`;
+  const ve=r.enfermedades?.verticillium;if(ve?.presente)tags+=`<span class="tag tes">Verticillium ${ve.incidencia}%</span>`;
+  const bo=r.enfermedades?.botrytis;if(bo?.presente){const org=bo.organos?.length?` [${bo.organos.join(',')}]`:'';tags+=`<span class="tag tea">Botrytis ${bo.incidencia}%${org}</span>`;}
+  const oi=r.enfermedades?.oidio;if(oi?.presente)tags+=`<span class="tag tea">Oídio ${oi.incidencia}%</span>`;
+  const bc=s.lv==='cr'?'cr':s.lv!=='ok'?'wi':'';
+  return`<div class="rcard ${bc}" onclick="showDet('${r.id}')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div class="rdt">${fmtD(r.fecha)} · ${r.tipo==='contingencia'?'⚡':'📅'} ${r.tipo}</div>
+        <div class="rloc">${P.nombre||'?'} — ${M.nombre||''}</div>
+        <div style="font-size:12px;color:var(--muted)">${E.nombre||''} / ${C.nombre||''}</div>
+      </div>
+      <span class="sb ${s.cls}" style="flex-shrink:0"><span class="dot ${s.d}"></span>${s.label}</span>
+    </div>
+    ${r.foto?`<img src="${r.foto}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-top:8px;border:1px solid var(--border)">`:''}
+    ${tags?`<div class="tags">${tags}</div>`:''}
+    ${r.observaciones?`<div style="font-size:12px;color:var(--muted);margin-top:5px;font-style:italic">"${r.observaciones.substring(0,80)}${r.observaciones.length>80?'…':''}"</div>`:''}
+  </div>`;
+}
+
+// ===== HISTORIAL =====
+function setFlt(f,btn){filtro=f;document.querySelectorAll('.fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderHist();}
+function renderHist(){
+  if(filtro==='resumen'){renderResumen();return;}
+  let regs=db.g('registros').slice().reverse();
+  if(filtro==='semanal')regs=regs.filter(r=>r.tipo==='semanal');
+  else if(filtro==='contingencia')regs=regs.filter(r=>r.tipo==='contingencia');
+  else if(filtro==='plagas')regs=regs.filter(r=>Object.values(r.plagas||{}).some(v=>v?.presente));
+  else if(filtro==='enf')regs=regs.filter(r=>Object.values(r.enfermedades||{}).some(v=>v?.presente));
+  else if(filtro==='criticos')regs=regs.filter(r=>calcStatus(r).lv==='cr');
+  else if(filtro==='trampa')regs=regs.filter(r=>r.plagas?.polilla?.trampa>0);
+  const el=document.getElementById('histList');
+  if(!regs.length){el.innerHTML='<div class="empty">Sin registros con este filtro.</div>';return;}
+  el.innerHTML=`<div style="padding:4px 16px;font-size:12px;color:var(--muted);font-weight:700">${regs.length} registro(s)</div>`;
+  regs.forEach(r=>el.innerHTML+=buildCard(r));
+}
+
+// ===== RESUMEN TABLE =====
+function renderResumen(){
+  const el=document.getElementById('histList');
+  const modulos=db.g('modulos'),puntos=db.g('puntos'),regs=db.g('registros');
+  if(!modulos.length){el.innerHTML='<div class="empty">Sin módulos configurados.</div>';return;}
+  let html='';
+  modulos.forEach(mod=>{
+    const pts=puntos.filter(p=>p.moduloId===mod.id);if(!pts.length)return;
+    const cam=db.g('campos').find(c=>c.id===mod.campoId)||{},emp=db.g('empresas').find(e=>e.id===cam.empresaId)||{};
+    html+=`<div style="padding:10px 16px 4px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--g-dark)">${emp.nombre||''} / ${cam.nombre||''} / ${mod.nombre}</div>`;
+    html+=`<div class="swrp"><table class="stbl"><thead><tr>
+      <th>Punto</th><th>Mosquita<br>/pl</th><th>Polilla<br>💧</th><th>Trips</th><th>Arañita<br>pl/sev</th>
+      <th>Nemat.<br>sev</th><th>Fus.<br>%/sev</th><th>Bot.<br>%/sev</th><th>Oídio<br>%/sev</th><th>Estado</th>
+    </tr></thead><tbody>`;
+    pts.forEach(p=>{
+      const pRegs=regs.filter(r=>r.puntoId===p.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+      const last=pRegs[0];
+      if(!last){html+=`<tr><td><b>${p.nombre}</b>${p.mesa?'<br><small>M'+p.mesa+'</small>':''}</td><td colspan="9" style="color:var(--muted);text-align:center">Sin datos</td></tr>`;return;}
+      const s=calcStatus(last);
+      const mo=last.plagas?.mosquita,po=last.plagas?.polilla,tr=last.plagas?.trips,ar=last.plagas?.aranitas;
+      const ne=last.enfermedades?.nematodos,fu=last.enfermedades?.fusarium,bo=last.enfermedades?.botrytis,oi=last.enfermedades?.oidio;
+      function cMo(){if(!mo?.presente)return'<td style="text-align:center;color:#ccc">·</td>';const c=mo.adultosPorPlanta==='>5'?'#dc2626':mo.adultosPorPlanta==='1-5'?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${mo.adultosPorPlanta||'?'}</td>`;}
+      function cPo(){if(!po?.presente)return'<td style="text-align:center;color:#ccc">·</td>';let txt=po.trampa>0?po.trampa+'m':'—';const c=po.trampa>=5?'#dc2626':po.trampa>0?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${txt}</td>`;}
+      function cTr(){if(!tr?.presente||tr.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=tr.nivelPoblacional>=4?'#dc2626':tr.nivelPoblacional>=3?'#ea580c':tr.nivelPoblacional>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">sev${tr.nivelPoblacional}</td>`;}
+      function cAr(){if(!ar?.presente||ar.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=ar.severidad>=4?'#dc2626':ar.severidad>=3?'#ea580c':ar.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${ar.plantasAfectadas}pl<br>sev${ar.severidad}</td>`;}
+      function cNe(){if(!ne?.presente||ne.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=ne.severidad>=4?'#dc2626':ne.severidad>=3?'#ea580c':ne.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">sev${ne.severidad}</td>`;}
+      function cIS(d){if(!d?.presente)return'<td style="text-align:center;color:#ccc">·</td>';const c=d.severidad>=4?'#dc2626':d.severidad>=3?'#ea580c':d.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${d.incidencia}%<br>sev${d.severidad}</td>`;}
+      html+=`<tr><td><b>${p.nombre}</b>${p.mesa?'<br><small>M'+p.mesa+'</small>':''}<br><small style="color:var(--muted)">${fmtD(last.fecha)}</small></td>${cMo()}${cPo()}${cTr()}${cAr()}${cNe()}${cIS(fu)}${cIS(bo)}${cIS(oi)}<td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.color}"></span> ${s.label}</td></tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  });
+  el.innerHTML=html||'<div class="empty">Sin datos.</div>';
+}
+
+// ===== DETALLE =====
+function showDet(id){
+  const r=db.g('registros').find(x=>x.id===id);if(!r)return;
+  const P=db.g('puntos').find(p=>p.id===r.puntoId)||{};
+  const M=db.g('modulos').find(m=>m.id===P.moduloId)||{};
+  const C=db.g('campos').find(c=>c.id===M.campoId)||{};
+  const E=db.g('empresas').find(e=>e.id===C.empresaId)||{};
+  const s=calcStatus(r);
+  const SLBL=['','Muy baja','Baja','Media','Alta','Muy alta / Crítica'];
+
+  const mo=r.plagas?.mosquita,po=r.plagas?.polilla,tr=r.plagas?.trips,ar=r.plagas?.aranitas;
+  const ne=r.enfermedades?.nematodos,fu=r.enfermedades?.fusarium,ve=r.enfermedades?.verticillium;
+  const bo=r.enfermedades?.botrytis,oi=r.enfermedades?.oidio;
+
+  let plagasHTML='';
+  if(mo?.presente)plagasHTML+=`<div class="di"><div class="dn">🪰 Mosquita blanca</div><div class="drow"><div><span style="color:var(--muted)">Adultos/planta:</span> <b style="color:${mo.adultosPorPlanta==='>5'?'var(--danger)':mo.adultosPorPlanta==='1-5'?'var(--amber-d)':'var(--ok)'}">${mo.adultosPorPlanta}</b></div></div></div>`;
+  if(po?.presente)plagasHTML+=`<div class="di"><div class="dn">🦋 Polilla del tomate (Tuta absoluta)</div><div class="drow"><div><span style="color:var(--muted)">Daño foliar/fruto:</span> <b>${po.dano==='pres'?'Presente (sev '+po.severidadDano+' — '+SLBL[po.severidadDano]+')':'Ausente'}</b></div></div><div style="margin-top:6px;background:#e0f2fe;border-radius:6px;padding:8px;font-size:12px"><b>💧 Trampa de agua:</b> ${po.trampa} adultos (machos) / ${po.nTrampas} trampa(s)<br><span style="color:var(--muted)">${po.trampa>=5?'⚠️ Sobre umbral de acción (≥5/trampa/semana)':'Bajo umbral de acción'}</span></div></div>`;
+  if(tr?.presente)plagasHTML+=`<div class="di"><div class="dn">🔍 Trips</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${tr.presencia==='pres'?'Presente (nivel '+tr.nivelPoblacional+' — '+SLBL[tr.nivelPoblacional]+')':'Ausente'}</b></div></div></div>`;
+  if(ar?.presente)plagasHTML+=`<div class="di"><div class="dn">🕷 Arañita (T. urticae)</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${ar.presencia==='pres'?'Presente':'Ausente'}</b></div>${ar.presencia==='pres'?`<div><span style="color:var(--muted)">Plantas afectadas:</span> <b>${ar.plantasAfectadas} / ${ar.plantasRevisadas}</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${ar.severidad} — ${SLBL[ar.severidad]}</b></div>`:''}</div></div>`;
+  if(!plagasHTML)plagasHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Sin plagas detectadas</div>';
+
+  let enfHTML='';
+  if(ne?.presente)enfHTML+=`<div class="di"><div class="dn">🪱 Nematodos (Meloidogyne)</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${ne.presencia==='pres'?'Presente':'Ausente'}</b></div>${ne.presencia==='pres'?`<div><span style="color:var(--muted)">Severidad:</span> <b>${ne.severidad} — ${SLBL[ne.severidad]}</b></div><div><span style="color:var(--muted)">Plantas con síntomas:</span> <b>${ne.plantasSint}</b></div>`:''}</div></div>`;
+  if(fu?.presente)enfHTML+=`<div class="di"><div class="dn">🟤 Fusarium</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${fu.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${fu.severidad} — ${SLBL[fu.severidad]}</b></div></div></div>`;
+  if(ve?.presente)enfHTML+=`<div class="di"><div class="dn">🟫 Verticillium</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${ve.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${ve.severidad} — ${SLBL[ve.severidad]}</b></div></div></div>`;
+  if(bo?.presente)enfHTML+=`<div class="di"><div class="dn">🍄 Botrytis cinerea</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${bo.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${bo.severidad} — ${SLBL[bo.severidad]}</b></div></div>${bo.organos?.length?`<div style="font-size:12px;margin-top:4px"><span style="color:var(--muted)">Órganos:</span> <b>${bo.organos.join(', ')}</b></div>`:''}</div>`;
+  if(oi?.presente)enfHTML+=`<div class="di"><div class="dn">⬜ Oídio</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${oi.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${oi.severidad} — ${SLBL[oi.severidad]}</b></div></div></div>`;
+  if(!enfHTML)enfHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Sin enfermedades detectadas</div>';
+
+  // Trend mini chart
+  const hist=db.g('registros').filter(x=>x.puntoId===r.puntoId).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha)).slice(-8);
+  let trendHTML='';
+  if(hist.length>1){
+    const vals=hist.map(rx=>calcStatus(rx).lv==='cr'?4:calcStatus(rx).lv==='a'?3:calcStatus(rx).lv==='w'?2:0);
+    const maxV=Math.max(...vals,1);
+    const cols=vals.map((v,i)=>{const h=Math.max(4,Math.round(v/maxV*28));const c=v>=4?'#dc2626':v>=3?'#ea580c':v>=2?'#ca8a04':v>=1?'#16a34a':'#e5e7eb';const act=hist[i].id===id?'outline:2px solid var(--g-dark);outline-offset:1px;':'';return`<div class="tcol" style="height:${h}px;background:${c};${act}" title="${fmtD(hist[i].fecha)}"></div>`;}).join('');
+    trendHTML=`<div class="ds">📈 Evolución del estado (últimas visitas)</div><div style="background:var(--bg);border-radius:8px;padding:10px"><div class="tbar">${cols}</div><div style="font-size:10px;color:var(--muted);margin-top:4px;font-weight:700">← Anterior &nbsp;·&nbsp; Actual →</div></div>`;
+  }
+
+  document.getElementById('detCont').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px">
+      <div><div class="mt" style="margin-bottom:2px">📋 Detalle</div><div style="font-size:13px;color:var(--muted);font-weight:700">${fmtD(r.fecha)} · ${r.tipo}</div></div>
+      <span class="sb ${s.cls}" style="flex-shrink:0"><span class="dot ${s.d}"></span>${s.label}</span>
+    </div>
+    <div style="background:var(--g-pale);border-radius:9px;padding:11px;margin-bottom:14px">
+      <div style="font-weight:800;color:var(--g-dark);font-size:14px">${P.nombre||''} — ${M.nombre||''}</div>
+      <div style="font-size:12px;color:var(--muted)">${E.nombre||''} / ${C.nombre||''}${P.mesa?' · Mesa '+P.mesa:''}</div>
+      ${P.descripcion?`<div style="font-size:12px;color:var(--muted)">${P.descripcion}</div>`:''}
+      ${P.lat?`<div style="font-size:11px;color:var(--g-mid);font-weight:700;margin-top:2px">📍 ${P.lat}, ${P.lng}</div>`:''}
+    </div>
+    ${r.foto?`<img src="${r.foto}" style="width:100%;border-radius:10px;max-height:220px;object-fit:cover;margin-bottom:12px;border:1px solid var(--border)">`:''}
+    ${trendHTML}
+    <div class="ds">🐛 Plagas</div>${plagasHTML}
+    <div class="ds">🌱 Enfermedades</div>${enfHTML}
+    ${r.observaciones?`<div class="ds">📝 Observaciones</div><div style="background:var(--bg);border-radius:8px;padding:10px;font-size:13px">${r.observaciones}</div>`:''}
+    <button class="bsm bdel" style="margin-top:14px;width:100%;padding:10px" onclick="delReg('${r.id}')">🗑 Eliminar registro</button>`;
+  om('mDet');
+}
+function delReg(id){if(!confirm('¿Eliminar?'))return;db.s('registros',db.g('registros').filter(r=>r.id!==id));fsDel('registros',id);cm('mDet');renderStats();renderHist();if(mapOk)refMap();}
+
+// ===== MAP =====
+function initMap(){if(mapOk){refMap();return;}leafMap=L.map('map',{zoomControl:true}).setView([-33.05,-71.2],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:22}).addTo(leafMap);mapOk=true;refMap();}
+function refMap(){if(!leafMap)return;leafMap.eachLayer(l=>{if(l instanceof L.CircleMarker||l instanceof L.Marker)leafMap.removeLayer(l);});const pts=db.g('puntos').filter(p=>p.lat&&p.lng),bounds=[];pts.forEach(p=>{const M=db.g('modulos').find(m=>m.id===p.moduloId)||{};const C=db.g('campos').find(c=>c.id===M.campoId)||{};const E=db.g('empresas').find(e=>e.id===C.empresaId)||{};const regs=db.g('registros').filter(r=>r.puntoId===p.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));const last=regs[0];const s=last?calcStatus(last):null;const color=s?s.color:'#9ca3af';const m=L.circleMarker([p.lat,p.lng],{radius:13,fillColor:color,color:'white',weight:2.5,opacity:1,fillOpacity:.92}).addTo(leafMap);let pop=`<b>${p.nombre}</b>${p.mesa?' · Mesa '+p.mesa:''}<br>${M.nombre||''}<br><span style="color:#666">${E.nombre||''} / ${C.nombre||''}</span>`;if(last)pop+=`<br><small>${fmtD(last.fecha)} — <b>${s?.label}</b></small>`;else pop+='<br><small style="color:#999">Sin registros</small>';m.bindPopup(pop);bounds.push([p.lat,p.lng]);});if(bounds.length)try{leafMap.fitBounds(bounds,{padding:[40,40]});}catch(e){}setTimeout(()=>leafMap.invalidateSize(),150);}
+
+// ===== EXPORTS =====
+function expJSON(){const data={exportDate:new Date().toISOString(),version:'3.0',empresas:db.g('empresas'),campos:db.g('campos'),modulos:db.g('modulos'),puntos:db.g('puntos'),registros:db.g('registros')};dlFile(JSON.stringify(data,null,2),'FitoMonitor_'+hoy()+'.json','application/json');}
+
+function expCSV(){
+  const regs=db.g('registros');if(!regs.length){alert('No hay registros');return;}
+  const sep=';';
+  const hdr=['Fecha','Tipo','Empresa','Campo','Módulo','Punto','Mesa','Lat','Lng',
+    'Mosquita_adultos/pl','Polilla_daño','Polilla_sevDaño','Trampa_adultos','N_trampas',
+    'Trips_presencia','Trips_nivel','Arañita_presencia','Arañita_plantasAfect','Arañita_plantasRevis','Arañita_sev',
+    'Nematodos_presencia','Nematodos_sev','Nematodos_plantasSint',
+    'Fusarium_inc%','Fusarium_sev','Verticillium_inc%','Verticillium_sev',
+    'Botrytis_inc%','Botrytis_sev','Botrytis_organos','Oidio_inc%','Oidio_sev',
+    'Estado','Observaciones'].join(sep);
+  const rows=regs.map(r=>{
+    const P=db.g('puntos').find(p=>p.id===r.puntoId)||{},M=db.g('modulos').find(m=>m.id===P.moduloId)||{},C=db.g('campos').find(c=>c.id===M.campoId)||{},E=db.g('empresas').find(e=>e.id===C.empresaId)||{};
+    const s=calcStatus(r);const mo=r.plagas?.mosquita,po=r.plagas?.polilla,tr=r.plagas?.trips,ar=r.plagas?.aranitas;
+    const ne=r.enfermedades?.nematodos,fu=r.enfermedades?.fusarium,ve=r.enfermedades?.verticillium,bo=r.enfermedades?.botrytis,oi=r.enfermedades?.oidio;
+    return[r.fecha,r.tipo,E.nombre||'',C.nombre||'',M.nombre||'',P.nombre||'',P.mesa||'',P.lat||'',P.lng||'',
+      mo?.presente?mo.adultosPorPlanta:'',
+      po?.presente?po.dano:'',po?.presente&&po.dano==='pres'?po.severidadDano:'',po?.presente?po.trampa:'',po?.presente?po.nTrampas:'',
+      tr?.presente?tr.presencia:'',tr?.presente&&tr.presencia==='pres'?tr.nivelPoblacional:'',
+      ar?.presente?ar.presencia:'',ar?.presente&&ar.presencia==='pres'?ar.plantasAfectadas:'',ar?.presente&&ar.presencia==='pres'?ar.plantasRevisadas:'',ar?.presente&&ar.presencia==='pres'?ar.severidad:'',
+      ne?.presente?ne.presencia:'',ne?.presente&&ne.presencia==='pres'?ne.severidad:'',ne?.presente&&ne.presencia==='pres'?ne.plantasSint:'',
+      fu?.presente?fu.incidencia:'',fu?.presente?fu.severidad:'',
+      ve?.presente?ve.incidencia:'',ve?.presente?ve.severidad:'',
+      bo?.presente?bo.incidencia:'',bo?.presente?bo.severidad:'',bo?.presente?bo.organos?.join('|')||''  :'',
+      oi?.presente?oi.incidencia:'',oi?.presente?oi.severidad:'',
+      s.label,'"'+(r.observaciones||'').replace(/"/g,"'")+'"'
+    ].join(sep);
+  });
+  dlFile('\uFEFF'+hdr+'\n'+rows.join('\n'),'FitoMonitor_'+hoy()+'.csv','text/csv;charset=utf-8;');
+}
+
+function expResumen(){
+  const sep=';';
+  const hdr=['Empresa','Campo','Módulo','Punto','Mesa','GPS','Última visita','Mosquita/pl','Polilla_trampa','Trips_pres','Arañita_pres','Arañita_pl','Arañita_sev','Nematodos_pres','Nematodos_sev','Fusarium_%','Verticillium_%','Botrytis_%','Botrytis_org','Oídio_%','Estado'].join(sep);
+  const rows=[];
+  db.g('modulos').forEach(mod=>{const cam=db.g('campos').find(c=>c.id===mod.campoId)||{},emp=db.g('empresas').find(e=>e.id===cam.empresaId)||{};
+    db.g('puntos').filter(p=>p.moduloId===mod.id).forEach(p=>{
+      const last=db.g('registros').filter(r=>r.puntoId===p.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))[0];
+      if(!last){rows.push([emp.nombre||'',cam.nombre||'',mod.nombre,p.nombre,p.mesa||'',p.lat&&p.lng?p.lat+','+p.lng:'',...Array(14).fill('Sin datos'),'—'].join(sep));return;}
+      const s=calcStatus(last);const mo=last.plagas?.mosquita,po=last.plagas?.polilla,tr=last.plagas?.trips,ar=last.plagas?.aranitas;
+      const ne=last.enfermedades?.nematodos,fu=last.enfermedades?.fusarium,ve=last.enfermedades?.verticillium,bo=last.enfermedades?.botrytis,oi=last.enfermedades?.oidio;
+      rows.push([emp.nombre||'',cam.nombre||'',mod.nombre,p.nombre,p.mesa||'',p.lat&&p.lng?p.lat+','+p.lng:'',last.fecha,
+        mo?.presente?mo.adultosPorPlanta:'—',po?.presente?po.trampa:'—',
+        tr?.presente?tr.presencia:'—',ar?.presente?ar.presencia:'—',ar?.presente&&ar.presencia==='pres'?ar.plantasAfectadas:'',ar?.presente&&ar.presencia==='pres'?ar.severidad:'',
+        ne?.presente?ne.presencia:'—',ne?.presente&&ne.presencia==='pres'?ne.severidad:'',
+        fu?.presente?fu.incidencia+'%':'—',ve?.presente?ve.incidencia+'%':'—',bo?.presente?bo.incidencia+'%':'—',bo?.presente?bo.organos?.join('|')||'':'',oi?.presente?oi.incidencia+'%':'—',s.label
+      ].join(sep));
+    });
+  });
+  dlFile('\uFEFF'+hdr+'\n'+rows.join('\n'),'FitoMonitor_Resumen_'+hoy()+'.csv','text/csv;charset=utf-8;');
+}
+
+function dlFile(c,n,t){const b=new Blob([c],{type:t});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();}
+function hoy(){return new Date().toISOString().split('T')[0];}
+function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][parseInt(m)-1]} ${y}`;}
+
+</script>
+
+<!-- ============================================================ -->
+<!-- =================== PANTALLA DE LOGIN ====================== -->
+<!-- ============================================================ -->
+<style>
+#loginScreen{background:linear-gradient(160deg,#1b4332 0%,#0f2419 100%);font-family:'Nunito',sans-serif}
+.lcard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:28px 24px;width:100%;max-width:340px}
+.llogo{font-family:'DM Serif Display',serif;font-size:36px;color:white;text-align:center;line-height:1}
+.lsub{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:700;text-align:center;margin-top:4px}
+.linput{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 16px;color:white;font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;letter-spacing:6px;text-align:center;outline:none;transition:border-color .2s;-webkit-text-security:disc}
+.linput::placeholder{letter-spacing:2px;font-size:14px;font-weight:600;opacity:.4}
+.linput:focus{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.15)}
+.lbtn{width:100%;padding:14px;background:#52b788;border:none;border-radius:12px;color:#0f2419;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;margin-top:10px;letter-spacing:.3px}
+.lerr{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:10px 14px;color:#fca5a5;font-size:12px;font-weight:700;text-align:center;margin-top:10px;display:none}
+</style>
+
+<div id="loginScreen" style="display:none;position:fixed;inset:0;z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:24px">
+  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#52b788,#2d6a4f,#52b788)"></div>
+  <div class="lcard">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:48px;line-height:1;margin-bottom:8px">🌿</div>
+      <div class="llogo">FitoMonitor</div>
+      <div class="lsub">Tomate · Invernadero</div>
+    </div>
+    <label style="display:block;font-size:11px;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Código de acceso</label>
+    <input class="linput" id="loginCode" type="password" inputmode="numeric" placeholder="● ● ● ● ● ●" maxlength="20"
+      onkeydown="if(event.key==='Enter')doLogin(this.value)">
+    <button class="lbtn" onclick="doLogin(document.getElementById('loginCode').value)">Ingresar →</button>
+    <div class="lerr" id="loginErr">Código incorrecto</div>
+  </div>
+  <div style="text-align:center">
+    <div style="font-size:11px;color:rgba(255,255,255,.25);font-weight:700">Acceso solo para personal autorizado</div>
+    <div style="font-size:10px;color:rgba(255,255,255,.18);margin-top:4px">Solicite su código al asesor técnico</div>
+  </div>
+</div>
+
+<button onclick="openCap()" style="position:fixed;bottom:76px;right:16px;z-index:150;background:#1b4332;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">📚 Capacitación</button>
+
+<div id="mCap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;overflow:hidden">
+<div id="mCapScroll" style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch">
+<div style="background:#fafaf8;min-height:100%;padding-bottom:40px;max-width:480px;margin:0 auto">
+
+<!-- Header cap -->
+<div style="background:#1b4332;color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10">
+  <div><div style="font-family:'DM Serif Display',serif;font-size:20px">📚 Capacitación</div>
+  <div style="font-size:10px;opacity:.6;font-weight:700;letter-spacing:.8px;text-transform:uppercase">Ciclos biológicos · Identificación visual</div></div>
+  <button onclick="closeCap()" style="background:rgba(255,255,255,.15);border:none;color:white;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;font-weight:900">✕</button>
+</div>
+
+<!-- Tabs -->
+<div id="capTabs" style="display:flex;background:white;border-bottom:2px solid #ddd8cf;position:sticky;top:57px;z-index:9;overflow-x:auto;scrollbar-width:none">
+  <button class="ctab active" id="ctab0" onclick="showCap(0)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🦋<br>Polilla</button>
+  <button class="ctab" id="ctab1" onclick="showCap(1)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🪰<br>Mosquita</button>
+  <button class="ctab" id="ctab2" onclick="showCap(2)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🕷<br>Bimaculada</button>
+  <button class="ctab" id="ctab3" onclick="showCap(3)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🔴<br>Ácaro seca</button>
+  <button class="ctab" id="ctab4" onclick="showCap(4)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🔍<br>Trips</button>
+</div>
+
+<!-- ===== PANEL 0: POLILLA ===== -->
+<div class="cpanel" id="cp0" style="display:block">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Polilla del tomate</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Tuta absoluta (Meyrick, 1917)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Lepidoptera · Gelechiidae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Plaga primaria tomate</span>
+  </div>
+</div>
+
+<!-- Ciclo SVG -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf;box-shadow:0 2px 8px rgba(0,0,0,.07)">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 29–38 días a 25°C · Holometábolo</div>
+  <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="ap0" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#52b788"/></marker></defs>
+    <circle cx="160" cy="100" r="82" fill="#f0fdf4" stroke="#d8f3dc" stroke-width="1.5"/>
+    <path d="M160,22 A80,80 0 0,1 234,62" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <path d="M238,72 A80,80 0 0,1 234,140" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <path d="M228,150 A80,80 0 0,1 160,182" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <path d="M148,182 A80,80 0 0,1 82,148" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <path d="M76,138 A80,80 0 0,1 78,64" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <path d="M84,54 A80,80 0 0,1 152,22" fill="none" stroke="#52b788" stroke-width="2" marker-end="url(#ap0)"/>
+    <!-- Nodos -->
+    <circle cx="160" cy="17" r="15" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+    <text x="160" y="13" text-anchor="middle" font-size="13">🥚</text>
+    <text x="160" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">HUEVO 3–5d</text>
+    <circle cx="237" cy="67" r="15" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="237" y="63" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="900" fill="#15803d">L1</text>
+    <text x="237" y="73" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="#15803d">1–2d</text>
+    <circle cx="237" cy="135" r="15" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+    <text x="237" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#15803d">L2-3</text>
+    <text x="237" y="141" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="#15803d">5–8d</text>
+    <circle cx="180" cy="182" r="15" fill="#86efac" stroke="#15803d" stroke-width="2.5"/>
+    <text x="180" y="178" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#14532d">L4</text>
+    <text x="180" y="188" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="#14532d">3–5d ⚠️</text>
+    <circle cx="113" cy="182" r="15" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
+    <text x="113" y="178" text-anchor="middle" font-size="11">🛶</text>
+    <text x="113" y="188" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">PUPA 9–12d</text>
+    <circle cx="75" cy="135" r="16" fill="#e9d5ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="75" y="129" text-anchor="middle" font-size="13">🦋</text>
+    <text x="75" y="141" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="#5b21b6">ADULTO 8–14d</text>
+    <text x="160" y="96" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#2d6a4f" font-weight="700">29–38 días</text>
+    <text x="160" y="107" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">a 25°C · 10–12 gen/año</text>
+  </svg>
+</div>
+
+<!-- Galería de ilustraciones -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:10px 0 8px">🎨 Galería de identificación visual</div>
+
+  <!-- Adulto ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#f3e8ff;padding:8px 13px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-weight:900;font-size:13px;color:#1b4332">Adulto</div><div style="font-size:11px;color:#6b7280">6–7mm envergadura · hábito nocturno</div></div>
+      <span style="font-size:10px;font-weight:800;background:#e9d5ff;color:#5b21b6;padding:2px 7px;border-radius:10px">Ilustración</span>
+    </div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 140 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+        <!-- Cuerpo -->
+        <ellipse cx="70" cy="62" rx="10" ry="18" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+        <!-- Alas anteriores (dobladas sobre cuerpo) -->
+        <path d="M70,48 Q50,35 30,50 Q25,65 35,72 Q55,78 70,72 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+        <path d="M70,48 Q90,35 110,50 Q115,65 105,72 Q85,78 70,72 Z" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+        <!-- Manchas negras características -->
+        <circle cx="52" cy="55" r="3.5" fill="#1c1c1c"/>
+        <circle cx="62" cy="48" r="2.5" fill="#1c1c1c"/>
+        <circle cx="88" cy="55" r="3.5" fill="#1c1c1c"/>
+        <circle cx="78" cy="48" r="2.5" fill="#1c1c1c"/>
+        <circle cx="44" cy="62" r="2" fill="#374151"/>
+        <circle cx="96" cy="62" r="2" fill="#374151"/>
+        <!-- Cabeza -->
+        <circle cx="70" cy="43" r="7" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+        <!-- Antenas largas -->
+        <path d="M66,38 Q55,20 45,8" fill="none" stroke="#4b5563" stroke-width="1.2"/>
+        <path d="M74,38 Q85,20 95,8" fill="none" stroke="#4b5563" stroke-width="1.2"/>
+        <!-- Ojos -->
+        <circle cx="67" cy="42" r="1.5" fill="#dc2626"/>
+        <circle cx="73" cy="42" r="1.5" fill="#dc2626"/>
+        <!-- Patas -->
+        <line x1="65" y1="68" x2="55" y2="82" stroke="#6b7280" stroke-width="1"/>
+        <line x1="70" y1="70" x2="60" y2="86" stroke="#6b7280" stroke-width="1"/>
+        <line x1="75" y1="68" x2="85" y2="82" stroke="#6b7280" stroke-width="1"/>
+        <line x1="70" y1="70" x2="80" y2="86" stroke="#6b7280" stroke-width="1"/>
+        <text x="70" y="105" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#374151">Vista dorsal</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b style="color:#7c3aed">📏</b> 6–7 mm envergadura</div>
+        <div><b style="color:#7c3aed">🎨</b> Gris plateado con <b>manchas negras</b> en ala anterior</div>
+        <div><b style="color:#7c3aed">📡</b> Antenas filiformes ≈ largo del ala</div>
+        <div><b style="color:#7c3aed">🌙</b> Reposa de día con alas plegadas</div>
+        <div><b style="color:#dc2626">♂</b> Solo machos atraídos a trampa de agua</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Larva L4 ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#dcfce7;padding:8px 13px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-weight:900;font-size:13px;color:#1b4332">Larva L3–L4 ⚠️</div><div style="font-size:11px;color:#6b7280">Estadio de mayor daño · 7–9mm</div></div>
+      <span style="font-size:10px;font-weight:800;background:#bbf7d0;color:#15803d;padding:2px 7px;border-radius:10px">Ilustración</span>
+    </div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fdf4">
+        <!-- Cuerpo larva segmentado -->
+        <ellipse cx="25" cy="45" rx="12" ry="9" fill="#86efac" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="42" cy="45" rx="9" ry="11" fill="#4ade80" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="57" cy="45" rx="9" ry="12" fill="#4ade80" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="72" cy="45" rx="9" ry="12" fill="#4ade80" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="87" cy="45" rx="9" ry="11" fill="#4ade80" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="102" cy="45" rx="9" ry="10" fill="#86efac" stroke="#15803d" stroke-width="1.2"/>
+        <ellipse cx="116" cy="45" rx="9" ry="9" fill="#86efac" stroke="#15803d" stroke-width="1.2"/>
+        <!-- Franja dorsal rosada -->
+        <path d="M38,36 Q57,33 72,33 Q87,33 106,36" fill="none" stroke="#f9a8d4" stroke-width="4" stroke-linecap="round"/>
+        <!-- Cabeza oscura -->
+        <circle cx="14" cy="45" r="9" fill="#1c1c1c" stroke="#0f172a" stroke-width="1"/>
+        <circle cx="11" cy="43" r="2" fill="#fbbf24"/>
+        <circle cx="17" cy="43" r="2" fill="#fbbf24"/>
+        <!-- Patas torácicas -->
+        <line x1="38" y1="55" x2="33" y2="68" stroke="#15803d" stroke-width="1.5"/>
+        <line x1="42" y1="56" x2="38" y2="70" stroke="#15803d" stroke-width="1.5"/>
+        <line x1="57" y1="56" x2="52" y2="70" stroke="#15803d" stroke-width="1.5"/>
+        <!-- Propatas -->
+        <line x1="72" y1="57" x2="68" y2="70" stroke="#15803d" stroke-width="1.2"/>
+        <line x1="87" y1="57" x2="83" y2="70" stroke="#15803d" stroke-width="1.2"/>
+        <line x1="116" y1="54" x2="113" y2="68" stroke="#15803d" stroke-width="1.5"/>
+        <text x="70" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#15803d">Vista lateral · franja rosa dorsal</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b style="color:#15803d">📏</b> 7–9 mm</div>
+        <div><b style="color:#15803d">🎨</b> Verde con <b>franja rosada dorsal</b> (L4)</div>
+        <div><b style="color:#1c1c1c">⬛</b> Cabeza negra quitinizada</div>
+        <div><b style="color:#dc2626">💥</b> Puede perforar frutos y migrar al tallo</div>
+        <div><b style="color:#374151">💩</b> Excrementos negros visibles en galería</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mina / Daño ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fef9c3;padding:8px 13px">
+      <div style="font-weight:900;font-size:13px;color:#1b4332">Daño característico: minas foliares</div>
+      <div style="font-size:11px;color:#6b7280">Síntoma diagnóstico principal en hoja</div>
+    </div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fdf4">
+        <!-- Hoja de tomate simplificada -->
+        <path d="M70,10 Q100,15 120,40 Q130,60 115,80 Q95,95 70,92 Q45,95 25,80 Q10,60 20,40 Q40,15 70,10 Z" fill="#22c55e" stroke="#15803d" stroke-width="1.5"/>
+        <!-- Nervadura central -->
+        <line x1="70" y1="10" x2="70" y2="92" stroke="#15803d" stroke-width="1.5"/>
+        <!-- Nervaduras secundarias -->
+        <path d="M70,30 Q90,35 105,32" fill="none" stroke="#15803d" stroke-width="1"/>
+        <path d="M70,50 Q90,55 108,52" fill="none" stroke="#15803d" stroke-width="1"/>
+        <path d="M70,30 Q50,35 35,32" fill="none" stroke="#15803d" stroke-width="1"/>
+        <path d="M70,50 Q50,55 32,52" fill="none" stroke="#15803d" stroke-width="1"/>
+        <!-- Minas (zonas translúcidas irregulares) -->
+        <path d="M55,25 Q65,22 78,28 Q82,35 75,40 Q65,44 55,38 Q50,32 55,25 Z" fill="#fef9c3" stroke="#ca8a04" stroke-width="1" opacity="0.9"/>
+        <path d="M82,42 Q92,38 102,45 Q105,54 98,58 Q88,60 80,54 Q76,48 82,42 Z" fill="#fef9c3" stroke="#ca8a04" stroke-width="1" opacity="0.9"/>
+        <!-- Larva dentro de mina -->
+        <ellipse cx="66" cy="33" rx="7" ry="4" fill="#4ade80" stroke="#15803d" stroke-width="0.8"/>
+        <circle cx="60" cy="33" r="2.5" fill="#1c1c1c"/>
+        <!-- Excrementos en mina -->
+        <circle cx="76" cy="37" r="1" fill="#1c1c1c"/>
+        <circle cx="79" cy="35" r="0.8" fill="#1c1c1c"/>
+        <!-- Etiquetas -->
+        <text x="66" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e" font-weight="700">mina</text>
+        <text x="91" y="36" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e" font-weight="700">mina</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b>L1:</b> mina muy pequeña, translúcida</div>
+        <div><b>L2-L3:</b> mina irregular, visible a ojo</div>
+        <div><b>L4:</b> galería grande, larva puede salir</div>
+        <div><b style="color:#374151">💩</b> Excrementos negros dentro = larva viva</div>
+        <div><b style="color:#6b7280">Sin excrementos</b> = larva emergió</div>
+        <div><b>🔍 Buscar en</b> últimas 4–6 hojas del ápice</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• 10 plantas/punto · revisar las últimas 4–6 hojas</div>
+      <div>• Buscar minas foliares con larva y excrementos negros</div>
+      <div>• Revisar frutos R1–R2 ante perforaciones pequeñas</div>
+      <div>• <b style="color:white">Umbral: 1 larva/planta</b> → acción inmediata</div>
+      <div>• Trampa de agua: ≥5 machos/trampa/semana → acción</div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ===== PANEL 1: MOSQUITA ===== -->
+<div class="cpanel" id="cp1" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Mosquita blanca</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Bemisia tabaci / Trialeurodes vaporariorum</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Hemiptera · Aleyrodidae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Vector TYLCV</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 18–30 días a 25°C · Hemimetábolo</div>
+  <svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="am1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#52b788"/></marker></defs>
+    <!-- Etapas lineales -->
+    <circle cx="28" cy="72" r="20" fill="#fffde7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="28" y="67" text-anchor="middle" font-size="14">🥚</text>
+    <text x="28" y="79" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#92400e">HUEVO</text>
+    <text x="28" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">4–7 d</text>
+    <line x1="50" y1="72" x2="66" y2="72" stroke="#52b788" stroke-width="2" marker-end="url(#am1)"/>
+    <circle cx="82" cy="72" r="18" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+    <text x="82" y="67" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="900" fill="#064e3b">N1</text>
+    <text x="82" y="78" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#064e3b">crawler</text>
+    <text x="82" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">1–2 d</text>
+    <line x1="102" y1="72" x2="118" y2="72" stroke="#52b788" stroke-width="2" marker-end="url(#am1)"/>
+    <circle cx="135" cy="72" r="18" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+    <text x="135" y="66" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#064e3b">N2-N3</text>
+    <text x="135" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#064e3b">sésil</text>
+    <text x="135" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">6–9 d</text>
+    <line x1="155" y1="72" x2="171" y2="72" stroke="#52b788" stroke-width="2" marker-end="url(#am1)"/>
+    <circle cx="188" cy="72" r="18" fill="#a7f3d0" stroke="#059669" stroke-width="2.5"/>
+    <text x="188" y="66" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#064e3b">N4</text>
+    <text x="188" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#064e3b">pseudo</text>
+    <text x="188" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">4–7 d</text>
+    <line x1="208" y1="72" x2="224" y2="72" stroke="#52b788" stroke-width="2" marker-end="url(#am1)"/>
+    <circle cx="245" cy="72" r="22" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="245" y="66" text-anchor="middle" font-size="16">🪰</text>
+    <text x="245" y="79" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#5b21b6">ADULTO</text>
+    <text x="245" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">20–30 d</text>
+    <path d="M245,48 Q135,10 28,48" fill="none" stroke="#52b788" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#am1)"/>
+    <text x="135" y="18" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#2d6a4f" font-weight="700">retorno a hoja joven → ovipostura</text>
+    <text x="165" y="135" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#dc2626" font-weight="700">⚠️ N2–N4 inmóviles → control de contacto difícil</text>
+  </svg>
+</div>
+
+<!-- Galería -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:10px 0 8px">🎨 Galería de identificación visual</div>
+
+  <!-- Comparación B. tabaci vs T. vaporariorum -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#f3e8ff;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Adultos — comparación de especies</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fffde7">
+          <!-- B. tabaci: alas PLANAS sobre cuerpo -->
+          <text x="65" y="10" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#92400e">B. tabaci</text>
+          <ellipse cx="65" cy="55" rx="8" ry="14" fill="#fbbf24" stroke="#92400e" stroke-width="1"/>
+          <!-- Ala izquierda plana -->
+          <path d="M58,45 Q42,38 30,48 Q25,58 32,65 Q48,72 58,68 Z" fill="white" stroke="#9ca3af" stroke-width="1" opacity="0.9"/>
+          <!-- Ala derecha plana -->
+          <path d="M72,45 Q88,38 100,48 Q105,58 98,65 Q82,72 72,68 Z" fill="white" stroke="#9ca3af" stroke-width="1" opacity="0.9"/>
+          <!-- Cabeza -->
+          <circle cx="65" cy="40" r="7" fill="#fbbf24" stroke="#92400e" stroke-width="1"/>
+          <!-- Antenas -->
+          <line x1="62" y1="34" x2="55" y2="22" stroke="#6b7280" stroke-width="1"/>
+          <line x1="68" y1="34" x2="75" y2="22" stroke="#6b7280" stroke-width="1"/>
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="700" fill="#92400e">Alas planas/horizontales</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">amarillo intenso</text>
+        </svg>
+        <div style="font-size:10px;margin-top:4px;padding:0 2px;color:#374151"><b>⚠️ Transmite TYLCV</b> (virus rizado amarillo)</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0f9ff">
+          <text x="65" y="10" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#0369a1">T. vaporariorum</text>
+          <ellipse cx="65" cy="55" rx="7" ry="12" fill="#fef9c3" stroke="#0369a1" stroke-width="1"/>
+          <!-- Ala izquierda en ángulo (techo) -->
+          <path d="M59,44 Q48,32 32,38 Q24,50 30,60 Q42,68 57,64 Z" fill="white" stroke="#9ca3af" stroke-width="1" opacity="0.95"/>
+          <!-- Ala derecha en ángulo (techo) -->
+          <path d="M71,44 Q82,32 98,38 Q106,50 100,60 Q88,68 73,64 Z" fill="white" stroke="#9ca3af" stroke-width="1" opacity="0.95"/>
+          <!-- Cabeza -->
+          <circle cx="65" cy="40" r="7" fill="#fef9c3" stroke="#0369a1" stroke-width="1"/>
+          <line x1="62" y1="34" x2="55" y2="22" stroke="#6b7280" stroke-width="1"/>
+          <line x1="68" y1="34" x2="75" y2="22" stroke="#6b7280" stroke-width="1"/>
+          <!-- Margen con flecos -->
+          <path d="M24,49 Q23,52 22,55 Q24,58 25,61" fill="none" stroke="#6b7280" stroke-width="0.8"/>
+          <path d="M104,49 Q105,52 106,55 Q104,58 103,61" fill="none" stroke="#6b7280" stroke-width="0.8"/>
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="700" fill="#0369a1">Alas en "V" / techo</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">blanco más puro</text>
+        </svg>
+        <div style="font-size:10px;margin-top:4px;padding:0 2px;color:#374151">Menor impacto viral · flecos en margen alar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- N4 pseudopupa -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#a7f3d0;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Ninfa IV — Pseudopupa · estadio diagnóstico clave</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fff4">
+        <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#064e3b">B. tabaci N4</text>
+        <!-- Cuerpo oval aplastado -->
+        <ellipse cx="65" cy="55" rx="28" ry="18" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+        <!-- Ojos rojos -->
+        <circle cx="52" cy="50" r="4" fill="#dc2626"/>
+        <circle cx="78" cy="50" r="4" fill="#dc2626"/>
+        <!-- Opérculo en T (B. tabaci) -->
+        <line x1="65" y1="42" x2="65" y2="52" stroke="#92400e" stroke-width="2"/>
+        <line x1="55" y1="47" x2="75" y2="47" stroke="#92400e" stroke-width="2"/>
+        <text x="65" y="65" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#92400e">Opérculo en "T"</text>
+        <!-- Escudo ceroso -->
+        <ellipse cx="65" cy="55" rx="26" ry="16" fill="none" stroke="#ca8a04" stroke-width="0.8" stroke-dasharray="2,1"/>
+        <text x="65" y="86" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="700" fill="#064e3b">0.7mm · ojos rojos visibles</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b>🔑 Diagnóstico:</b> buscar ojos rojos a lupa</div>
+        <div><b style="color:#dc2626">B. tabaci:</b> opérculo en "T" central</div>
+        <div><b style="color:#0369a1">T. vap.:</b> flecos largos en borde</div>
+        <div><b>📍</b> Envés de hojas, no se mueve</div>
+        <div><b>🔬</b> Necesita lupa 10–20×</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daño mielecilla -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fef9c3;padding:8px 13px"><div style="font-weight:900;font-size:13px">Daño indirecto: mielecilla + fumagina</div></div>
+    <div style="padding:10px 13px;font-size:12px;display:flex;flex-direction:column;gap:5px">
+      <div>🍯 <b>Mielecilla:</b> excreción azucarada → pegajosidad en hoja y fruto</div>
+      <div>⬛ <b>Fumagina</b> (hongo negro): se desarrolla sobre mielecilla → bloquea fotosíntesis</div>
+      <div>📉 Infestación alta → amarillamiento, debilitamiento, reducción de calibre</div>
+      <div style="color:#dc2626;font-weight:700">🦠 B. tabaci → TYLCV: rizado, amarillamiento, enanismo → planta no recupera</div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">envés de hojas jóvenes</b> (últimas 3–4)</div>
+      <div>• Contar adultos en reposo <b style="color:white">sin perturbar la planta</b></div>
+      <div>• Sacudir hoja sobre papel blanco → nube blanca = infestación</div>
+      <div>• <b style="color:white">Umbral: &gt;5 adultos/planta</b> → evaluar acción</div>
+      <div>• Mielecilla + fumagina = infestación prolongada alta</div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ===== PANEL 2: ARAÑITA BIMACULADA ===== -->
+<div class="cpanel" id="cp2" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Arañita bimaculada</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Tetranychus urticae (Koch, 1836)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Arachnida · Tetranychidae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ciclo explosivo con calor</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 7–14 días a 25–30°C · 20+ gen/año</div>
+  <svg viewBox="0 0 320 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="am2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#f97316"/></marker></defs>
+    <circle cx="160" cy="95" r="82" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+    <path d="M160,16 A80,80 0 0,1 232,56" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <path d="M236,66 A80,80 0 0,1 234,128" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <path d="M226,138 A80,80 0 0,1 162,175" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <path d="M150,175 A80,80 0 0,1 88,138" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <path d="M82,128 A80,80 0 0,1 82,62" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <path d="M88,52 A80,80 0 0,1 152,16" fill="none" stroke="#f97316" stroke-width="2" marker-end="url(#am2)"/>
+    <!-- Nodos -->
+    <circle cx="160" cy="13" r="14" fill="#fffde7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="160" y="9" text-anchor="middle" font-size="11">🥚</text>
+    <text x="160" y="19" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">HUEVO 2–4d</text>
+    <circle cx="235" cy="58" r="14" fill="#ffedd5" stroke="#f97316" stroke-width="2"/>
+    <text x="235" y="53" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="900" fill="#c2410c">L6p</text>
+    <text x="235" y="63" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6" font-weight="700" fill="#c2410c">6 patas 1–2d</text>
+    <circle cx="235" cy="132" r="14" fill="#fed7aa" stroke="#ea580c" stroke-width="2"/>
+    <text x="235" y="127" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="900" fill="#9a3412">Proto</text>
+    <text x="235" y="137" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="#9a3412">ninfa 1–2d</text>
+    <circle cx="175" cy="173" r="14" fill="#fb923c" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="175" y="168" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">Deuto</text>
+    <text x="175" y="178" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" font-weight="800" fill="white">ninfa 1–2d</text>
+    <circle cx="83" cy="132" r="16" fill="#dc2626" stroke="#b91c1c" stroke-width="2.5"/>
+    <text x="83" y="127" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9.5" font-weight="900" fill="white">♀♂</text>
+    <text x="83" y="138" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="white">ADULTO 20–30d</text>
+    <text x="160" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9.5" fill="#9a3412" font-weight="800">7–14 días</text>
+    <text x="160" y="102" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">a 25–30°C</text>
+  </svg>
+</div>
+
+<!-- Galería -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:10px 0 8px">🎨 Galería de identificación visual</div>
+
+  <!-- Hembra adulta activa vs forma diapausa -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fee2e2;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Adultos — hembra activa vs. forma de diapausa</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#f0fff4">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#15803d">♀ Activa (verano)</text>
+          <!-- Cuerpo oval -->
+          <ellipse cx="65" cy="56" rx="26" ry="20" fill="#a3e635" stroke="#4d7c0f" stroke-width="1.5"/>
+          <!-- Dos manchas negras laterales características -->
+          <ellipse cx="52" cy="55" rx="7" ry="9" fill="#1c1c1c" opacity="0.75"/>
+          <ellipse cx="78" cy="55" rx="7" ry="9" fill="#1c1c1c" opacity="0.75"/>
+          <!-- Segmentación cuerpo -->
+          <path d="M42,50 Q65,46 88,50" fill="none" stroke="#4d7c0f" stroke-width="0.8"/>
+          <!-- 8 patas (4 cada lado) -->
+          <line x1="50" y1="44" x2="30" y2="30" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="55" y1="42" x2="36" y2="25" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="50" y1="60" x2="28" y2="68" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="52" y1="68" x2="30" y2="80" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="80" y1="44" x2="100" y2="30" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="75" y1="42" x2="94" y2="25" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="80" y1="60" x2="102" y2="68" stroke="#4d7c0f" stroke-width="1.2"/>
+          <line x1="78" y1="68" x2="100" y2="80" stroke="#4d7c0f" stroke-width="1.2"/>
+          <!-- Quelíceros -->
+          <line x1="55" y1="37" x2="48" y2="26" stroke="#4d7c0f" stroke-width="1.5"/>
+          <line x1="75" y1="37" x2="82" y2="26" stroke="#4d7c0f" stroke-width="1.5"/>
+          <text x="65" y="92" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#15803d" font-weight="700">2 manchas oscuras dorsales</text>
+          <text x="65" y="102" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">0.4–0.5mm · 8 patas</text>
+        </svg>
+        <div style="font-size:10px;margin-top:3px;color:#374151;padding:0 2px">Verde-amarillenta con <b>2 manchas laterales oscuras</b> = contenido intestinal visible</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 130 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fff7ed">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#c2410c">♀ Diapausa (invierno)</text>
+          <ellipse cx="65" cy="56" rx="26" ry="20" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
+          <!-- SIN manchas -->
+          <path d="M42,50 Q65,46 88,50" fill="none" stroke="#c2410c" stroke-width="0.8"/>
+          <!-- 8 patas (naranja-roja) -->
+          <line x1="50" y1="44" x2="30" y2="30" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="55" y1="42" x2="36" y2="25" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="50" y1="60" x2="28" y2="68" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="52" y1="68" x2="30" y2="80" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="80" y1="44" x2="100" y2="30" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="75" y1="42" x2="94" y2="25" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="80" y1="60" x2="102" y2="68" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="78" y1="68" x2="100" y2="80" stroke="#c2410c" stroke-width="1.2"/>
+          <line x1="55" y1="37" x2="48" y2="26" stroke="#c2410c" stroke-width="1.5"/>
+          <line x1="75" y1="37" x2="82" y2="26" stroke="#c2410c" stroke-width="1.5"/>
+          <!-- Cruz indicando sin manchas -->
+          <text x="65" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="18" fill="#fff7ed" opacity="0.5">✗</text>
+          <text x="65" y="92" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#c2410c" font-weight="700">SIN manchas dorsales</text>
+          <text x="65" y="102" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">naranja-rojo intenso</text>
+        </svg>
+        <div style="font-size:10px;margin-top:3px;color:#374151;padding:0 2px"><b>Naranja-roja sin manchas</b> = diapausa invernal. Se acumula en grietas y resiste frío.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Larva 6 patas vs ninfa 8 patas -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#ffedd5;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Larva hexápode vs. Ninfas — diferencia clave</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#b45309">Larva L — 6 PATAS</text>
+          <ellipse cx="65" cy="55" rx="20" ry="14" fill="#bef264" stroke="#65a30d" stroke-width="1.2"/>
+          <!-- Solo 6 patas (3 cada lado) -->
+          <line x1="52" y1="46" x2="36" y2="33" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="52" y1="55" x2="33" y2="55" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="52" y1="64" x2="36" y2="77" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="78" y1="46" x2="94" y2="33" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="78" y1="55" x2="97" y2="55" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="78" y1="64" x2="94" y2="77" stroke="#65a30d" stroke-width="1.3"/>
+          <line x1="50" y1="44" x2="42" y2="36" stroke="#65a30d" stroke-width="1"/>
+          <line x1="80" y1="44" x2="88" y2="36" stroke="#65a30d" stroke-width="1"/>
+          <!-- Cabeza -->
+          <circle cx="46" cy="55" r="6" fill="#bef264" stroke="#65a30d" stroke-width="1"/>
+          <circle cx="44" cy="53" r="1.5" fill="#1c1c1c"/>
+          <!-- Count label -->
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#b45309">⬛ 6 patas = LARVA</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">translúcida · 0.15mm</text>
+        </svg>
+        <div style="font-size:10px;margin-top:3px;color:#374151;padding:0 2px">Solo la larva tiene <b>6 patas</b>. Se dispersa activamente. Muy pequeña.</div>
+      </div>
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fafaf8">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#c2410c">Ninfas N1–N2 — 8 PATAS</text>
+          <ellipse cx="65" cy="55" rx="22" ry="15" fill="#fde68a" stroke="#ea580c" stroke-width="1.2"/>
+          <!-- 8 patas (4 cada lado) -->
+          <line x1="52" y1="44" x2="35" y2="30" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="55" y1="42" x2="40" y2="26" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="52" y1="64" x2="35" y2="78" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="55" y1="67" x2="40" y2="82" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="78" y1="44" x2="95" y2="30" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="75" y1="42" x2="90" y2="26" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="78" y1="64" x2="95" y2="78" stroke="#ea580c" stroke-width="1.2"/>
+          <line x1="75" y1="67" x2="90" y2="82" stroke="#ea580c" stroke-width="1.2"/>
+          <!-- Manchas pequeñas ya visibles -->
+          <ellipse cx="58" cy="54" rx="5" ry="6" fill="#6b7280" opacity="0.6"/>
+          <ellipse cx="72" cy="54" rx="5" ry="6" fill="#6b7280" opacity="0.6"/>
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#c2410c">🔴 8 patas = NINFA</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">0.2–0.35mm · manchas visibles</text>
+        </svg>
+        <div style="font-size:10px;margin-top:3px;color:#374151;padding:0 2px">Ninfas y adultos tienen <b>8 patas</b>. Manchas laterales oscuras desde N1.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daño foliar escala -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">📊 Escala de daño foliar (Severidad 1–5)</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#dcfce7;border:1.5px solid #16a34a;border-radius:6px;padding:3px 8px;font-weight:900;color:#15803d;min-width:24px;text-align:center;flex-shrink:0">1</div><div>Puntitos blancos muy escasos en haz (pústulas de succión) · a lupa en envés: huevos o larvas</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fef9c3;border:1.5px solid #ca8a04;border-radius:6px;padding:3px 8px;font-weight:900;color:#854d0e;min-width:24px;text-align:center;flex-shrink:0">2</div><div>Moteado clorótico claro en haz · hoja pierde brillo · telaraña incipiente en envés</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#ffedd5;border:1.5px solid #ea580c;border-radius:6px;padding:3px 8px;font-weight:900;color:#c2410c;min-width:24px;text-align:center;flex-shrink:0">3</div><div>Bronceado parcial de hoja · telaraña visible · hoja se enrolla levemente · caída posible</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fee2e2;border:1.5px solid #dc2626;border-radius:6px;padding:3px 8px;font-weight:900;color:#b91c1c;min-width:24px;text-align:center;flex-shrink:0">4</div><div>Bronceado severo · telaraña densa cubriendo envés · defoliación iniciando</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#450a0a;border-radius:6px;padding:3px 8px;font-weight:900;color:white;min-width:24px;text-align:center;flex-shrink:0">5</div><div>Necrosis · telaraña densa en toda la planta · defoliación severa · pérdida productiva grave</div></div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">envés de hojas medias</b> (racimo 3–5 desde ápice)</div>
+      <div>• Usar <b style="color:white">lupa 10×</b> para distinguir estadios</div>
+      <div>• <b style="color:white">Puntitos blancos en haz</b> = primer síntoma visible</div>
+      <div>• HR &lt;50% + T° &gt;28°C = <b style="color:white">condición explosiva</b></div>
+      <div>• Detectar <i style="color:#a7f3d0">Phytoseiulus persimilis</i> = control biológico activo</div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ===== PANEL 3: ÁCARO DE LA SECA ===== -->
+<div class="cpanel" id="cp3" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Ácaro de la seca</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Aculops lycopersici (Massee, 1937)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Arachnida · Eriophyidae</span>
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Solo 4 patas (2 pares)</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Microscópico · difícil detectar</span>
+  </div>
+</div>
+
+<!-- Comparación de tamaño -->
+<div style="margin:10px 16px;background:white;border-radius:12px;padding:10px 13px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px">⚖️ Comparación de tamaño — crítico para identificación</div>
+  <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <!-- T. urticae referencia -->
+    <ellipse cx="80" cy="40" rx="30" ry="22" fill="#a3e635" stroke="#4d7c0f" stroke-width="1.5"/>
+    <ellipse cx="62" cy="39" rx="8" ry="9" fill="#1c1c1c" opacity="0.7"/>
+    <ellipse cx="98" cy="39" rx="8" ry="9" fill="#1c1c1c" opacity="0.7"/>
+    <text x="80" y="10" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#4d7c0f">T. urticae</text>
+    <text x="80" y="70" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#6b7280">0.4–0.5 mm</text>
+    <!-- Aculops lycopersici (mucho más pequeño) -->
+    <ellipse cx="200" cy="42" rx="7" ry="3.5" fill="#f97316" stroke="#c2410c" stroke-width="1"/>
+    <!-- 4 patas muy pequeñas -->
+    <line x1="195" y1="40" x2="190" y2="35" stroke="#c2410c" stroke-width="0.8"/>
+    <line x1="197" y1="39" x2="192" y2="33" stroke="#c2410c" stroke-width="0.8"/>
+    <line x1="195" y1="44" x2="190" y2="49" stroke="#c2410c" stroke-width="0.8"/>
+    <line x1="197" y1="45" x2="192" y2="51" stroke="#c2410c" stroke-width="0.8"/>
+    <!-- Flecha de escala -->
+    <line x1="130" y1="42" x2="185" y2="42" stroke="#6b7280" stroke-width="0.8" stroke-dasharray="3,2"/>
+    <text x="200" y="10" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#c2410c">A. lycopersici</text>
+    <text x="200" y="70" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#c2410c" font-weight="700">0.15–0.17 mm · 3× más pequeño</text>
+    <!-- Lupa referencia -->
+    <text x="160" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#374151">← mismo</text>
+    <text x="160" y="65" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#374151">campo visual</text>
+    <!-- Indicador necesita microscopio -->
+    <text x="265" y="40" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#dc2626" font-weight="700">🔬 20–40×</text>
+    <text x="265" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#dc2626">necesario</text>
+  </svg>
+</div>
+
+<!-- Ciclo biológico -->
+<div style="margin:0 16px 10px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 7–10 días a 25–27°C · Eriofido</div>
+  <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="am3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#ea580c"/></marker></defs>
+    <!-- 4 etapas lineales simples -->
+    <!-- Huevo -->
+    <circle cx="42" cy="65" r="22" fill="#fff7ed" stroke="#f97316" stroke-width="2"/>
+    <text x="42" y="58" text-anchor="middle" font-size="16">🥚</text>
+    <text x="42" y="71" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#c2410c">HUEVO</text>
+    <text x="42" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">2–3 d · esférico</text>
+    <line x1="66" y1="65" x2="86" y2="65" stroke="#ea580c" stroke-width="2" marker-end="url(#am3)"/>
+    <!-- Larva -->
+    <circle cx="108" cy="65" r="22" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <text x="108" y="58" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#c2410c">L</text>
+    <text x="108" y="70" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#c2410c">LARVA</text>
+    <text x="108" y="79" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">1–2 d · 4 patas</text>
+    <line x1="132" y1="65" x2="152" y2="65" stroke="#ea580c" stroke-width="2" marker-end="url(#am3)"/>
+    <!-- Ninfa -->
+    <circle cx="174" cy="65" r="22" fill="#fed7aa" stroke="#dc2626" stroke-width="2"/>
+    <text x="174" y="58" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#9a3412">N</text>
+    <text x="174" y="70" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#9a3412">NINFA</text>
+    <text x="174" y="79" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">2–3 d · 4 patas</text>
+    <line x1="198" y1="65" x2="218" y2="65" stroke="#ea580c" stroke-width="2" marker-end="url(#am3)"/>
+    <!-- Adulto -->
+    <circle cx="245" cy="65" r="28" fill="#fee2e2" stroke="#b91c1c" stroke-width="2.5"/>
+    <text x="245" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#7f1d1d">♀♂</text>
+    <text x="245" y="67" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#7f1d1d">ADULTO</text>
+    <text x="245" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">15–30 d</text>
+    <!-- Flecha retorno curva superior -->
+    <path d="M245,35 Q145,5 42,35" fill="none" stroke="#ea580c" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#am3)"/>
+    <text x="145" y="18" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#c2410c" font-weight="700">retorno para ovipostura</text>
+    <!-- Nota importante -->
+    <text x="160" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#b91c1c" font-weight="700">⚠️ Todos los estadios tienen SOLO 4 PATAS (eriofido)</text>
+    <text x="160" y="130" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280">Hembra: 100–200 huevos · Partenogénesis arrenotoca</text>
+  </svg>
+</div>
+
+<!-- Galería ilustraciones -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:4px 0 8px">🎨 Galería de identificación visual</div>
+
+  <!-- Morfología adulto (forma vermiforme) -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#ffedd5;padding:8px 13px;display:flex;align-items:center;justify-content:space-between">
+      <div><div style="font-weight:900;font-size:13px;color:#1b4332">Adulto — morfología vermiforme</div><div style="font-size:11px;color:#6b7280">0.15–0.17mm · requiere 20–40× para identificar</div></div>
+    </div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fff7ed">
+        <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#c2410c">Aculops lycopersici — Adulto</text>
+        <!-- Cuerpo vermiforme/zanahoria: más ancho adelante, afinado atrás -->
+        <!-- Vista lateral -->
+        <path d="M25,55 Q30,42 48,38 Q65,36 82,40 Q92,44 94,55 Q92,66 82,70 Q65,74 48,72 Q30,68 25,55 Z" fill="#f97316" stroke="#c2410c" stroke-width="1.5"/>
+        <!-- Anillos del cuerpo (eriofido típico) - muchos anillos -->
+        <path d="M32,48 Q65,44 90,50" fill="none" stroke="#c2410c" stroke-width="0.6" opacity="0.7"/>
+        <path d="M30,52 Q65,48 92,54" fill="none" stroke="#c2410c" stroke-width="0.6" opacity="0.7"/>
+        <path d="M29,56 Q65,52 92,58" fill="none" stroke="#c2410c" stroke-width="0.6" opacity="0.7"/>
+        <path d="M30,60 Q65,57 91,62" fill="none" stroke="#c2410c" stroke-width="0.6" opacity="0.7"/>
+        <path d="M32,64 Q65,61 88,66" fill="none" stroke="#c2410c" stroke-width="0.6" opacity="0.7"/>
+        <!-- Solo 4 patas al frente (2 pares) -->
+        <line x1="36" y1="48" x2="22" y2="33" stroke="#c2410c" stroke-width="2"/>
+        <line x1="42" y1="46" x2="30" y2="28" stroke="#c2410c" stroke-width="2"/>
+        <line x1="36" y1="62" x2="22" y2="77" stroke="#c2410c" stroke-width="2"/>
+        <line x1="42" y1="64" x2="30" y2="80" stroke="#c2410c" stroke-width="2"/>
+        <!-- Quelíceros/estiletes al frente -->
+        <line x1="30" y1="53" x2="16" y2="53" stroke="#7f1d1d" stroke-width="2"/>
+        <line x1="16" y1="50" x2="16" y2="56" stroke="#7f1d1d" stroke-width="1.5"/>
+        <!-- Seta terminal larga en posterior -->
+        <line x1="91" y1="55" x2="112" y2="55" stroke="#9ca3af" stroke-width="1"/>
+        <text x="65" y="93" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="700" fill="#c2410c">Cuerpo anillado · solo 4 patas</text>
+        <text x="65" y="103" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">anterior · forma de zanahoria</text>
+        <text x="65" y="113" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">(muy aumentado — 40×)</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b style="color:#c2410c">📏</b> 0.15–0.17mm (invisible a ojo desnudo)</div>
+        <div><b>🔑 Diagnóstico:</b> cuerpo vermiforme, muy alargado, anillado</div>
+        <div><b style="color:#ea580c">🦵 SOLO 4 PATAS</b> (2 pares) al extremo anterior</div>
+        <div><b>🎨</b> Amarillo-crema a naranja, según estado nutricional</div>
+        <div><b>⚙️</b> Estiletes muy cortos, alimenta raspando epidermis</div>
+        <div><b>🔬</b> Necesita lupa 20× mínimo · mejor microscopio</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progresión del daño -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#fee2e2;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Progresión del daño — de base hacia ápice</div></div>
+    <div style="padding:10px 13px">
+      <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <!-- Planta simplificada -->
+        <line x1="150" y1="190" x2="150" y2="20" stroke="#15803d" stroke-width="3"/>
+        <!-- Raíces -->
+        <line x1="150" y1="190" x2="130" y2="198" stroke="#92400e" stroke-width="2"/>
+        <line x1="150" y1="190" x2="170" y2="198" stroke="#92400e" stroke-width="2"/>
+        <!-- Hojas inferiores (afectadas primero) -->
+        <!-- Hoja muy afectada (nivel bajo) -->
+        <path d="M150,170 Q120,160 115,148 Q120,140 140,148 Q150,154 150,170 Z" fill="#78350f" stroke="#451a03" stroke-width="1"/>
+        <path d="M150,170 Q180,160 185,148 Q180,140 160,148 Q150,154 150,170 Z" fill="#78350f" stroke="#451a03" stroke-width="1"/>
+        <text x="195" y="152" font-family="Nunito,sans-serif" font-size="8.5" fill="#78350f" font-weight="800">Necrosis/seca ← hojas bajas</text>
+        <!-- Hoja con bronceado severo -->
+        <path d="M150,140 Q118,128 112,114 Q118,106 140,114 Q150,120 150,140 Z" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <path d="M150,140 Q182,128 188,114 Q182,106 160,114 Q150,120 150,140 Z" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="198" y="120" font-family="Nunito,sans-serif" font-size="8.5" fill="#b45309" font-weight="800">Bronceado severo</text>
+        <!-- Hoja con bronceado inicial -->
+        <path d="M150,108 Q120,96 114,82 Q120,74 140,82 Q150,88 150,108 Z" fill="#d97706" stroke="#b45309" stroke-width="1"/>
+        <path d="M150,108 Q180,96 186,82 Q180,74 160,82 Q150,88 150,108 Z" fill="#d97706" stroke="#b45309" stroke-width="1"/>
+        <text x="196" y="88" font-family="Nunito,sans-serif" font-size="8.5" fill="#d97706" font-weight="800">Bronceado inicial</text>
+        <!-- Hojas jóvenes (aparentemente sanas) -->
+        <path d="M150,75 Q125,63 120,50 Q127,42 143,50 Q150,56 150,75 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+        <path d="M150,75 Q175,63 180,50 Q173,42 157,50 Q150,56 150,75 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+        <text x="188" y="56" font-family="Nunito,sans-serif" font-size="8.5" fill="#15803d" font-weight="800">Hojas jóvenes (aún verdes)</text>
+        <!-- Ápice -->
+        <path d="M150,42 Q138,30 138,22 Q145,18 150,22 Q155,18 162,22 Q162,30 150,42 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+        <!-- Flecha de dirección -->
+        <text x="10" y="100" font-family="Nunito,sans-serif" font-size="9" fill="#c2410c" font-weight="800">↑</text>
+        <text x="5" y="112" font-family="Nunito,sans-serif" font-size="8.5" fill="#c2410c" font-weight="700">Avance</text>
+        <!-- Nota tallo -->
+        <rect x="95" y="155" width="12" height="30" rx="2" fill="#b45309" stroke="#92400e" stroke-width="1"/>
+        <text x="82" y="175" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e" font-weight="700">tallo</text>
+        <text x="82" y="184" font-family="Nunito,sans-serif" font-size="7.5" fill="#92400e">corchoso</text>
+      </svg>
+    </div>
+    <div style="padding:0 13px 12px;font-size:12px;display:flex;flex-direction:column;gap:5px;color:#374151">
+      <div>🍂 Infestación sube desde la <b>base</b> hacia el ápice</div>
+      <div>🟫 Tallos con corteza <b>bronceada/corchosa</b> = diagnóstico seguro</div>
+      <div>🍅 Frutos: superficie <b>oxidada/herrumbrosa</b> (russet), de color marrón-grisáceo</div>
+      <div>💨 Se dispersa por <b>viento, herramientas y ropa</b> del operador</div>
+    </div>
+  </div>
+
+  <!-- Síntomas por órgano -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🌿 Síntomas por órgano</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+      <div style="background:#fff7ed;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#c2410c;margin-bottom:3px">🍃 Hojas</div>
+        <div>• Epinastia (enrollamiento hacia abajo)</div>
+        <div>• Bronceado/herrumbre desde nervaduras → lamina completa</div>
+        <div>• Hojas viejas: secado y necrosis total</div>
+      </div>
+      <div style="background:#fef3c7;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#b45309;margin-bottom:3px">🪴 Tallos y pecíolos</div>
+        <div>• Aspecto <b>bronceado, herrumbroso, corchoso</b></div>
+        <div>• En infestaciones graves: <b>coloración rojiza-oxidada</b> diagnóstica</div>
+        <div>• Grietas y engrosamiento epidérmico</div>
+      </div>
+      <div style="background:#fee2e2;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#b91c1c;margin-bottom:3px">🍅 Frutos</div>
+        <div>• Superficie <b>oxidada/russet</b> (herrumbre) color marrón-grisáceo</div>
+        <div>• Deformación, agrietamiento</div>
+        <div>• Pérdida total de valor comercial</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diferencias con T. urticae -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">⚖️ Cómo diferenciarlo de T. urticae</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+      <div>
+        <div style="font-weight:900;color:#c2410c;margin-bottom:5px;font-size:12px">A. lycopersici</div>
+        <div style="display:flex;flex-direction:column;gap:3px;color:#374151">
+          <div>• 4 patas, cuerpo vermiforme</div>
+          <div>• Sin telaraña en plantas</div>
+          <div>• Daño en tallos y frutos</div>
+          <div>• Avance base → ápice</div>
+          <div style="color:#dc2626">• Invisible sin lupa 20×</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:900;color:#4d7c0f;margin-bottom:5px;font-size:12px">T. urticae</div>
+        <div style="display:flex;flex-direction:column;gap:3px;color:#374151">
+          <div>• 8 patas, cuerpo oval</div>
+          <div>• <b>Produce telaraña</b></div>
+          <div>• Daño foliar principal</div>
+          <div>• Manchas blancas en haz</div>
+          <div>• Visible con lupa 10×</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Diagnóstico por síntoma:</b> tallo bronceado/corchoso = A. lycopersici</div>
+      <div>• Revisar <b style="color:white">tallos en base y pecíolos</b> (zona de mayor densidad)</div>
+      <div>• Lupa 20–40× necesaria para confirmar presencia de ácaros</div>
+      <div>• <b style="color:white">Sin telaraña = diferencia clave</b> con T. urticae</div>
+      <div>• Alta temperatura y baja HR favorecen su proliferación</div>
+      <div>• Inicio de ciclo: pocos ácaros → síntoma ya visible en tallos</div>
+      <div>• <b style="color:white">Umbral de acción:</b> primeros síntomas en tallos bajos → tratar inmediatamente</div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- ===== PANEL 4: TRIPS ===== -->
+<div class="cpanel" id="cp4" style="display:none">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Trips</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Frankliniella occidentalis (Pergande, 1895)</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Thysanoptera · Thripidae</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Vector TSWV (virus bronceado)</span>
+  </div>
+</div>
+
+<!-- Ciclo -->
+<div style="margin:10px 16px;background:white;border-radius:14px;padding:12px;border:1px solid #ddd8cf">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#6b7280;margin-bottom:8px;text-align:center">Ciclo biológico · 14–20 días a 25°C · Planta + Suelo</div>
+  <svg viewBox="0 0 320 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="am4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#8b5cf6"/></marker></defs>
+    <!-- Zona planta -->
+    <rect x="5" y="5" width="310" height="80" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1.5"/>
+    <text x="13" y="17" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#15803d">🌿 EN LA PLANTA</text>
+    <!-- Zona suelo -->
+    <rect x="5" y="100" width="310" height="48" rx="10" fill="#fef3c7" stroke="#fde68a" stroke-width="1.5"/>
+    <text x="13" y="112" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#92400e">🟫 EN EL SUELO</text>
+    <!-- Huevo -->
+    <circle cx="38" cy="45" r="19" fill="#fffde7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="38" y="39" text-anchor="middle" font-size="14">🥚</text>
+    <text x="38" y="51" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="#92400e">HUEVO</text>
+    <text x="38" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">2–5 d en tejido</text>
+    <line x1="59" y1="45" x2="75" y2="45" stroke="#8b5cf6" stroke-width="2" marker-end="url(#am4)"/>
+    <!-- L1 -->
+    <circle cx="95" cy="45" r="19" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="95" y="39" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#5b21b6">L1</text>
+    <text x="95" y="51" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#5b21b6">blanca</text>
+    <text x="95" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">2–3 d · adquiere TSWV</text>
+    <line x1="116" y1="45" x2="132" y2="45" stroke="#8b5cf6" stroke-width="2" marker-end="url(#am4)"/>
+    <!-- L2 -->
+    <circle cx="152" cy="45" r="19" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="152" y="39" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#5b21b6">L2</text>
+    <text x="152" y="51" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="700" fill="#5b21b6">amarilla</text>
+    <text x="152" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">3–5 d · mayor daño</text>
+    <!-- Flecha baja al suelo -->
+    <line x1="152" y1="66" x2="152" y2="100" stroke="#8b5cf6" stroke-width="2" marker-end="url(#am4)"/>
+    <text x="165" y="88" font-family="Nunito,sans-serif" font-size="8" fill="#7c3aed" font-weight="700">cae al suelo</text>
+    <!-- Prepupa -->
+    <circle cx="210" cy="126" r="18" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+    <text x="210" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">Pre-</text>
+    <text x="210" y="131" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">pupa</text>
+    <text x="210" y="142" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">1–2 d</text>
+    <line x1="188" y1="126" x2="172" y2="126" stroke="#8b5cf6" stroke-width="2" marker-end="url(#am4)"/>
+    <!-- Pupa -->
+    <circle cx="152" cy="126" r="18" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
+    <text x="152" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="900" fill="#92400e">PUPA</text>
+    <text x="152" y="131" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#92400e">blanca</text>
+    <text x="152" y="142" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">2–4 d</text>
+    <!-- Flecha sube a adulto -->
+    <line x1="136" y1="116" x2="100" y2="68" stroke="#8b5cf6" stroke-width="2" marker-end="url(#am4)"/>
+    <!-- Adulto -->
+    <circle cx="268" cy="45" r="24" fill="#c4b5fd" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="268" y="38" text-anchor="middle" font-size="17">🔍</text>
+    <text x="268" y="53" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#4c1d95">ADULTO</text>
+    <text x="268" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">30–45 d</text>
+    <!-- Flecha adulto a huevo -->
+    <path d="M248,30 Q155,8 56,28" fill="none" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#am4)"/>
+  </svg>
+</div>
+
+<!-- Galería -->
+<div style="padding:0 16px">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:#6b7280;margin:8px 0 8px">🎨 Galería de identificación visual</div>
+
+  <!-- Adulto ilustración -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#c4b5fd;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Adulto — hembra y macho</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <svg viewBox="0 0 130 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#faf5ff">
+        <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#5b21b6">♀ Adulta — vista dorsal</text>
+        <!-- Cuerpo esbelto -->
+        <path d="M65,20 Q75,22 78,35 Q80,60 78,85 Q74,100 65,103 Q56,100 52,85 Q50,60 52,35 Q55,22 65,20 Z" fill="#a78bfa" stroke="#6d28d9" stroke-width="1.2"/>
+        <!-- Segmentación abdominal -->
+        <line x1="53" y1="55" x2="77" y2="55" stroke="#6d28d9" stroke-width="0.6"/>
+        <line x1="52" y1="62" x2="78" y2="62" stroke="#6d28d9" stroke-width="0.6"/>
+        <line x1="52" y1="69" x2="78" y2="69" stroke="#6d28d9" stroke-width="0.6"/>
+        <line x1="52" y1="76" x2="78" y2="76" stroke="#6d28d9" stroke-width="0.6"/>
+        <line x1="53" y1="83" x2="77" y2="83" stroke="#6d28d9" stroke-width="0.6"/>
+        <!-- Alas anteriores con flecos característicos -->
+        <path d="M53,32 Q38,28 28,40 Q26,55 30,65 Q40,70 52,62 Z" fill="#ddd6fe" stroke="#7c3aed" stroke-width="0.8"/>
+        <path d="M77,32 Q92,28 102,40 Q104,55 100,65 Q90,70 78,62 Z" fill="#ddd6fe" stroke="#7c3aed" stroke-width="0.8"/>
+        <!-- Flecos en borde de ala -->
+        <line x1="26" y1="45" x2="21" y2="43" stroke="#6d28d9" stroke-width="0.8"/>
+        <line x1="26" y1="50" x2="20" y2="50" stroke="#6d28d9" stroke-width="0.8"/>
+        <line x1="27" y1="55" x2="21" y2="57" stroke="#6d28d9" stroke-width="0.8"/>
+        <line x1="104" y1="45" x2="109" y2="43" stroke="#6d28d9" stroke-width="0.8"/>
+        <line x1="104" y1="50" x2="110" y2="50" stroke="#6d28d9" stroke-width="0.8"/>
+        <line x1="103" y1="55" x2="109" y2="57" stroke="#6d28d9" stroke-width="0.8"/>
+        <!-- Cabeza -->
+        <ellipse cx="65" cy="25" rx="10" ry="8" fill="#7c3aed" stroke="#5b21b6" stroke-width="1"/>
+        <!-- Ojos compuestos -->
+        <circle cx="60" cy="24" r="2.5" fill="#dc2626"/>
+        <circle cx="70" cy="24" r="2.5" fill="#dc2626"/>
+        <!-- Antenas -->
+        <path d="M61,18 Q58,12 55,6" fill="none" stroke="#4b5563" stroke-width="1"/>
+        <path d="M69,18 Q72,12 75,6" fill="none" stroke="#4b5563" stroke-width="1"/>
+        <!-- Ovipositor hembra -->
+        <path d="M62,100 Q65,108 68,100" fill="#f97316" stroke="#ea580c" stroke-width="1"/>
+        <text x="65" y="115" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#5b21b6" font-weight="700">Alas con flecos · 1–1.4mm</text>
+      </svg>
+      <div style="font-size:11px;color:#374151;padding:4px;display:flex;flex-direction:column;gap:5px">
+        <div><b>📏</b> ♀: 1.0–1.4mm · ♂: 0.8–1.0mm</div>
+        <div><b style="color:#5b21b6">🎨</b> Marrón-amarillento a pardo oscuro</div>
+        <div><b>✂️</b> Alas con <b>flecos en el margen</b> (característica del orden)</div>
+        <div><b>♀</b> Ovipositor curvo → inserta huevos en tejido</div>
+        <div><b style="color:#dc2626">🦠</b> Vector TSWV: lo adquiere en L1, transmite como adulto</div>
+        <div><b>📍</b> Se oculta en flores y hojas enrolladas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Larvas L1 vs L2 -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;overflow:hidden">
+    <div style="background:#ede9fe;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Larvas L1 y L2 — diferencias clave</div></div>
+    <div style="padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#faf5ff">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#5b21b6">Larva I — blanca</text>
+          <path d="M30,52 Q38,38 65,35 Q85,36 94,48 Q96,60 88,70 Q78,76 65,75 Q45,75 33,66 Q26,60 30,52 Z" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.2"/>
+          <!-- Segmentos -->
+          <path d="M44,39 Q65,37 82,43" fill="none" stroke="#9ca3af" stroke-width="0.6"/>
+          <path d="M38,52 Q65,50 91,55" fill="none" stroke="#9ca3af" stroke-width="0.6"/>
+          <path d="M39,63 Q65,61 88,66" fill="none" stroke="#9ca3af" stroke-width="0.6"/>
+          <!-- Ojos rojos visibles -->
+          <circle cx="38" cy="49" r="3" fill="#dc2626"/>
+          <circle cx="45" cy="44" r="3" fill="#dc2626"/>
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#5b21b6">Blanca translúcida</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#dc2626" font-weight="700">← adquiere TSWV aquí</text>
+        </svg>
+      </div>
+      <div>
+        <svg viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;border:1px solid #e5e7eb;border-radius:8px;background:#fdf4ff">
+          <text x="65" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#7c3aed">Larva II — amarilla</text>
+          <path d="M30,52 Q38,38 65,35 Q85,36 94,48 Q96,60 88,70 Q78,76 65,75 Q45,75 33,66 Q26,60 30,52 Z" fill="#fde68a" stroke="#d97706" stroke-width="1.2"/>
+          <!-- Segmentos más definidos -->
+          <path d="M44,39 Q65,37 82,43" fill="none" stroke="#b45309" stroke-width="0.7"/>
+          <path d="M38,52 Q65,50 91,55" fill="none" stroke="#b45309" stroke-width="0.7"/>
+          <path d="M39,63 Q65,61 88,66" fill="none" stroke="#b45309" stroke-width="0.7"/>
+          <!-- Ojos rojos más visibles -->
+          <circle cx="38" cy="49" r="3.5" fill="#dc2626"/>
+          <circle cx="45" cy="44" r="3.5" fill="#dc2626"/>
+          <text x="65" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="700" fill="#7c3aed">Amarilla-anaranjada</text>
+          <text x="65" y="99" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#b45309" font-weight="700">mayor daño directo</text>
+        </svg>
+      </div>
+    </div>
+    <div style="padding:4px 12px 10px;font-size:11px;color:#374151;background:#faf5ff">
+      <b style="color:#dc2626">⚠️ Crucial:</b> Solo <b>L1</b> puede adquirir TSWV durante alimentación. Los adultos provenientes de L1 infectada transmiten el virus. L2 no adquiere TSWV.
+    </div>
+  </div>
+
+  <!-- Daño en campo -->
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🌿 Síntomas y daño característico</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+      <div style="background:#f0fdf4;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#15803d;margin-bottom:3px">Daño directo (raspado + succión)</div>
+        <div>• <b>Manchas plateadas/plateado-satinado</b> en haz de hoja y superficie de fruto</div>
+        <div>• <b>Puntos negros</b> de excrementos sobre las manchas = diagnóstico seguro</div>
+        <div>• Cicatrices en fruto joven → deformación y corchado superficial</div>
+      </div>
+      <div style="background:#fef2f2;border-radius:8px;padding:9px">
+        <div style="font-weight:900;color:#b91c1c;margin-bottom:3px">Daño viral — TSWV</div>
+        <div>• <b>Anillos necróticos</b> en frutos verdes y maduros</div>
+        <div>• <b>Manchas bronceadas</b> en hojas → necrosis avanzada</div>
+        <div>• Enanismo, deformación, aborto floral</div>
+        <div style="color:#dc2626;font-weight:700">• Planta infectada NO se recupera → eliminar inmediatamente</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Técnica flores:</b> sacudir flor abierta sobre papel blanco → puntitos que se mueven</div>
+      <div>• Buscar manchas plateadas con puntos negros en hojas jóvenes</div>
+      <div>• <b style="color:white">Trampas azules</b> pegajosas: más eficientes que amarillas para trips</div>
+      <div>• Revisar axilas de hojas y hojas enrolladas (refugio diurno)</div>
+      <div>• Síntomas TSWV → retirar planta + <b style="color:white">acción urgente en trips</b></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== CIERRE MODAL CAPACITACIÓN ===== -->
+</div><!-- fin container fafaf8 -->
+</div><!-- fin scroll -->
+</div><!-- fin mCap -->
+
+<style>
+.ctab.active{color:#1b4332 !important;border-bottom-color:#1b4332 !important;background:#f0fdf4}
+#capTabs::-webkit-scrollbar{display:none}
+</style>
+<script>
+function openCap(){document.getElementById('mCap').style.display='block';document.body.style.overflow='hidden';}
+function closeCap(){document.getElementById('mCap').style.display='none';document.body.style.overflow='';}
+function showCap(i){
+  document.querySelectorAll('.cpanel').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('cp'+i).style.display='block';
+  document.getElementById('ctab'+i).classList.add('active');
+  document.getElementById('mCapScroll').scrollTop=0;
+}
+</script>
+</body>
+</html>
