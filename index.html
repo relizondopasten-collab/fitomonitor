@@ -319,7 +319,6 @@ input:checked+.tsl:before{transform:translateX(20px)}
 
 <div class="mov" id="mCampo"><div class="modal">
   <div class="mh"></div><div class="mt">Nuevo Campo</div>
-  <div class="fg" id="fgCampoEmpresa"><label class="fl">Empresa</label><select class="fs" id="cE"></select></div>
   <div class="fg"><label class="fl">Nombre del campo</label><input class="fi" id="cN" placeholder="Ej: El Tránsito"></div>
   <div class="fg"><label class="fl">Ubicación</label><input class="fi" id="cU" placeholder="Ej: Quillota, V Región"></div>
   <button class="bfull bg" onclick="saveC()">Guardar</button>
@@ -362,7 +361,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
   <div class="mh"></div>
   <div class="mt">Registro de Monitoreo</div>
 
-  <div class="fg"><label class="fl">Empresa</label><select class="fs" id="mnE" onchange="mnUpC()"></select></div>
+  <div id="mnEWrap" class="fg"><label class="fl">Empresa</label><select class="fs" id="mnE" onchange="mnUpC()"></select></div>
   <div class="fg"><label class="fl">Campo</label><select class="fs" id="mnC" onchange="mnUpM()"></select></div>
   <div class="fg"><label class="fl">Módulo</label><select class="fs" id="mnM" onchange="mnUpP()"></select></div>
   <div class="fg"><label class="fl">Punto de Monitoreo</label><select class="fs" id="mnP"></select></div>
@@ -1121,16 +1120,37 @@ function tacc(id){document.getElementById(id).classList.toggle('open');}
 // ===== MODALS =====
 function om(id){
   if(id==='mCampo'){
-    if(sess?.isAdmin){
-      fillSel('cE',db.g('empresas'),'nombre');
-      document.getElementById('fgCampoEmpresa').style.display='block';
-    } else {
-      document.getElementById('fgCampoEmpresa').style.display='none';
-    }
+    // nada que precargar - empresa viene de sess
   }
-  if(id==='mModulo')fillSel('mC',db.g('campos').map(c=>({...c,nombre:geN(c.empresaId)+' / '+c.nombre})),'nombre');
-  if(id==='mPunto')fillSel('pMod',db.g('modulos').map(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};return{...m,nombre:geN(c.empresaId)+' / '+(c.nombre||'')+' / '+m.nombre};}), 'nombre');
-  if(id==='mMon'){fillSel('mnE',db.g('empresas'),'nombre');mnUpC();document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];resetForm();}
+  if(id==='mModulo'){
+    // Mostrar solo nombre del campo (sin prefijo empresa)
+    fillSel('mC',db.g('campos'),'nombre');
+  }
+  if(id==='mPunto'){
+    // Mostrar módulo con campo (sin prefijo empresa)
+    fillSel('pMod',db.g('modulos').map(m=>{
+      const c=db.g('campos').find(x=>x.id===m.campoId)||{};
+      return{...m,nombre:(c.nombre?c.nombre+' / ':'')+m.nombre};
+    }),'nombre');
+  }
+  if(id==='mMon'){
+    // Auto-seleccionar empresa de la sesión y cargar cascada
+    const empresas=db.g('empresas');
+    fillSel('mnE',empresas,'nombre');
+    // Pre-seleccionar la empresa actual
+    const sel=document.getElementById('mnE');
+    if(sel && sess?.id && sess.id!=='admin'){
+      sel.value=sess.id;
+    } else if(sel && empresas.length===1){
+      sel.value=empresas[0].id;
+    }
+    mnUpC();
+    document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];
+    resetForm();
+    // Ocultar selector empresa en monitoreo si no es admin
+    const mnEWrap=document.getElementById('mnEWrap');
+    if(mnEWrap) mnEWrap.style.display=sess?.isAdmin?'block':'none';
+  }
   document.getElementById(id).classList.add('open');
 }
 function cm(id){document.getElementById(id).classList.remove('open');}
@@ -1151,9 +1171,9 @@ function saveE(){
 function saveC(){
   const n=document.getElementById('cN').value.trim();
   if(!n){alert('Ingrese nombre del campo');return;}
-  // Si es admin usa el selector; si no, usa la empresa de la sesión
-  const eid=sess?.isAdmin ? document.getElementById('cE').value : sess?.id;
-  if(!eid){alert('No se pudo determinar la empresa');return;}
+  // La empresa siempre es la sesión activa
+  const eid=sess?.id;
+  if(!eid||eid==='admin'){alert('Seleccione una empresa desde el panel de admin primero');return;}
   const item={id:db.id(),empresaId:eid,nombre:n,ubicacion:document.getElementById('cU').value};
   const a=db.g('campos');a.push(item);db.s('campos',a);
   fsWrite('campos',item);
@@ -1200,9 +1220,26 @@ function renderCfg(){
 }
 
 // ===== MONITOR FORM SELECTORS =====
-function mnUpC(){fillSel('mnC',db.g('campos').filter(c=>c.empresaId===document.getElementById('mnE').value),'nombre');mnUpM();}
-function mnUpM(){fillSel('mnM',db.g('modulos').filter(m=>m.campoId===document.getElementById('mnC').value),'nombre');mnUpP();}
-function mnUpP(){fillSel('mnP',db.g('puntos').filter(p=>p.moduloId===document.getElementById('mnM').value),'nombre');}
+function mnUpC(){
+  const eid=document.getElementById('mnE').value;
+  fillSel('mnC',db.g('campos').filter(c=>c.empresaId===eid),'nombre');
+  // Auto-seleccionar si solo hay un campo
+  const campos=db.g('campos').filter(c=>c.empresaId===eid);
+  if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
+  mnUpM();
+}
+function mnUpM(){
+  const cid=document.getElementById('mnC').value;
+  fillSel('mnM',db.g('modulos').filter(m=>m.campoId===cid),'nombre');
+  // Auto-seleccionar si solo hay un módulo
+  const mods=db.g('modulos').filter(m=>m.campoId===cid);
+  if(mods.length===1) document.getElementById('mnM').value=mods[0].id;
+  mnUpP();
+}
+function mnUpP(){
+  const mid=document.getElementById('mnM').value;
+  fillSel('mnP',db.g('puntos').filter(p=>p.moduloId===mid),'nombre');
+}
 
 // ===== TOGGLE PEST PANEL =====
 function tp(k){const c=document.getElementById('ck'+k),f=document.getElementById('fld'+k);c.checked?f.classList.add('open'):f.classList.remove('open');}
