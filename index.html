@@ -1134,22 +1134,15 @@ function om(id){
     }),'nombre');
   }
   if(id==='mMon'){
-    // Auto-seleccionar empresa de la sesión y cargar cascada
-    const empresas=db.g('empresas');
-    fillSel('mnE',empresas,'nombre');
-    // Pre-seleccionar la empresa actual
-    const sel=document.getElementById('mnE');
-    if(sel && sess?.id && sess.id!=='admin'){
-      sel.value=sess.id;
-    } else if(sel && empresas.length===1){
-      sel.value=empresas[0].id;
-    }
-    mnUpC();
+    const mnEWrap=document.getElementById('mnEWrap');
+    if(mnEWrap) mnEWrap.style.display='none'; // siempre oculto
+    // Cargar campos directamente del namespace actual (sess.id)
+    fillSel('mnC',db.g('campos'),'nombre');
+    const campos=db.g('campos');
+    if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
+    mnUpM();
     document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];
     resetForm();
-    // Ocultar selector empresa en monitoreo si no es admin
-    const mnEWrap=document.getElementById('mnEWrap');
-    if(mnEWrap) mnEWrap.style.display=sess?.isAdmin?'block':'none';
   }
   document.getElementById(id).classList.add('open');
 }
@@ -1221,17 +1214,18 @@ function renderCfg(){
 
 // ===== MONITOR FORM SELECTORS =====
 function mnUpC(){
-  const eid=document.getElementById('mnE').value;
-  fillSel('mnC',db.g('campos').filter(c=>c.empresaId===eid),'nombre');
-  // Auto-seleccionar si solo hay un campo
-  const campos=db.g('campos').filter(c=>c.empresaId===eid);
-  if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
+  // Mantener por compatibilidad con el HTML del selector empresa (oculto)
+  const eid=document.getElementById('mnE')?.value;
+  if(eid){
+    fillSel('mnC',db.g('campos').filter(c=>c.empresaId===eid),'nombre');
+    const campos=db.g('campos').filter(c=>c.empresaId===eid);
+    if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
+  }
   mnUpM();
 }
 function mnUpM(){
   const cid=document.getElementById('mnC').value;
   fillSel('mnM',db.g('modulos').filter(m=>m.campoId===cid),'nombre');
-  // Auto-seleccionar si solo hay un módulo
   const mods=db.g('modulos').filter(m=>m.campoId===cid);
   if(mods.length===1) document.getElementById('mnM').value=mods[0].id;
   mnUpP();
