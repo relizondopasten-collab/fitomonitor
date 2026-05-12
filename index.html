@@ -402,8 +402,10 @@ input:checked+.tsl:before{transform:translateX(20px)}
   <div class="mh"></div>
   <div class="mt">Registro de Monitoreo</div>
 
-  <div id="mnEWrap" class="fg"><label class="fl">Empresa</label><select class="fs" id="mnE" onchange="mnUpC()"></select></div>
-  <div class="fg"><label class="fl">Campo</label><select class="fs" id="mnC" onchange="mnUpM()"></select></div>
+  <div id="mnEWrap" class="fg" style="display:none"><label class="fl">Empresa</label><select class="fs" id="mnE" onchange="mnUpC()"></select></div>
+  <div class="fg"><label class="fl">Campo</label><select class="fs" id="mnC" onchange="mnUpCiclo()"></select></div>
+  <div class="fg"><label class="fl">Ciclo / Época</label><select class="fs" id="mnCiclo" onchange="mnUpCultivo()"></select></div>
+  <div class="fg"><label class="fl">Cultivo</label><select class="fs" id="mnCultivo" onchange="mnUpMod()"></select></div>
   <div class="fg"><label class="fl">Módulo</label><select class="fs" id="mnM" onchange="mnUpP()"></select></div>
   <div class="fg"><label class="fl">Punto de Monitoreo</label><select class="fs" id="mnP"></select></div>
   <div class="f2">
@@ -1400,12 +1402,11 @@ function om(id){
   }
   if(id==='mMon'){
     const mnEWrap=document.getElementById('mnEWrap');
-    if(mnEWrap) mnEWrap.style.display='none'; // siempre oculto
-    // Cargar campos directamente del namespace actual (sess.id)
+    if(mnEWrap) mnEWrap.style.display='none';
     fillSel('mnC',db.g('campos'),'nombre');
     const campos=db.g('campos');
     if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
-    mnUpM();
+    mnUpCiclo();
     document.getElementById('mnFe').value=new Date().toISOString().split('T')[0];
     resetForm();
   }
@@ -1512,22 +1513,56 @@ function renderCfg(){
 
 // ===== MONITOR FORM SELECTORS =====
 function mnUpC(){
-  // Mantener por compatibilidad con el HTML del selector empresa (oculto)
   const eid=document.getElementById('mnE')?.value;
   if(eid){
     fillSel('mnC',db.g('campos').filter(c=>c.empresaId===eid),'nombre');
     const campos=db.g('campos').filter(c=>c.empresaId===eid);
     if(campos.length===1) document.getElementById('mnC').value=campos[0].id;
   }
-  mnUpM();
+  mnUpCiclo();
 }
-function mnUpM(){
+function mnUpCiclo(){
   const cid=document.getElementById('mnC').value;
-  fillSel('mnM',db.g('modulos').filter(m=>m.campoId===cid),'nombre');
   const mods=db.g('modulos').filter(m=>m.campoId===cid);
+  const epocas=[...new Set(mods.map(m=>m.epoca).filter(Boolean))].sort();
+  const sel=document.getElementById('mnCiclo');
+  sel.innerHTML='';
+  if(!epocas.length){
+    sel.innerHTML='<option value="">— Sin ciclo asignado —</option>';
+  } else {
+    const labels={otoño:'🍂 Otoño',invierno:'❄️ Invierno',primor:'🌱 Primor',trastomate:'🔄 Trastomate',verano:'☀️ Verano'};
+    epocas.forEach(e=>sel.innerHTML+=`<option value="${e}">${labels[e]||e}</option>`);
+  }
+  mnUpCultivo();
+}
+function mnUpCultivo(){
+  const cid=document.getElementById('mnC').value;
+  const ciclo=document.getElementById('mnCiclo').value;
+  let mods=db.g('modulos').filter(m=>m.campoId===cid);
+  if(ciclo) mods=mods.filter(m=>m.epoca===ciclo);
+  const cultivos=[...new Set(mods.map(m=>m.cultivo).filter(Boolean))];
+  const sel=document.getElementById('mnCultivo');
+  sel.innerHTML='';
+  if(!cultivos.length){
+    sel.innerHTML='<option value="">— Sin cultivo asignado —</option>';
+  } else {
+    const icons={tomate:'🍅',pimenton:'🫑',frutilla:'🍓',especialidades:'🌿'};
+    cultivos.forEach(c=>sel.innerHTML+=`<option value="${c}">${icons[c]||''} ${c}</option>`);
+  }
+  mnUpMod();
+}
+function mnUpMod(){
+  const cid=document.getElementById('mnC').value;
+  const ciclo=document.getElementById('mnCiclo').value;
+  const cultivo=document.getElementById('mnCultivo').value;
+  let mods=db.g('modulos').filter(m=>m.campoId===cid);
+  if(ciclo) mods=mods.filter(m=>m.epoca===ciclo||!m.epoca);
+  if(cultivo) mods=mods.filter(m=>m.cultivo===cultivo||!m.cultivo);
+  fillSel('mnM',mods,'nombre');
   if(mods.length===1) document.getElementById('mnM').value=mods[0].id;
   mnUpP();
 }
+function mnUpM(){mnUpCiclo();}// compatibilidad
 function mnUpP(){
   const mid=document.getElementById('mnM').value;
   fillSel('mnP',db.g('puntos').filter(p=>p.moduloId===mid),'nombre');
@@ -1731,38 +1766,203 @@ function renderHist(){
   regs.forEach(r=>el.innerHTML+=buildCard(r));
 }
 
-// ===== RESUMEN TABLE =====
+// ===== ÍNDICE DE SANIDAD =====
+function calcIS(reg){
+  let s=0;
+  const p=reg.plagas||{},e=reg.enfermedades||{};
+  // Mosquita (max 15)
+  if(p.mosquita?.presente){s+=p.mosquita.adultosPorPlanta==='>5'?15:p.mosquita.adultosPorPlanta==='1-5'?7:0;}
+  // Polilla (max 20)
+  if(p.polilla?.presente){if(p.polilla.dano==='pres')s+=(p.polilla.severidadDano||0)*4;if((p.polilla.trampa||0)>=5)s+=5;}
+  // Trips (max 10)
+  if(p.trips?.presente&&p.trips.presencia==='pres')s+=(p.trips.nivelPoblacional||0)*2;
+  // Arañita (max 15)
+  if(p.aranitas?.presente&&p.aranitas.presencia==='pres')s+=(p.aranitas.severidad||0)*3;
+  // Nematodos (max 15)
+  if(e.nematodos?.presente&&e.nematodos.presencia==='pres')s+=(e.nematodos.severidad||0)*3;
+  // Botrytis (max 15) — incidencia 0-20 plantas
+  if(e.botrytis?.presente)s+=Math.round((e.botrytis.incidencia||0)/20*5)+(e.botrytis.severidad||0)*2;
+  // Fusarium (max 10) — incidencia 0-100%
+  if(e.fusarium?.presente)s+=Math.round((e.fusarium.incidencia||0)/20)+(e.fusarium.severidad||0)*1;
+  // Verticillium (max 10)
+  if(e.verticillium?.presente)s+=Math.round((e.verticillium.incidencia||0)/20)+(e.verticillium.severidad||0)*1;
+  // Oídio (max 5)
+  if(e.oidio?.presente)s+=Math.round((e.oidio.incidencia||0)/20*1)+(e.oidio.severidad||0)*0.5;
+  return Math.min(Math.round(s),100);
+}
+
+function isColor(v){return v>=80?'#dc2626':v>=60?'#ea580c':v>=40?'#ca8a04':v>=20?'#65a30d':'#16a34a';}
+function isLabel(v){return v>=80?'Crítico':v>=60?'Alto':v>=40?'Medio':v>=20?'Bajo':'Sano';}
+
+function dominante(reg){
+  const p=reg.plagas||{},e=reg.enfermedades||{};
+  const items=[];
+  if(p.mosquita?.presente&&p.mosquita.adultosPorPlanta==='>5')items.push({n:'Mosquita',s:15});
+  if(p.polilla?.presente&&p.polilla.dano==='pres')items.push({n:'Polilla',s:(p.polilla.severidadDano||0)*4});
+  if(p.aranitas?.presente&&p.aranitas.presencia==='pres')items.push({n:'Arañita',s:(p.aranitas.severidad||0)*3});
+  if(p.trips?.presente&&p.trips.presencia==='pres')items.push({n:'Trips',s:(p.trips.nivelPoblacional||0)*2});
+  if(e.botrytis?.presente)items.push({n:'Botrytis',s:(e.botrytis.severidad||0)*2+Math.round((e.botrytis.incidencia||0)/20*5)});
+  if(e.nematodos?.presente&&e.nematodos.presencia==='pres')items.push({n:'Nematodos',s:(e.nematodos.severidad||0)*3});
+  if(e.fusarium?.presente)items.push({n:'Fusarium',s:(e.fusarium.severidad||0)*2});
+  if(e.verticillium?.presente)items.push({n:'Verticillium',s:(e.verticillium.severidad||0)*2});
+  if(!items.length)return'—';
+  return items.sort((a,b)=>b.s-a.s)[0].n;
+}
+
+// ===== DASHBOARD - RESUMEN ANALÍTICO =====
 function renderResumen(){
   const el=document.getElementById('histList');
-  const modulos=db.g('modulos'),puntos=db.g('puntos'),regs=db.g('registros');
-  if(!modulos.length){el.innerHTML='<div class="empty">Sin módulos configurados.</div>';return;}
-  let html='';
-  modulos.forEach(mod=>{
-    const pts=puntos.filter(p=>p.moduloId===mod.id);if(!pts.length)return;
-    const cam=db.g('campos').find(c=>c.id===mod.campoId)||{},emp=db.g('empresas').find(e=>e.id===cam.empresaId)||{};
-    html+=`<div style="padding:10px 16px 4px;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--g-dark)">${emp.nombre||''} / ${cam.nombre||''} / ${mod.nombre}</div>`;
-    html+=`<div class="swrp"><table class="stbl"><thead><tr>
-      <th>Punto</th><th>Mosquita<br>/pl</th><th>Polilla<br>💧</th><th>Trips</th><th>Arañita<br>pl/sev</th>
-      <th>Nemat.<br>sev</th><th>Fus.<br>%/sev</th><th>Bot.<br>%/sev</th><th>Oídio<br>%/sev</th><th>Estado</th>
-    </tr></thead><tbody>`;
-    pts.forEach(p=>{
-      const pRegs=regs.filter(r=>r.puntoId===p.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-      const last=pRegs[0];
-      if(!last){html+=`<tr><td><b>${p.nombre}</b>${p.mesa?'<br><small>M'+p.mesa+'</small>':''}</td><td colspan="9" style="color:var(--muted);text-align:center">Sin datos</td></tr>`;return;}
-      const s=calcStatus(last);
-      const mo=last.plagas?.mosquita,po=last.plagas?.polilla,tr=last.plagas?.trips,ar=last.plagas?.aranitas;
-      const ne=last.enfermedades?.nematodos,fu=last.enfermedades?.fusarium,bo=last.enfermedades?.botrytis,oi=last.enfermedades?.oidio;
-      function cMo(){if(!mo?.presente)return'<td style="text-align:center;color:#ccc">·</td>';const c=mo.adultosPorPlanta==='>5'?'#dc2626':mo.adultosPorPlanta==='1-5'?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${mo.adultosPorPlanta||'?'}</td>`;}
-      function cPo(){if(!po?.presente)return'<td style="text-align:center;color:#ccc">·</td>';let txt=po.trampa>0?po.trampa+'m':'—';const c=po.trampa>=5?'#dc2626':po.trampa>0?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${txt}</td>`;}
-      function cTr(){if(!tr?.presente||tr.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=tr.nivelPoblacional>=4?'#dc2626':tr.nivelPoblacional>=3?'#ea580c':tr.nivelPoblacional>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">sev${tr.nivelPoblacional}</td>`;}
-      function cAr(){if(!ar?.presente||ar.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=ar.severidad>=4?'#dc2626':ar.severidad>=3?'#ea580c':ar.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${ar.plantasAfectadas}pl<br>sev${ar.severidad}</td>`;}
-      function cNe(){if(!ne?.presente||ne.presencia==='aus')return'<td style="text-align:center;color:#ccc">·</td>';const c=ne.severidad>=4?'#dc2626':ne.severidad>=3?'#ea580c':ne.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">sev${ne.severidad}</td>`;}
-      function cIS(d){if(!d?.presente)return'<td style="text-align:center;color:#ccc">·</td>';const c=d.severidad>=4?'#dc2626':d.severidad>=3?'#ea580c':d.severidad>=2?'#ca8a04':'#16a34a';return`<td style="text-align:center;font-weight:800;color:${c}">${d.incidencia}%<br>sev${d.severidad}</td>`;}
-      html+=`<tr><td><b>${p.nombre}</b>${p.mesa?'<br><small>M'+p.mesa+'</small>':''}<br><small style="color:var(--muted)">${fmtD(last.fecha)}</small></td>${cMo()}${cPo()}${cTr()}${cAr()}${cNe()}${cIS(fu)}${cIS(bo)}${cIS(oi)}<td><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.color}"></span> ${s.label}</td></tr>`;
-    });
-    html+=`</tbody></table></div>`;
+  const modulos=db.g('modulos'),puntos=db.g('puntos'),regs=db.g('registros'),campos=db.g('campos');
+  if(!regs.length){el.innerHTML='<div class="empty">Aún no hay registros de monitoreo.</div>';return;}
+
+  // ── Calcular IS promedio por módulo (últimos 30 días) ──
+  const hoy=new Date(),hace30=new Date(hoy-30*864e5);
+  const modData=modulos.map(mod=>{
+    const pts=puntos.filter(p=>p.moduloId===mod.id);
+    const modRegs=regs.filter(r=>pts.some(p=>p.id===r.puntoId)&&new Date(r.fecha)>=hace30);
+    if(!modRegs.length)return null;
+    const isVals=modRegs.map(r=>calcIS(r));
+    const avgIS=Math.round(isVals.reduce((a,b)=>a+b,0)/isVals.length);
+    const lastReg=modRegs.sort((a,b)=>new Date(b.fecha)-new Date(a.fecha))[0];
+    const cam=campos.find(c=>c.id===mod.campoId)||{};
+    return{mod,cam,avgIS,n:modRegs.length,dom:dominante(lastReg),lastFecha:lastReg.fecha,pts:pts.length};
+  }).filter(Boolean).sort((a,b)=>b.avgIS-a.avgIS);
+
+  if(!modData.length){el.innerHTML='<div class="empty">Sin registros en los últimos 30 días.</div>';return;}
+
+  // ── Evolución semanal (IS promedio por semana, últimos 8 semanas) ──
+  const semanas=[];
+  for(let i=7;i>=0;i--){
+    const desde=new Date(hoy-(i+1)*7*864e5),hasta=new Date(hoy-i*7*864e5);
+    const semRegs=regs.filter(r=>{const d=new Date(r.fecha);return d>=desde&&d<hasta;});
+    const lbl=`S${8-i}`;
+    const isV=semRegs.length?Math.round(semRegs.map(r=>calcIS(r)).reduce((a,b)=>a+b,0)/semRegs.length):null;
+    semanas.push({lbl,isV,n:semRegs.length});
+  }
+  const semsConDatos=semanas.filter(s=>s.isV!==null);
+
+  // ── Gráfico de barras horizontales — IS por módulo ──
+  const topN=Math.min(modData.length,12);
+  const barH=28,barPad=8,chartH=(barH+barPad)*topN+20;
+  const maxLabel=Math.max(...modData.slice(0,topN).map(d=>d.mod.nombre.length))*5.5;
+  const labelW=Math.min(maxLabel,130);
+  const chartW=320-labelW-40;
+
+  let barsSvg=`<svg viewBox="0 0 320 ${chartH}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">`;
+  modData.slice(0,topN).forEach((d,i)=>{
+    const y=i*(barH+barPad)+4;
+    const bw=Math.max(1,d.avgIS/100*chartW);
+    const col=isColor(d.avgIS);
+    const short=d.mod.nombre.length>18?d.mod.nombre.slice(0,17)+'…':d.mod.nombre;
+    barsSvg+=`<text x="${labelW-4}" y="${y+18}" font-family="Nunito,sans-serif" font-size="10" font-weight="700" fill="#374151" text-anchor="end">${short}</text>`;
+    barsSvg+=`<rect x="${labelW}" y="${y+4}" width="${chartW}" height="${barH-6}" rx="4" fill="#f3f4f6"/>`;
+    barsSvg+=`<rect x="${labelW}" y="${y+4}" width="${bw}" height="${barH-6}" rx="4" fill="${col}"/>`;
+    barsSvg+=`<text x="${labelW+bw+5}" y="${y+18}" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="${col}">${d.avgIS}</text>`;
   });
-  el.innerHTML=html||'<div class="empty">Sin datos.</div>';
+  barsSvg+=`</svg>`;
+
+  // ── Gráfico de línea — evolución IS semanal ──
+  let lineSvg='';
+  if(semsConDatos.length>=2){
+    const W=300,H=90,padL=28,padB=20,padT=8;
+    const maxIS=Math.max(...semsConDatos.map(s=>s.isV),20);
+    const xs=semanas.map((_,i)=>padL+(i/(semanas.length-1))*(W-padL-8));
+    const ys=semanas.map(s=>s.isV!==null?padT+(H-padT-padB)*(1-s.isV/100):null);
+    const pts2=semanas.map((s,i)=>s.isV!==null?`${xs[i]},${ys[i]}`:null).filter(Boolean);
+    lineSvg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">`;
+    // Grid lines
+    [0,25,50,75,100].forEach(v=>{
+      const y=padT+(H-padT-padB)*(1-v/100);
+      lineSvg+=`<line x1="${padL}" y1="${y}" x2="${W-8}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>`;
+      lineSvg+=`<text x="${padL-3}" y="${y+3}" font-family="Nunito,sans-serif" font-size="8" fill="#9ca3af" text-anchor="end">${v}</text>`;
+    });
+    // Zona roja (IS>60)
+    const yRed=padT+(H-padT-padB)*0.4;
+    lineSvg+=`<rect x="${padL}" y="${padT}" width="${W-padL-8}" height="${yRed-padT}" fill="#fee2e2" opacity="0.3"/>`;
+    // Línea
+    if(pts2.length>=2)lineSvg+=`<polyline points="${pts2.join(' ')}" fill="none" stroke="#1b4332" stroke-width="2" stroke-linejoin="round"/>`;
+    // Puntos y etiquetas
+    semanas.forEach((s,i)=>{
+      if(s.isV===null)return;
+      const x=xs[i],y=ys[i];
+      lineSvg+=`<circle cx="${x}" cy="${y}" r="4" fill="${isColor(s.isV)}" stroke="white" stroke-width="1.5"/>`;
+      lineSvg+=`<text x="${x}" y="${H-5}" font-family="Nunito,sans-serif" font-size="8" fill="#6b7280" text-anchor="middle">${s.lbl}</text>`;
+    });
+    lineSvg+=`</svg>`;
+  }
+
+  // ── Tabla de prioridades completa ──
+  let priorHtml=modData.map((d,i)=>{
+    const badge=`<span style="background:${isColor(d.avgIS)};color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">${isLabel(d.avgIS)} ${d.avgIS}</span>`;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6">
+      <div style="font-size:18px;font-weight:900;color:${isColor(d.avgIS)};min-width:24px;text-align:center">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.mod.nombre}</div>
+        <div style="font-size:11px;color:var(--muted)">${d.cam.nombre||''} · ${d.n} registro${d.n>1?'s':''} · último ${fmtD(d.lastFecha)}</div>
+        <div style="font-size:11px;margin-top:2px">Dominante: <b>${d.dom}</b></div>
+      </div>
+      ${badge}
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`
+  <div style="padding:12px 16px 0">
+
+    <div style="background:#1b4332;border-radius:14px;padding:14px;margin-bottom:12px">
+      <div style="color:white;font-weight:900;font-size:14px;margin-bottom:4px">📊 Dashboard Fitosanitario</div>
+      <div style="color:rgba(255,255,255,.6);font-size:12px">Índice de Sanidad (IS) promedio · últimos 30 días · ${modData.length} módulo${modData.length>1?'s':''} con datos</div>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        ${['Sano 0–19','Bajo 20–39','Medio 40–59','Alto 60–79','Crítico 80+'].map((l,i)=>{
+          const cols=['#16a34a','#65a30d','#ca8a04','#ea580c','#dc2626'];
+          return`<div style="display:flex;align-items:center;gap:3px"><div style="width:10px;height:10px;border-radius:2px;background:${cols[i]};flex-shrink:0"></div><span style="color:rgba(255,255,255,.65);font-size:9px;font-weight:700">${l}</span></div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:13px;margin-bottom:12px">
+      <div style="font-weight:900;font-size:13px;color:#1b4332;margin-bottom:10px">🏆 IS por módulo — top ${topN} (últimos 30 días)</div>
+      ${barsSvg}
+    </div>
+
+    ${semsConDatos.length>=2?`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:13px;margin-bottom:12px">
+      <div style="font-weight:900;font-size:13px;color:#1b4332;margin-bottom:8px">📈 Evolución IS semanal (promedio empresa)</div>
+      <div style="font-size:10px;color:#dc2626;font-weight:700;margin-bottom:6px">Zona roja = riesgo alto (IS > 60)</div>
+      ${lineSvg}
+    </div>`:''}
+
+    <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:13px;margin-bottom:16px">
+      <div style="font-weight:900;font-size:13px;color:#1b4332;margin-bottom:10px">🚨 Ranking de prioridad de atención</div>
+      ${priorHtml}
+    </div>
+
+    <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;margin-bottom:16px">
+      <div style="padding:10px 13px;font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #f3f4f6">📋 Tabla de estado por punto — último registro</div>
+      <div class="swrp"><table class="stbl"><thead><tr>
+        <th>Módulo / Punto</th><th>IS</th><th>Mosquita</th><th>Polilla</th><th>Arañita</th><th>Botrytis</th><th>Fecha</th>
+      </tr></thead><tbody>
+      ${modData.flatMap(d=>{
+        const pts2=puntos.filter(p=>p.moduloId===d.mod.id);
+        return pts2.map(p=>{
+          const pRegs=regs.filter(r=>r.puntoId===p.id).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+          const last=pRegs[0];
+          if(!last)return`<tr><td><b>${d.mod.nombre}</b><br>${p.nombre}</td><td colspan="6" style="color:#ccc;text-align:center">—</td></tr>`;
+          const is2=calcIS(last);
+          const col=isColor(is2);
+          const mo2=last.plagas?.mosquita,po2=last.plagas?.polilla,ar2=last.plagas?.aranitas,bo2=last.enfermedades?.botrytis;
+          const cMo=mo2?.presente?`<span style="color:${mo2.adultosPorPlanta==='>5'?'#dc2626':mo2.adultosPorPlanta==='1-5'?'#ca8a04':'#16a34a'};font-weight:800">${mo2.adultosPorPlanta}</span>`:'·';
+          const cPo=po2?.presente&&po2.dano==='pres'?`<span style="color:#ea580c;font-weight:800">sev${po2.severidadDano}</span>`:po2?.trampa>0?`<span style="color:#ca8a04;font-weight:800">${po2.trampa}m</span>`:'·';
+          const cAr=ar2?.presente&&ar2.presencia==='pres'?`<span style="color:${ar2.severidad>=4?'#dc2626':ar2.severidad>=3?'#ea580c':'#ca8a04'};font-weight:800">sev${ar2.severidad}</span>`:'·';
+          const cBo=bo2?.presente?`<span style="color:${bo2.severidad>=4?'#dc2626':bo2.severidad>=3?'#ea580c':'#ca8a04'};font-weight:800">${bo2.incidencia}/20 s${bo2.severidad}</span>`:'·';
+          return`<tr><td><b>${d.mod.nombre}</b><br><small>${p.nombre}</small></td>
+            <td style="text-align:center"><span style="background:${col};color:white;font-size:10px;font-weight:900;padding:1px 5px;border-radius:8px">${is2}</span></td>
+            <td style="text-align:center">${cMo}</td><td style="text-align:center">${cPo}</td>
+            <td style="text-align:center">${cAr}</td><td style="text-align:center">${cBo}</td>
+            <td style="font-size:10px;color:var(--muted)">${fmtD(last.fecha)}</td></tr>`;
+        });
+      }).join('')}
+      </tbody></table></div>
+    </div>
+  </div>`;
 }
 
 // ===== DETALLE =====
