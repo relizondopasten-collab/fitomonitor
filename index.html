@@ -328,10 +328,40 @@ input:checked+.tsl:before{transform:translateX(20px)}
 <div class="mov" id="mModulo"><div class="modal">
   <div class="mh"></div><div class="mt">Nuevo Módulo / Invernadero</div>
   <div class="fg"><label class="fl">Campo</label><select class="fs" id="mC"></select></div>
-  <div class="fg"><label class="fl">Nombre del módulo</label><input class="fi" id="mN" placeholder="Ej: Módulo 1 Norte"></div>
+  <div class="fg"><label class="fl">Sector predial</label><input class="fi" id="mSector" placeholder="Ej: A, B, Las Casas..."></div>
+  <div class="fg"><label class="fl">Módulo (dentro del sector)</label>
+    <select class="fs" id="mModTipo" onchange="updateNombreModulo()">
+      <option value="Norte">Norte</option>
+      <option value="Sur">Sur</option>
+      <option value="Centro">Centro</option>
+      <option value="Único">Único</option>
+      <option value="Otro">Otro (libre)</option>
+    </select>
+  </div>
+  <div class="fg" id="fgNombreLibre" style="display:none"><label class="fl">Nombre del módulo</label><input class="fi" id="mN" placeholder="Ej: Módulo 1 Norte"></div>
   <div class="f2">
     <div class="fg"><label class="fl">N° mesas/hileras</label><input type="number" class="fi" id="mMs" placeholder="24" min="1"></div>
     <div class="fg"><label class="fl">Superficie (m²)</label><input type="number" class="fi" id="mSu" placeholder="2000"></div>
+  </div>
+  <div class="fg"><label class="fl">Cultivo</label>
+    <select class="fs" id="mCultivo" onchange="toggleEpoca()">
+      <option value="tomate">🍅 Tomate</option>
+      <option value="pimenton">🫑 Pimentón</option>
+      <option value="frutilla">🍓 Frutilla</option>
+      <option value="especialidades">🌿 Especialidades</option>
+    </select>
+  </div>
+  <div class="fg" id="fgEpoca"><label class="fl">Época de cultivo</label>
+    <select class="fs" id="mEpoca">
+      <option value="otoño">Otoño</option>
+      <option value="invierno">Invierno</option>
+      <option value="primor">Primor</option>
+      <option value="trastomate">Trastomate</option>
+      <option value="verano">Verano</option>
+    </select>
+  </div>
+  <div class="fg"><label class="fl">Fecha de establecimiento</label>
+    <input type="date" class="fi" id="mFechaEst">
   </div>
   <div class="fg"><label class="fl">Variedad / Cultivar</label><input class="fi" id="mVa" placeholder="Ej: Zeemann, RAF..."></div>
   <button class="bfull bg" onclick="saveMo()">Guardar</button>
@@ -409,7 +439,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
           </div>
           <div class="pfld open" id="fldPoDa" style="margin-top:8px">
             <div class="subfld">
-              <div class="subfld-t">Severidad del daño</div>
+              <div class="subfld-t">Severidad del daño foliar</div>
               <div class="sv-row" id="svPo">
                 <button class="sv" onclick="setSv('svPo',1,this)">1</button>
                 <button class="sv" onclick="setSv('svPo',2,this)">2</button>
@@ -417,9 +447,12 @@ input:checked+.tsl:before{transform:translateX(20px)}
                 <button class="sv" onclick="setSv('svPo',4,this)">4</button>
                 <button class="sv" onclick="setSv('svPo',5,this)">5</button>
               </div>
-              <div class="svleg" style="margin-top:8px;margin-bottom:0">
-                <span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span>
-                <span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span>
+              <div style="display:flex;flex-direction:column;gap:3px;margin-top:8px;font-size:11px">
+                <div style="display:flex;gap:6px"><span style="background:#dcfce7;border-radius:4px;padding:1px 6px;font-weight:800;color:#15803d;flex-shrink:0">1</span><span>1 foliolo con larva en 10 tallos revisados</span></div>
+                <div style="display:flex;gap:6px"><span style="background:#fef9c3;border-radius:4px;padding:1px 6px;font-weight:800;color:#854d0e;flex-shrink:0">2</span><span>5 foliolos con daño en 10 tallos revisados</span></div>
+                <div style="display:flex;gap:6px"><span style="background:#ffedd5;border-radius:4px;padding:1px 6px;font-weight:800;color:#c2410c;flex-shrink:0">3</span><span>10 foliolos con daño en 10 tallos + daño en frutos</span></div>
+                <div style="display:flex;gap:6px"><span style="background:#fee2e2;border-radius:4px;padding:1px 6px;font-weight:800;color:#b91c1c;flex-shrink:0">4</span><span>20 foliolos con daño + daño en frutos</span></div>
+                <div style="display:flex;gap:6px"><span style="background:#450a0a;border-radius:4px;padding:1px 6px;font-weight:800;color:white;flex-shrink:0">5</span><span>Daño en más del 5% de las plantas del módulo</span></div>
               </div>
             </div>
           </div>
@@ -622,11 +655,12 @@ input:checked+.tsl:before{transform:translateX(20px)}
       <div class="pfld" id="fldBo">
         <div class="f2" style="margin-top:10px">
           <div>
-            <div class="fl">Incidencia (%)</div>
-            <div class="nw"><button class="nbb" onclick="adj('nBoI',-5)">−</button><input type="number" class="nin" id="nBoI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nBoI',5)">+</button></div>
+            <div class="fl">Incidencia — plantas con síntomas</div>
+            <div class="nw"><button class="nbb" onclick="adj('nBoI',-1)">−</button><input type="number" class="nin" id="nBoI" value="0" min="0" max="20"><button class="nbb" onclick="adj('nBoI',1)">+</button></div>
+            <div style="font-size:10px;color:var(--muted);margin-top:3px;text-align:center">de 20 plantas observadas</div>
           </div>
           <div>
-            <div class="fl">Severidad</div>
+            <div class="fl">Severidad — daños en tallo</div>
             <div class="sv-row" id="svBo">
               <button class="sv" onclick="setSv('svBo',1,this)">1</button><button class="sv" onclick="setSv('svBo',2,this)">2</button>
               <button class="sv" onclick="setSv('svBo',3,this)">3</button><button class="sv" onclick="setSv('svBo',4,this)">4</button>
@@ -634,8 +668,14 @@ input:checked+.tsl:before{transform:translateX(20px)}
             </div>
           </div>
         </div>
-        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
-        <div style="margin-top:4px"><div class="fl">Órganos afectados</div>
+        <div style="display:flex;flex-direction:column;gap:3px;margin-top:8px;font-size:11px">
+          <div style="display:flex;gap:6px"><span style="background:#dcfce7;border-radius:4px;padding:1px 6px;font-weight:800;color:#15803d;flex-shrink:0">1</span><span>1 lesión en 20 tallos (1/20)</span></div>
+          <div style="display:flex;gap:6px"><span style="background:#fef9c3;border-radius:4px;padding:1px 6px;font-weight:800;color:#854d0e;flex-shrink:0">2</span><span>1 lesión en 15 tallos (~1-2/20)</span></div>
+          <div style="display:flex;gap:6px"><span style="background:#ffedd5;border-radius:4px;padding:1px 6px;font-weight:800;color:#c2410c;flex-shrink:0">3</span><span>1 lesión en 10 tallos (2/20)</span></div>
+          <div style="display:flex;gap:6px"><span style="background:#fee2e2;border-radius:4px;padding:1px 6px;font-weight:800;color:#b91c1c;flex-shrink:0">4</span><span>1 lesión en 5 tallos (4/20)</span></div>
+          <div style="display:flex;gap:6px"><span style="background:#450a0a;border-radius:4px;padding:1px 6px;font-weight:800;color:white;flex-shrink:0">5</span><span>1 lesión por tallo (20/20)</span></div>
+        </div>
+        <div style="margin-top:8px"><div class="fl">Órganos afectados</div>
           <div class="org-row" id="orgBo">
             <button class="orgb" onclick="togOrg(this,'tallo')">🪴 Tallo</button>
             <button class="orgb" onclick="togOrg(this,'fruto')">🍅 Fruto</button>
@@ -649,7 +689,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
     <!-- OÍDIO -->
     <div class="prow">
       <div class="phdr">
-        <div><div class="pnm">Oídio</div><div class="pit">Leveillula taurica</div></div>
+        <div><div class="pnm">Oídio</div><div class="pit">O. neolycopersici · L. taurica</div></div>
         <label class="tog"><input type="checkbox" id="ckOi" onchange="tp('Oi')"><span class="tsl"></span></label>
       </div>
       <div class="pfld" id="fldOi">
@@ -1022,7 +1062,8 @@ function renderAccessMgmt(){
   // Export codes button
   html+=`<button onclick="exportCodes()" style="width:100%;margin-top:6px;padding:11px;background:#1b4332;color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">📄 Exportar hoja de códigos</button>`;
   html+=`<button onclick="adminSyncAllUp()" style="width:100%;margin-top:8px;padding:11px;background:#0369a1;color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">☁️ Forzar sincronización → Firestore</button>`;
-  html+=`<div style="font-size:11px;color:#6b7280;margin-top:6px;text-align:center">Los datos se sincronizan automáticamente. Usa este botón solo si es necesario.</div>`;
+  html+=`<button onclick="openBulkModal()" style="width:100%;margin-top:8px;padding:11px;background:#7c3aed;color:white;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer">📦 Carga masiva de estructura</button>`;
+  html+=`<div style="font-size:11px;color:#6b7280;margin-top:6px;text-align:center">Los datos se sincronizan automáticamente.</div>`;
   html+=`</div>`;
   el.innerHTML=html;
 }
@@ -1088,7 +1129,109 @@ function exportCodes(){
   dlFile(txt,'FitoMonitor_Codigos_'+new Date().toISOString().split('T')[0]+'.txt','text/plain;charset=utf-8');
 }
 
-// ===== INIT =====
+// ===== CARGA MASIVA =====
+const BULK_PREDIOS = {
+  mol: { // Agrícola El Molino
+    campos:[
+      {nombre:'Fundo',      sectores:['A','B','C','D','E']},
+      {nombre:'Jorquera',   sectores:['A','B','C','D','E','F1','F2','G']},
+      {nombre:'Parcela 22', sectores:['A','B','C','D','E']},
+    ]
+  },
+  mar: { // Agrícola Marcotti
+    campos:[
+      {nombre:'Parcela 25', sectores:['Las Casas','Las Pitas','Las Nuevas','Parrón B','Parrón A','El Pozo','El Espino','El Pino']},
+    ]
+  },
+  ori: { // Agrícola Origen
+    campos:[
+      {nombre:'La Constancia', sectores:['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','Parrón']},
+      {nombre:'El Tránsito',   sectores:['1','2','3','4','5','6']},
+      {nombre:'Paradero 12',   sectores:['1','2','3','4','5','6','7','8','9','10','11','12','13']},
+    ]
+  }
+};
+const BULK_MODULOS  = ['Norte','Sur'];
+const BULK_PUNTOS   = ['Techo A','Techo B','Techo C'];
+
+async function runBulkImport(cid){
+  const bd=BULK_PREDIOS[cid];
+  if(!bd){alert('No hay datos precargados para esta empresa');return;}
+  const co=getAuthCos().find(x=>x.id===cid);
+  const coName=co?co.name:cid;
+
+  // Contar elementos totales
+  let total=0;
+  bd.campos.forEach(c=>c.sectores.forEach(s=>{BULK_MODULOS.forEach(m=>{total++;BULK_PUNTOS.forEach(()=>total++);});}));
+  total+=bd.campos.length; // campos
+
+  if(!confirm(`¿Cargar la estructura completa de ${coName}?\n\n• ${bd.campos.length} campo(s)\n• ${bd.campos.reduce((a,c)=>a+c.sectores.length*BULK_MODULOS.length,0)} módulos\n• ${bd.campos.reduce((a,c)=>a+c.sectores.length*BULK_MODULOS.length*BULK_PUNTOS.length,0)} puntos de monitoreo\n\nEsto puede tomar unos segundos.`))return;
+
+  // Guardar sesión actual y cambiar a la empresa
+  const prevSess={...sess};
+  sess={id:cid,name:coName,isAdmin:true};
+
+  showLoader('Creando estructura… 0%');
+
+  // Asegurar que existe la empresa
+  let empresas=db.g('empresas');
+  if(!empresas.find(e=>e.id===cid)){
+    const eItem={id:cid,nombre:coName,notas:'',auto:true};
+    empresas.push(eItem);db.s('empresas',empresas);
+    await fsWrite('empresas',eItem);
+  }
+
+  let done=0;
+  for(const campo of bd.campos){
+    // Campo
+    let campos=db.g('campos');
+    let campoItem=campos.find(c=>c.nombre===campo.nombre&&c.empresaId===cid);
+    if(!campoItem){
+      campoItem={id:db.id(),empresaId:cid,nombre:campo.nombre,ubicacion:''};
+      campos.push(campoItem);db.s('campos',campos);
+      await fsWrite('campos',campoItem);
+    }
+    done++;showLoader(`Creando estructura… ${Math.round(done/total*100)}%`);
+
+    for(const sector of campo.sectores){
+      for(const modNombre of BULK_MODULOS){
+        // Módulo
+        let modulos=db.g('modulos');
+        const mNombre=`${sector} · ${modNombre}`;
+        let modItem=modulos.find(m=>m.nombre===mNombre&&m.campoId===campoItem.id);
+        if(!modItem){
+          modItem={id:db.id(),campoId:campoItem.id,nombre:mNombre,sector,modTipo:modNombre,
+            mesas:0,superficie:0,cultivo:'tomate',epoca:'',fechaEst:'',variedad:''};
+          modulos.push(modItem);db.s('modulos',modulos);
+          await fsWrite('modulos',modItem);
+        }
+        done++;showLoader(`Creando estructura… ${Math.round(done/total*100)}%`);
+
+        for(const puntoNombre of BULK_PUNTOS){
+          // Punto
+          let puntos=db.g('puntos');
+          if(!puntos.find(p=>p.nombre===puntoNombre&&p.moduloId===modItem.id)){
+            const pItem={id:db.id(),moduloId:modItem.id,nombre:puntoNombre,
+              mesa:'',descripcion:'',lat:null,lng:null};
+            puntos.push(pItem);db.s('puntos',puntos);
+            await fsWrite('puntos',pItem);
+          }
+          done++;showLoader(`Creando estructura… ${Math.round(done/total*100)}%`);
+        }
+      }
+    }
+  }
+
+  // Restaurar sesión admin
+  sess=prevSess;
+  hideLoader();
+  renderCfg();
+  alert(`✅ Estructura de ${coName} cargada correctamente.\nAhora selecciona la empresa en el panel para verla.`);
+}
+
+function openBulkModal(){
+  document.getElementById('mBulk').classList.add('open');
+}
 (()=>{const d=new Date();document.getElementById('hdrDate').innerHTML=d.toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'}).replace(/ de /g,' ').toUpperCase().replace(',','<br>');})();
 function initApp(){
   const stored=sessionStorage.getItem(SK);
@@ -1173,9 +1316,39 @@ function saveC(){
   document.getElementById('cN').value='';document.getElementById('cU').value='';
   cm('mCampo');renderCfg();
 }
+function toggleEpoca(){
+  const c=document.getElementById('mCultivo').value;
+  const ep=document.getElementById('fgEpoca');
+  if(ep) ep.style.display=(c==='tomate'||c==='especialidades')?'block':'none';
+}
+function updateNombreModulo(){
+  const tipo=document.getElementById('mModTipo').value;
+  const libre=document.getElementById('fgNombreLibre');
+  if(libre) libre.style.display=tipo==='Otro'?'block':'none';
+}
+function getNombreModulo(){
+  const sector=document.getElementById('mSector').value.trim();
+  const tipo=document.getElementById('mModTipo').value;
+  if(tipo==='Otro') return document.getElementById('mN').value.trim();
+  return sector ? `${sector} · ${tipo}` : tipo;
+}
+
 function saveMo(){
-  const n=document.getElementById('mN').value.trim(),cid=document.getElementById('mC').value;if(!n||!cid){alert('Complete los campos');return;}
-  const item={id:db.id(),campoId:cid,nombre:n,mesas:parseInt(document.getElementById('mMs').value)||0,superficie:parseInt(document.getElementById('mSu').value)||0,variedad:document.getElementById('mVa').value};
+  const nombre=getNombreModulo();
+  const cid=document.getElementById('mC').value;
+  if(!nombre||!cid){alert('Complete los campos obligatorios');return;}
+  const cultivo=document.getElementById('mCultivo').value;
+  const item={
+    id:db.id(),campoId:cid,nombre,
+    sector:document.getElementById('mSector').value.trim(),
+    modTipo:document.getElementById('mModTipo').value,
+    mesas:parseInt(document.getElementById('mMs').value)||0,
+    superficie:parseInt(document.getElementById('mSu').value)||0,
+    cultivo,
+    epoca:(cultivo==='tomate'||cultivo==='especialidades')?document.getElementById('mEpoca').value:'',
+    fechaEst:document.getElementById('mFechaEst').value,
+    variedad:document.getElementById('mVa').value
+  };
   const a=db.g('modulos');a.push(item);db.s('modulos',a);
   fsWrite('modulos',item);
   cm('mModulo');renderCfg();
@@ -1208,7 +1381,10 @@ function renderCfg(){
 
   const lE=document.getElementById('lstE');lE.innerHTML=E.length?'':'<div class="empty">No hay empresas configuradas</div>';E.forEach(e=>lE.innerHTML+=`<div class="card"><div class="ct">${e.nombre}</div><div class="cs">${C.filter(c=>c.empresaId===e.id).length} campo(s)${e.notas?' · '+e.notas:''}</div><div class="ca">${e.auto?'':'<button class="bsm bdel" onclick="delItem(\'empresas\',\''+e.id+'\')">Eliminar</button>'}</div></div>`);
   const lC=document.getElementById('lstC');lC.innerHTML=C.length?'':'<div class="empty">No hay campos configurados</div>';C.forEach(c=>lC.innerHTML+=`<div class="card"><div class="ct">${c.nombre}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' · ':''}${M.filter(m=>m.campoId===c.id).length} módulo(s)${c.ubicacion?' · '+c.ubicacion:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('campos','${c.id}')">Eliminar</button></div></div>`);
-  const lM=document.getElementById('lstM');lM.innerHTML=M.length?'':'<div class="empty">No hay módulos configurados</div>';M.forEach(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};lM.innerHTML+=`<div class="card"><div class="ct">${m.nombre}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' / ':''} ${c.nombre||''} · ${m.mesas||0} mesas · ${P.filter(p=>p.moduloId===m.id).length} punto(s)${m.variedad?' · '+m.variedad:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('modulos','${m.id}')">Eliminar</button></div></div>`;});
+  const lM=document.getElementById('lstM');lM.innerHTML=M.length?'':'<div class="empty">No hay módulos configurados</div>';M.forEach(m=>{const c=db.g('campos').find(x=>x.id===m.campoId)||{};
+    const cultivoBadge=m.cultivo?`<span style="background:${m.cultivo==='tomate'?'#fee2e2':m.cultivo==='pimenton'?'#fff7ed':m.cultivo==='frutilla'?'#fce7f3':'#f0fdf4'};color:${m.cultivo==='tomate'?'#b91c1c':m.cultivo==='pimenton'?'#c2410c':m.cultivo==='frutilla'?'#9d174d':'#15803d'};font-size:10px;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:4px">${m.cultivo==='tomate'?'🍅':m.cultivo==='pimenton'?'🫑':m.cultivo==='frutilla'?'🍓':'🌿'} ${m.cultivo}${m.epoca?' · '+m.epoca:''}</span>`:'';
+    const fechaBadge=m.fechaEst?`<span style="font-size:10px;color:var(--muted);margin-left:4px">📅 ${fmtD(m.fechaEst)}</span>`:'';
+    lM.innerHTML+=`<div class="card"><div class="ct">${m.nombre} ${cultivoBadge}${fechaBadge}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' / ':''} ${c.nombre||''} · ${m.mesas||0} mesas · ${P.filter(p=>p.moduloId===m.id).length} punto(s)${m.variedad?' · '+m.variedad:''}</div><div class="ca"><button class="bsm bdel" onclick="delItem('modulos','${m.id}')">Eliminar</button></div></div>`;});
   const lP=document.getElementById('lstP');lP.innerHTML=P.length?'':'<div class="empty">No hay puntos de monitoreo</div>';P.forEach(p=>{const m=db.g('modulos').find(x=>x.id===p.moduloId)||{},c=db.g('campos').find(x=>x.id===m.campoId)||{};const gps=p.lat&&p.lng;lP.innerHTML+=`<div class="card"><div class="ct">${p.nombre} ${gps?'📍':'⬜'}</div><div class="cs">${sess?.isAdmin?geN(c.empresaId)+' / ':''} ${c.nombre||''} / ${m.nombre||''}${p.mesa?' · Mesa '+p.mesa:''}</div>${p.descripcion?`<div style="font-size:12px;color:var(--muted)">${p.descripcion}</div>`:''}${gps?`<div style="font-size:11px;color:var(--g-mid);font-weight:700;margin-top:2px">📍 ${p.lat}, ${p.lng}</div>`:'<div style="font-size:11px;color:var(--muted)">Sin coordenadas GPS</div>'}<div class="ca"><button class="bsm bdel" onclick="delItem('puntos','${p.id}')">Eliminar</button></div></div>`;});
 }
 
@@ -1476,6 +1652,8 @@ function showDet(id){
   const E=db.g('empresas').find(e=>e.id===C.empresaId)||{};
   const s=calcStatus(r);
   const SLBL=['','Muy baja','Baja','Media','Alta','Muy alta / Crítica'];
+  const SLBL_PO=['','1 foliolo/larva en 10 tallos','5 foliolos/daño en 10 tallos','10 foliolos/daño + frutos','20 foliolos/daño + frutos','>5% plantas afectadas'];
+  const SLBL_BO=['','1 lesión en 20 tallos','1 lesión en 15 tallos','1 lesión en 10 tallos','1 lesión en 5 tallos','1 lesión por tallo (20/20)'];
 
   const mo=r.plagas?.mosquita,po=r.plagas?.polilla,tr=r.plagas?.trips,ar=r.plagas?.aranitas;
   const ne=r.enfermedades?.nematodos,fu=r.enfermedades?.fusarium,ve=r.enfermedades?.verticillium;
@@ -1483,7 +1661,7 @@ function showDet(id){
 
   let plagasHTML='';
   if(mo?.presente)plagasHTML+=`<div class="di"><div class="dn">🪰 Mosquita blanca</div><div class="drow"><div><span style="color:var(--muted)">Adultos/planta:</span> <b style="color:${mo.adultosPorPlanta==='>5'?'var(--danger)':mo.adultosPorPlanta==='1-5'?'var(--amber-d)':'var(--ok)'}">${mo.adultosPorPlanta}</b></div></div></div>`;
-  if(po?.presente)plagasHTML+=`<div class="di"><div class="dn">🦋 Polilla del tomate (Tuta absoluta)</div><div class="drow"><div><span style="color:var(--muted)">Daño foliar/fruto:</span> <b>${po.dano==='pres'?'Presente (sev '+po.severidadDano+' — '+SLBL[po.severidadDano]+')':'Ausente'}</b></div></div><div style="margin-top:6px;background:#e0f2fe;border-radius:6px;padding:8px;font-size:12px"><b>💧 Trampa de agua:</b> ${po.trampa} adultos (machos) / ${po.nTrampas} trampa(s)<br><span style="color:var(--muted)">${po.trampa>=5?'⚠️ Sobre umbral de acción (≥5/trampa/semana)':'Bajo umbral de acción'}</span></div></div>`;
+  if(po?.presente)plagasHTML+=`<div class="di"><div class="dn">🦋 Polilla del tomate (Tuta absoluta)</div><div class="drow"><div><span style="color:var(--muted)">Daño foliar/fruto:</span> <b>${po.dano==='pres'?'Presente — Sev '+po.severidadDano+': '+SLBL_PO[po.severidadDano]:'Ausente'}</b></div></div><div style="margin-top:6px;background:#e0f2fe;border-radius:6px;padding:8px;font-size:12px"><b>💧 Trampa de agua:</b> ${po.trampa} adultos (machos) / ${po.nTrampas} trampa(s)<br><span style="color:var(--muted)">${po.trampa>=5?'⚠️ Sobre umbral de acción (≥5/trampa/semana)':'Bajo umbral de acción'}</span></div></div>`;
   if(tr?.presente)plagasHTML+=`<div class="di"><div class="dn">🔍 Trips</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${tr.presencia==='pres'?'Presente (nivel '+tr.nivelPoblacional+' — '+SLBL[tr.nivelPoblacional]+')':'Ausente'}</b></div></div></div>`;
   if(ar?.presente)plagasHTML+=`<div class="di"><div class="dn">🕷 Arañita (T. urticae)</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${ar.presencia==='pres'?'Presente':'Ausente'}</b></div>${ar.presencia==='pres'?`<div><span style="color:var(--muted)">Plantas afectadas:</span> <b>${ar.plantasAfectadas} / ${ar.plantasRevisadas}</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${ar.severidad} — ${SLBL[ar.severidad]}</b></div>`:''}</div></div>`;
   if(!plagasHTML)plagasHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Sin plagas detectadas</div>';
@@ -1492,7 +1670,7 @@ function showDet(id){
   if(ne?.presente)enfHTML+=`<div class="di"><div class="dn">🪱 Nematodos (Meloidogyne)</div><div class="drow"><div><span style="color:var(--muted)">Presencia:</span> <b>${ne.presencia==='pres'?'Presente':'Ausente'}</b></div>${ne.presencia==='pres'?`<div><span style="color:var(--muted)">Severidad:</span> <b>${ne.severidad} — ${SLBL[ne.severidad]}</b></div><div><span style="color:var(--muted)">Plantas con síntomas:</span> <b>${ne.plantasSint}</b></div>`:''}</div></div>`;
   if(fu?.presente)enfHTML+=`<div class="di"><div class="dn">🟤 Fusarium</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${fu.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${fu.severidad} — ${SLBL[fu.severidad]}</b></div></div></div>`;
   if(ve?.presente)enfHTML+=`<div class="di"><div class="dn">🟫 Verticillium</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${ve.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${ve.severidad} — ${SLBL[ve.severidad]}</b></div></div></div>`;
-  if(bo?.presente)enfHTML+=`<div class="di"><div class="dn">🍄 Botrytis cinerea</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${bo.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${bo.severidad} — ${SLBL[bo.severidad]}</b></div></div>${bo.organos?.length?`<div style="font-size:12px;margin-top:4px"><span style="color:var(--muted)">Órganos:</span> <b>${bo.organos.join(', ')}</b></div>`:''}</div>`;
+  if(bo?.presente)enfHTML+=`<div class="di"><div class="dn">🍄 Botrytis cinerea</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${bo.incidencia}/20 plantas</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${bo.severidad} — ${SLBL_BO[bo.severidad]||''}</b></div></div>${bo.organos?.length?`<div style="font-size:12px;margin-top:4px"><span style="color:var(--muted)">Órganos:</span> <b>${bo.organos.join(', ')}</b></div>`:''}</div>`;
   if(oi?.presente)enfHTML+=`<div class="di"><div class="dn">⬜ Oídio</div><div class="drow"><div><span style="color:var(--muted)">Incidencia:</span> <b>${oi.incidencia}%</b></div><div><span style="color:var(--muted)">Severidad:</span> <b>${oi.severidad} — ${SLBL[oi.severidad]}</b></div></div></div>`;
   if(!enfHTML)enfHTML='<div style="font-size:12px;color:var(--muted);margin-bottom:6px">Sin enfermedades detectadas</div>';
 
@@ -1591,8 +1769,33 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 
 </script>
 
-<!-- ============================================================ -->
-<!-- =================== PANTALLA DE LOGIN ====================== -->
+<!-- Modal carga masiva -->
+<div class="mov" id="mBulk"><div class="modal">
+  <div class="mh"></div>
+  <div class="mt">📦 Carga masiva de estructura</div>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:16px">Carga automática de campos, módulos (sector + Norte/Sur) y puntos de muestreo (Techo A/B/C).</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="background:var(--bg2);border-radius:10px;padding:13px">
+      <div style="font-weight:900;font-size:14px;color:var(--g-dark)">🏢 Agrícola El Molino</div>
+      <div style="font-size:12px;color:var(--muted);margin:4px 0">Fundo · Jorquera · Parcela 22 → 18 módulos · 54 puntos</div>
+      <button onclick="runBulkImport('mol');cm('mBulk')" style="margin-top:8px;width:100%;padding:9px;background:var(--g-dark);color:white;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer">Cargar El Molino</button>
+    </div>
+    <div style="background:var(--bg2);border-radius:10px;padding:13px">
+      <div style="font-weight:900;font-size:14px;color:var(--g-dark)">🏢 Agrícola Marcotti</div>
+      <div style="font-size:12px;color:var(--muted);margin:4px 0">Parcela 25 → 16 módulos · 48 puntos</div>
+      <button onclick="runBulkImport('mar');cm('mBulk')" style="margin-top:8px;width:100%;padding:9px;background:var(--g-dark);color:white;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer">Cargar Marcotti</button>
+    </div>
+    <div style="background:var(--bg2);border-radius:10px;padding:13px">
+      <div style="font-weight:900;font-size:14px;color:var(--g-dark)">🏢 Agrícola Origen</div>
+      <div style="font-size:12px;color:var(--muted);margin:4px 0">La Constancia · El Tránsito · Paradero 12 → 78 módulos · 234 puntos</div>
+      <button onclick="runBulkImport('ori');cm('mBulk')" style="margin-top:8px;width:100%;padding:9px;background:var(--g-dark);color:white;border:none;border-radius:8px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer">Cargar Origen</button>
+    </div>
+  </div>
+  <div style="background:#fef9c3;border-radius:8px;padding:10px;margin-top:12px;font-size:11px;color:#92400e">
+    ⚠️ Solo crea datos que aún no existen. Si ya los cargaste antes, no duplica.
+  </div>
+  <button class="bfull bcan" onclick="cm('mBulk')">Cerrar</button>
+</div></div>
 <!-- ============================================================ -->
 <style>
 #loginScreen{background:linear-gradient(160deg,#1b4332 0%,#0f2419 100%);font-family:'Nunito',sans-serif}
@@ -1832,19 +2035,27 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
     </div>
   </div>
 
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">📊 Escala de severidad de daño (en campo, 10 tallos revisados)</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#dcfce7;border:1.5px solid #16a34a;border-radius:6px;padding:3px 8px;font-weight:900;color:#15803d;min-width:24px;text-align:center;flex-shrink:0">1</div><div><b>1 foliolo con larva</b> en 10 tallos revisados · daño muy localizado · mina incipiente</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fef9c3;border:1.5px solid #ca8a04;border-radius:6px;padding:3px 8px;font-weight:900;color:#854d0e;min-width:24px;text-align:center;flex-shrink:0">2</div><div><b>5 foliolos con daño</b> en 10 tallos revisados · minas visibles sin afectar fruto</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#ffedd5;border:1.5px solid #ea580c;border-radius:6px;padding:3px 8px;font-weight:900;color:#c2410c;min-width:24px;text-align:center;flex-shrink:0">3</div><div><b>10 foliolos con daño en 10 tallos</b> + inicio de daño en frutos</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fee2e2;border:1.5px solid #dc2626;border-radius:6px;padding:3px 8px;font-weight:900;color:#b91c1c;min-width:24px;text-align:center;flex-shrink:0">4</div><div><b>20 foliolos con daño</b> + daño generalizado en frutos de varios racimos</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#450a0a;border-radius:6px;padding:3px 8px;font-weight:900;color:white;min-width:24px;text-align:center;flex-shrink:0">5</div><div><b>Daño en más del 5% de las plantas</b> del módulo · pérdida productiva significativa</div></div>
+    </div>
+  </div>
+
   <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
     <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
     <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
-      <div>• 10 plantas/punto · revisar las últimas 4–6 hojas</div>
-      <div>• Buscar minas foliares con larva y excrementos negros</div>
-      <div>• Revisar frutos R1–R2 ante perforaciones pequeñas</div>
-      <div>• <b style="color:white">Umbral: 1 larva/planta</b> → acción inmediata</div>
+      <div>• Revisar <b style="color:white">10 tallos/punto</b> · contar foliolos con minas activas</div>
+      <div>• Buscar minas con larva (excrementos negros) y perforaciones en fruto R1–R2</div>
       <div>• Trampa de agua: ≥5 machos/trampa/semana → acción</div>
     </div>
   </div>
 </div>
 </div>
-<!-- ===== PANEL 1: MOSQUITA ===== -->
 <div class="cpanel" id="cp1" style="display:none">
 <div style="padding:16px 16px 6px">
   <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Mosquita blanca</div>
@@ -2871,21 +3082,36 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
     </div>
   </div>
 
+  <div style="background:white;border-radius:12px;margin-bottom:8px;border:1px solid #ddd8cf;padding:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">📊 Incidencia y Severidad — criterios de campo (20 plantas / 20 tallos)</div>
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;font-weight:900;color:#9d174d;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">INCIDENCIA — Plantas con síntomas / 20 observadas</div>
+      <div style="font-size:12px;color:#374151;line-height:1.7">
+        Contar cuántas de 20 plantas presentan al menos un órgano con síntomas de Botrytis (tallo, fruto, hoja o flor). Registrar el número directo (ej: 3/20 plantas).
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:900;color:#9d174d;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">SEVERIDAD — Lesiones en 20 tallos revisados</div>
+    <div style="display:flex;flex-direction:column;gap:5px;font-size:12px">
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#dcfce7;border:1.5px solid #16a34a;border-radius:6px;padding:3px 8px;font-weight:900;color:#15803d;min-width:24px;text-align:center;flex-shrink:0">1</div><div><b>1 lesión en 20 tallos</b> (1/20) · daño muy localizado</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fef9c3;border:1.5px solid #ca8a04;border-radius:6px;padding:3px 8px;font-weight:900;color:#854d0e;min-width:24px;text-align:center;flex-shrink:0">2</div><div><b>1 lesión en 15 tallos</b> (~1–2/20) · daño bajo</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#ffedd5;border:1.5px solid #ea580c;border-radius:6px;padding:3px 8px;font-weight:900;color:#c2410c;min-width:24px;text-align:center;flex-shrink:0">3</div><div><b>1 lesión en 10 tallos</b> (2/20) · daño medio</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fee2e2;border:1.5px solid #dc2626;border-radius:6px;padding:3px 8px;font-weight:900;color:#b91c1c;min-width:24px;text-align:center;flex-shrink:0">4</div><div><b>1 lesión en 5 tallos</b> (4/20) · daño alto</div></div>
+      <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#450a0a;border-radius:6px;padding:3px 8px;font-weight:900;color:white;min-width:24px;text-align:center;flex-shrink:0">5</div><div><b>1 lesión por tallo</b> (20/20) · epidemia activa</div></div>
+    </div>
+  </div>
+
   <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
     <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
     <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
-      <div>• Revisar <b style="color:white">tallos en zona de desbrote</b> después de cada poda</div>
-      <div>• Buscar <b style="color:white">micelio gris polvoriento</b> = esporulación activa → dispersión</div>
-      <div>• Flores senescentes caídas sobre hojas = fuente de infección</div>
-      <div>• <b style="color:white">Incidencia:</b> % de plantas con al menos un órgano afectado</div>
-      <div>• <b style="color:white">Severidad:</b> extensión del daño en el órgano afectado (1–5)</div>
-      <div>• Registrar órgano: tallo / fruto / hoja / flor — prioridad clínica diferente</div>
+      <div>• Revisar <b style="color:white">20 plantas</b> por punto → contar cuántas tienen síntomas (incidencia)</div>
+      <div>• Revisar <b style="color:white">20 tallos</b> → contar lesiones activas (severidad)</div>
+      <div>• Buscar <b style="color:white">micelio gris polvoriento</b> = esporulación activa → alta dispersión</div>
+      <div>• Registrar órgano afectado: tallo / fruto / hoja / flor</div>
+      <div>• Flores senescentes sobre hojas = fuente de infección frecuente</div>
     </div>
   </div>
 </div>
 </div>
-
-<!-- ===== PANEL 7: OIDIO ===== -->
 <!-- ===== PANEL 7: OÍDIO — DOS ESPECIES ===== -->
 <div class="cpanel" id="cp7" style="display:none">
 <div style="padding:16px 16px 6px">
