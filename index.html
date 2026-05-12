@@ -233,7 +233,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
       </div>
       <div id="accEWrap"><div class="ach" onclick="tacc('accE')"><span>🏢 Empresas <span class="bn" id="cntE">0</span></span><button class="badd" onclick="event.stopPropagation();om('mEmpresa')">+ Agregar</button></div><div class="acb open" id="accE"><div id="lstE"></div></div></div>
       <div><div class="ach" onclick="tacc('accC')"><span>🌾 Campos <span class="bn" id="cntC">0</span></span><button class="badd" onclick="event.stopPropagation();om('mCampo')">+ Agregar</button></div><div class="acb open" id="accC"><div id="lstC"></div></div></div>
-      <div><div class="ach" onclick="tacc('accM')"><span>🏗️ Módulos <span class="bn" id="cntM">0</span></span><button class="badd" onclick="event.stopPropagation();om('mModulo')">+ Agregar</button></div><div class="acb open" id="accM"><div id="lstM"></div></div></div>
+      <div><div class="ach" onclick="tacc('accM')"><span>🏗️ Módulos <span class="bn" id="cntM">0</span></span><div style="display:flex;gap:6px"><button class="badd" onclick="event.stopPropagation();openBulkModModal()" style="background:#7c3aed;color:white">🌱 Cultivos</button><button class="badd" onclick="event.stopPropagation();om('mModulo')">+ Agregar</button></div></div><div class="acb open" id="accM"><div id="lstM"></div></div></div>
       <div><div class="ach" onclick="tacc('accP')"><span>📍 Puntos de Monitoreo <span class="bn" id="cntP">0</span></span><button class="badd" onclick="event.stopPropagation();om('mPunto')">+ Agregar</button></div><div class="acb open" id="accP"><div id="lstP"></div></div></div>
       <!-- Gestión de accesos: solo admin -->
       <div id="accAccesoWrap" style="display:none">
@@ -1140,7 +1140,117 @@ function exportCodes(){
   dlFile(txt,'FitoMonitor_Codigos_'+new Date().toISOString().split('T')[0]+'.txt','text/plain;charset=utf-8');
 }
 
-// ===== CARGA MASIVA =====
+// ===== CONFIGURACIÓN MASIVA DE MÓDULOS =====
+let selModIds=new Set();
+
+function openBulkModModal(){
+  selModIds=new Set();
+  const campos=db.g('campos');
+  fillSel('bmCampo',campos,'nombre');
+  if(campos.length>0){
+    document.getElementById('bmCampo').value=campos[0].id;
+    renderModChips(campos[0].id);
+  } else {
+    document.getElementById('modChips').innerHTML='<div style="color:var(--muted);font-size:12px">No hay campos configurados</div>';
+  }
+  toggleBmEpoca();
+  updateBmApplyBtn();
+  document.getElementById('mBulkMod').classList.add('open');
+}
+
+function renderModChips(campoId){
+  selModIds=new Set();
+  const modulos=db.g('modulos').filter(m=>m.campoId===campoId);
+  const el=document.getElementById('modChips');
+  if(!modulos.length){el.innerHTML='<div style="color:var(--muted);font-size:12px">No hay módulos en este campo</div>';updateBmApplyBtn();return;}
+  el.innerHTML=modulos.map(m=>{
+    const isNorte=m.modTipo==='Norte'||m.nombre.includes('Norte');
+    const isSur=m.modTipo==='Sur'||m.nombre.includes('Sur');
+    const color=isNorte?'#dbeafe':'isSur'?'#ffedd5':'#f3f4f6';
+    const txtColor=isNorte?'#1e40af':isSur?'#c2410c':'#374151';
+    const short=m.nombre.replace(' · Norte',' N').replace(' · Sur',' S').replace('·','');
+    return`<button id="chip_${m.id}" onclick="toggleModChip('${m.id}',this,'${isNorte?'norte':isSur?'sur':'otro'}')"
+      style="padding:5px 10px;border:2px solid ${isNorte?'#93c5fd':isSur?'#fed7aa':'#d1d5db'};border-radius:20px;background:white;color:${txtColor};font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;white-space:nowrap"
+      data-tipo="${isNorte?'norte':isSur?'sur':'otro'}">${short}${m.fechaEst||m.cultivo?`<span style="font-size:9px;opacity:.7"> ${m.cultivo?'🍅':''}</span>`:''}
+    </button>`;
+  }).join('');
+  updateBmApplyBtn();
+}
+
+function toggleModChip(id,el,tipo){
+  if(selModIds.has(id)){
+    selModIds.delete(id);
+    const isNorte=tipo==='norte',isSur=tipo==='sur';
+    el.style.background='white';
+    el.style.borderColor=isNorte?'#93c5fd':isSur?'#fed7aa':'#d1d5db';
+    el.style.color=isNorte?'#1e40af':isSur?'#c2410c':'#374151';
+  } else {
+    selModIds.add(id);
+    el.style.background='#1b4332';
+    el.style.borderColor='#1b4332';
+    el.style.color='white';
+  }
+  updateBmApplyBtn();
+}
+
+function selectModChips(tipo){
+  const chips=document.querySelectorAll('#modChips button');
+  chips.forEach(chip=>{
+    const id=chip.id.replace('chip_','');
+    const chipTipo=chip.getAttribute('data-tipo');
+    const match=tipo==='all'||(tipo==='none'?false:chipTipo===tipo);
+    if(tipo==='none'){
+      selModIds.delete(id);
+      chip.style.background='white';
+      const isN=chipTipo==='norte',isS=chipTipo==='sur';
+      chip.style.borderColor=isN?'#93c5fd':isS?'#fed7aa':'#d1d5db';
+      chip.style.color=isN?'#1e40af':isS?'#c2410c':'#374151';
+    } else if(match){
+      selModIds.add(id);
+      chip.style.background='#1b4332';chip.style.borderColor='#1b4332';chip.style.color='white';
+    }
+  });
+  updateBmApplyBtn();
+}
+
+function updateBmApplyBtn(){
+  const n=selModIds.size;
+  const btn=document.getElementById('bmApplyBtn');
+  const cnt=document.getElementById('modChipCount');
+  if(btn) btn.textContent=n>0?`Aplicar a ${n} módulo${n>1?'s':''} seleccionado${n>1?'s':''}`:'-  Selecciona módulos primero  -';
+  if(cnt) cnt.textContent=n>0?`${n} módulo${n>1?'s':''} seleccionado${n>1?'s':''}  ✓`:'';
+}
+
+function toggleBmEpoca(){
+  const c=document.getElementById('bmCultivo').value;
+  const ep=document.getElementById('bmEpocaWrap');
+  if(ep) ep.style.display=(c==='tomate'||c==='especialidades')?'block':'none';
+}
+
+async function applyBulkModEdit(){
+  if(!selModIds.size){alert('Selecciona al menos un módulo');return;}
+  const cultivo=document.getElementById('bmCultivo').value;
+  const epoca=(cultivo==='tomate'||cultivo==='especialidades')?document.getElementById('bmEpoca').value:'';
+  const fechaEst=document.getElementById('bmFechaEst').value;
+  const variedad=document.getElementById('bmVariedad').value;
+  if(!fechaEst){alert('Ingresa la fecha de establecimiento');return;}
+
+  showLoader(`Guardando ${selModIds.size} módulos…`);
+  let modulos=db.g('modulos');
+  for(const id of selModIds){
+    const idx=modulos.findIndex(m=>m.id===id);
+    if(idx>=0){
+      modulos[idx]={...modulos[idx],cultivo,epoca,fechaEst,variedad:variedad||modulos[idx].variedad};
+      await fsWrite('modulos',modulos[idx]);
+    }
+  }
+  db.s('modulos',modulos);
+  hideLoader();
+  renderModChips(document.getElementById('bmCampo').value);
+  renderCfg();
+  alert(`✅ ${selModIds.size} módulo${selModIds.size>1?'s':''} actualizados`);
+  selModIds=new Set();updateBmApplyBtn();
+}
 const BULK_PREDIOS = {
   mol: { // Agrícola El Molino
     campos:[
@@ -1781,7 +1891,68 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 
 </script>
 
-<!-- Modal carga masiva -->
+<!-- Modal configuración masiva de módulos -->
+<div class="mov" id="mBulkMod"><div class="modal" style="padding-bottom:40px">
+  <div class="mh"></div>
+  <div class="mt">🌱 Configurar cultivos por módulo</div>
+  <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Selecciona los módulos y aplica cultivo, época y fecha a todos a la vez.</div>
+
+  <!-- Selector de campo -->
+  <div class="fg"><label class="fl">Campo (predio)</label>
+    <select class="fs" id="bmCampo" onchange="renderModChips(this.value)"></select>
+  </div>
+
+  <!-- Chips de módulos -->
+  <div style="margin-bottom:10px">
+    <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+      <button onclick="selectModChips('norte')" style="font-size:11px;font-weight:800;padding:4px 10px;border:none;border-radius:20px;background:#dbeafe;color:#1d4ed8;cursor:pointer">Todos Norte</button>
+      <button onclick="selectModChips('sur')" style="font-size:11px;font-weight:800;padding:4px 10px;border:none;border-radius:20px;background:#ffedd5;color:#c2410c;cursor:pointer">Todos Sur</button>
+      <button onclick="selectModChips('all')" style="font-size:11px;font-weight:800;padding:4px 10px;border:none;border-radius:20px;background:#dcfce7;color:#15803d;cursor:pointer">Todos</button>
+      <button onclick="selectModChips('none')" style="font-size:11px;font-weight:800;padding:4px 10px;border:none;border-radius:20px;background:#f3f4f6;color:#6b7280;cursor:pointer">Ninguno</button>
+    </div>
+    <div id="modChips" style="display:flex;flex-wrap:wrap;gap:6px;max-height:200px;overflow-y:auto;padding:10px;background:#f9fafb;border-radius:10px;border:1px solid #e5e7eb">
+      <div style="color:var(--muted);font-size:12px">Selecciona un campo para ver los módulos</div>
+    </div>
+    <div id="modChipCount" style="font-size:11px;color:var(--muted);margin-top:5px;text-align:right"></div>
+  </div>
+
+  <!-- Configuración a aplicar -->
+  <div style="background:#f0fdf4;border-radius:12px;padding:12px;border:1px solid #bbf7d0;margin-bottom:12px">
+    <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin-bottom:10px">🌱 Aplicar a los módulos seleccionados</div>
+    <div class="f2" style="margin-bottom:10px">
+      <div class="fg" style="margin:0">
+        <label class="fl">Cultivo</label>
+        <select class="fs" id="bmCultivo" onchange="toggleBmEpoca()">
+          <option value="tomate">🍅 Tomate</option>
+          <option value="pimenton">🫑 Pimentón</option>
+          <option value="frutilla">🍓 Frutilla</option>
+          <option value="especialidades">🌿 Especialidades</option>
+        </select>
+      </div>
+      <div class="fg" id="bmEpocaWrap" style="margin:0">
+        <label class="fl">Época</label>
+        <select class="fs" id="bmEpoca">
+          <option value="otoño">Otoño</option>
+          <option value="invierno">Invierno</option>
+          <option value="primor">Primor</option>
+          <option value="trastomate">Trastomate</option>
+          <option value="verano">Verano</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:8px">
+      <label class="fl">Fecha de establecimiento</label>
+      <input type="date" class="fi" id="bmFechaEst">
+    </div>
+    <div class="fg" style="margin:0">
+      <label class="fl">Variedad / Cultivar (opcional)</label>
+      <input class="fi" id="bmVariedad" placeholder="Ej: Zeemann, Geronimo...">
+    </div>
+  </div>
+
+  <button onclick="applyBulkModEdit()" style="width:100%;padding:13px;background:#7c3aed;color:white;border:none;border-radius:12px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer" id="bmApplyBtn">Aplicar a módulos seleccionados</button>
+  <button class="bfull bcan" onclick="cm('mBulkMod')" style="margin-top:8px">Cerrar</button>
+</div></div>
 <div class="mov" id="mBulk"><div class="modal">
   <div class="mh"></div>
   <div class="mt">📦 Carga masiva de estructura</div>
