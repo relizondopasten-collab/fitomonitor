@@ -2212,7 +2212,8 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
   </div>
 </div>
 
-<button onclick="openCap()" style="position:fixed;bottom:76px;right:16px;z-index:150;background:#1b4332;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">📚 Capacitación</button>
+<button onclick="openCap()" style="position:fixed;bottom:76px;right:16px;z-index:150;background:#1b4332;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍅 Tomate</button>
+<button onclick="openCapF()" style="position:fixed;bottom:124px;right:16px;z-index:150;background:#be185d;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍓 Frutilla</button>
 
 <div id="mCap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;overflow:hidden">
 <div id="mCapScroll" style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch">
@@ -2220,7 +2221,7 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 
 <!-- Header cap -->
 <div style="background:#1b4332;color:white;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10">
-  <div><div style="font-family:'DM Serif Display',serif;font-size:20px">📚 Capacitación</div>
+  <div><div style="font-family:'DM Serif Display',serif;font-size:20px">🍅 Capacitación Tomate</div>
   <div style="font-size:10px;opacity:.6;font-weight:700;letter-spacing:.8px;text-transform:uppercase">Ciclos biológicos · Identificación visual</div></div>
   <button onclick="closeCap()" style="background:rgba(255,255,255,.15);border:none;color:white;border-radius:50%;width:36px;height:36px;font-size:20px;cursor:pointer;font-weight:900">✕</button>
 </div>
@@ -2237,8 +2238,6 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
   <button class="ctab" id="ctab7" onclick="showCap(7)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">⬜<br>Oídio</button>
   <button class="ctab" id="ctab8" onclick="showCap(8)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🟤<br>Fusarium</button>
   <button class="ctab" id="ctab9" onclick="showCap(9)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🟣<br>Verticill.</button>
-  <button class="ctab" id="ctab10" onclick="showCap(10)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🍓🕷<br>Plagas F.</button>
-  <button class="ctab" id="ctab11" onclick="showCap(11)" style="flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s">🍓🍄<br>Enf. F.</button>
 </div>
 
 <!-- ===== PANEL 0: POLILLA ===== -->
@@ -4075,481 +4074,6 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
       <div>• <b style="color:white">Portainjertos resistentes</b> = única protección efectiva</div>
     </div>
   </div>
-<!-- ===== PANEL 10: PLAGAS FRUTILLA ===== -->
-<div class="cpanel" id="cp10" style="display:none">
-<div style="padding:16px 16px 6px">
-  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Plagas de Frutilla</div>
-  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Fragaria × ananassa — principales agentes en invernadero</div>
-  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-    <span style="background:#fce7f3;color:#9d174d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🍓 Frutilla</span>
-    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Alta dificultad de control</span>
-  </div>
-</div>
-
-<!-- ====== ARAÑITA BIMACULADA ====== -->
-<div style="padding:14px 16px 4px">
-  <div style="display:flex;align-items:center;gap:8px">
-    <div style="background:#fee2e2;width:4px;height:28px;border-radius:2px;flex-shrink:0"></div>
-    <div>
-      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#b91c1c">🕷 Arañita bimaculada</div>
-      <div style="font-size:11px;color:#6b7280;font-style:italic">Tetranychus urticae Koch, 1836 · Acari: Tetranychidae</div>
-    </div>
-  </div>
-</div>
-
-<!-- Ciclo -->
-<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #fca5a5">
-  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#b91c1c;margin-bottom:8px;text-align:center">Ciclo biológico · 7–10 días a 25°C · Hasta 20 generaciones/año</div>
-  <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-    <defs><marker id="amAr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#b91c1c"/></marker></defs>
-    <circle cx="160" cy="70" r="55" fill="#fee2e2" opacity="0.4" stroke="#fca5a5" stroke-width="1"/>
-    <!-- Huevo -->
-    <circle cx="160" cy="18" r="15" fill="#fffde7" stroke="#d97706" stroke-width="2"/>
-    <text x="160" y="14" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">HUEVO</text>
-    <text x="160" y="24" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">esférico</text>
-    <!-- Larva -->
-    <circle cx="230" cy="45" r="15" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
-    <text x="230" y="41" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#854d0e">LARVA</text>
-    <text x="230" y="51" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#854d0e">3 pares patas</text>
-    <!-- Protoninfa -->
-    <circle cx="265" cy="95" r="15" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
-    <text x="265" y="91" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#9a3412">PROTO-</text>
-    <text x="265" y="101" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#9a3412">NINFA</text>
-    <!-- Deutoninfa -->
-    <circle cx="230" cy="138" r="15" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
-    <text x="230" y="134" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#9a3412">DEUTO-</text>
-    <text x="230" y="144" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">NINFA</text>
-    <!-- Adulto -->
-    <circle cx="90" cy="138" r="18" fill="#dc2626" stroke="#9f1239" stroke-width="2.5"/>
-    <text x="90" y="133" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ADULTO</text>
-    <text x="90" y="143" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">♀ 0.4mm</text>
-    <!-- Quiescencia -->
-    <circle cx="55" cy="95" r="14" fill="#e9d5ff" stroke="#7c3aed" stroke-width="2"/>
-    <text x="55" y="91" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#4c1d95">QUIES-</text>
-    <text x="55" y="101" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">CENCIA</text>
-    <!-- Flechas ciclo -->
-    <path d="M172,22 A58,58 0 0,1 220,38" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amAr)"/>
-    <path d="M244,55 A58,58 0 0,1 265,83" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amAr)"/>
-    <path d="M260,110 A58,58 0 0,1 242,130" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amAr)"/>
-    <path d="M214,143 A58,58 0 0,1 108,148" fill="none" stroke="#b91c1c" stroke-width="2.5" marker-end="url(#amAr)"/>
-    <path d="M73,127 A58,58 0 0,1 56,110" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amAr)"/>
-    <path d="M56,80 A58,58 0 0,1 65,40" fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amAr)"/>
-    <path d="M76,28 A58,58 0 0,1 145,18" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amAr)"/>
-    <!-- Datos centrales -->
-    <text x="160" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#b91c1c" font-weight="800">7–10 días</text>
-    <text x="160" y="74" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">ciclo completo</text>
-    <text x="160" y="86" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">T° 25–30°C</text>
-  </svg>
-</div>
-
-<!-- SECCIÓN CRÍTICA: por qué es difícil de controlar -->
-<div style="margin:0 16px 10px;background:#450a0a;border-radius:12px;padding:13px">
-  <div style="color:#fca5a5;font-weight:900;font-size:13px;margin-bottom:10px">⚠️ Por qué es la plaga más difícil de controlar en frutilla</div>
-  <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
-    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
-      <div style="color:#fbbf24;font-weight:900;margin-bottom:4px">1. Velocidad reproductiva extrema</div>
-      <div style="color:#fde8d8;line-height:1.6">Ciclo completo en <b style="color:white">7–10 días a 25°C</b>. Una hembra pone 60–100 huevos. En 3 semanas, una pareja puede generar miles de individuos. Bajo invernadero chileno, hasta <b style="color:white">20 generaciones por temporada</b>.</div>
-    </div>
-    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
-      <div style="color:#fbbf24;font-weight:900;margin-bottom:4px">2. Resistencia múltiple a acaricidas</div>
-      <div style="color:#fde8d8;line-height:1.6">La corta generación aceleró la selección de resistencias. Grupos IRAC <b style="color:white">IA, IB y IIIA</b> ya presentan resistencia documentada en poblaciones chilenas de invernadero. Resistencia cruzada entre organofosforados y carbamatos. La resistencia puede instalarse en <b style="color:white">3–5 generaciones</b> (3–5 semanas).</div>
-    </div>
-    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
-      <div style="color:#fbbf24;font-weight:900;margin-bottom:4px">3. Protección física del hábitat</div>
-      <div style="color:#fde8d8;line-height:1.6">Vive en el <b style="color:white">envés de las hojas</b>, protegida por la telaraña y difícil de alcanzar con la aspersión. El follaje denso de frutilla genera microambientes húmedos que reducen la penetración. Los huevos son <b style="color:white">resistentes a la mayoría de los acaricidas</b> — es necesaria la acción ovicida.</div>
-    </div>
-    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
-      <div style="color:#fbbf24;font-weight:900;margin-bottom:4px">4. Todas las generaciones simultáneas</div>
-      <div style="color:#fde8d8;line-height:1.6">Huevos, larvas, ninfas y adultos coexisten en la misma planta. No hay una "ventana de vulnerabilidad" en que toda la población esté en un estadio sensible. Se necesitan <b style="color:white">2–3 aplicaciones con intervalo de 5–7 días</b> para cubrir todos los estadios.</div>
-    </div>
-    <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
-      <div style="color:#fbbf24;font-weight:900;margin-bottom:4px">5. Control biológico frágil</div>
-      <div style="color:#fde8d8;line-height:1.6">Los depredadores naturales más eficaces (<i style="color:white">Phytoseiulus persimilis, Neoseiulus californicus</i>) son muy sensibles a los plaguicidas. Un tratamiento químico para otra plaga puede <b style="color:white">destruir toda la población de fitoseidos</b> establecida, provocando un rebrote explosivo.</div>
-    </div>
-  </div>
-</div>
-
-<!-- Estrategia de manejo -->
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #fca5a5;padding:12px">
-  <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">🔬 Estrategia de manejo integrado</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px">
-    <div style="background:#f0fdf4;border-radius:8px;padding:9px">
-      <div style="font-weight:900;color:#15803d;margin-bottom:5px">Control biológico</div>
-      <div style="line-height:1.7">
-        <div><b>P. persimilis:</b> especialista, muy eficaz con poblaciones altas. Requiere presa para establecerse.</div>
-        <div><b>N. californicus:</b> más resistente a T° y HR baja. Mejor preventivo.</div>
-        <div><b>A. swirskii:</b> generalista, compatible con control de trips.</div>
-        <div style="color:#dc2626;margin-top:4px">⚠️ Incompatible con la mayoría de acaricidas químicos.</div>
-      </div>
-    </div>
-    <div style="background:#fff7ed;border-radius:8px;padding:9px">
-      <div style="font-weight:900;color:#c2410c;margin-bottom:5px">Grupos IRAC a rotar</div>
-      <div style="line-height:1.7">
-        <div><b>Gr. 6:</b> Abamectina (Vertimec) — ovicida parcial</div>
-        <div><b>Gr. 10B:</b> Clofentezina — ovicida selectivo</div>
-        <div><b>Gr. 21:</b> Fenazaquín — adulticida</div>
-        <div><b>Gr. 23:</b> Spiromesifen — ovicida + larvas</div>
-        <div><b>Gr. 25:</b> Cyflumetofen — amplio espectro</div>
-        <div style="color:#dc2626;margin-top:4px">🚫 Evitar IA, IB, IIIA (resistencia)</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Síntomas y monitoreo -->
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #fca5a5;padding:12px">
-  <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">📊 Síntomas y escala de severidad</div>
-  <div style="display:flex;flex-direction:column;gap:5px;font-size:12px">
-    <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#dcfce7;border:1.5px solid #16a34a;border-radius:6px;padding:3px 8px;font-weight:900;color:#15803d;min-width:24px;text-align:center;flex-shrink:0">1</div><div>Puntitos blancos muy escasos en haz · a lupa en envés: huevos o primeras larvas · sin telaraña</div></div>
-    <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fef9c3;border:1.5px solid #ca8a04;border-radius:6px;padding:3px 8px;font-weight:900;color:#854d0e;min-width:24px;text-align:center;flex-shrink:0">2</div><div>Moteado clorótico claro en haz · telaraña incipiente en envés · sin deformación de hoja</div></div>
-    <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#ffedd5;border:1.5px solid #ea580c;border-radius:6px;padding:3px 8px;font-weight:900;color:#c2410c;min-width:24px;text-align:center;flex-shrink:0">3</div><div>Bronceado generalizado · telaraña visible · hoja enrollada · inicio de defoliación</div></div>
-    <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#fee2e2;border:1.5px solid #dc2626;border-radius:6px;padding:3px 8px;font-weight:900;color:#b91c1c;min-width:24px;text-align:center;flex-shrink:0">4</div><div>Bronceado severo · telaraña densa · defoliación activa · producción comprometida</div></div>
-    <div style="display:flex;gap:9px;align-items:flex-start"><div style="background:#450a0a;border-radius:6px;padding:3px 8px;font-weight:900;color:white;min-width:24px;text-align:center;flex-shrink:0">5</div><div>Necrosis · telaraña por toda la planta · defoliación total · pérdida productiva grave</div></div>
-  </div>
-  <div style="background:#1b4332;border-radius:8px;padding:9px;margin-top:10px;font-size:12px;color:#d8f3dc;line-height:1.7">
-    <div>• Revisar <b style="color:white">envés de 10 hojas trifoliadas jóvenes</b> por punto de muestreo</div>
-    <div>• <b style="color:white">Umbral de acción: 5 huevos o 2 móviles / hoja</b> en producción</div>
-    <div>• Usar lupa 10× · huevos esféricos perlados, móviles amarillo-rojizo</div>
-    <div>• Monitorear preferentemente hojas medias (no apicales ni basales)</div>
-  </div>
-</div>
-
-<!-- ====== TARSONÉMIDO ====== -->
-<div style="padding:14px 16px 4px">
-  <div style="display:flex;align-items:center;gap:8px">
-    <div style="background:#ede9fe;width:4px;height:28px;border-radius:2px;flex-shrink:0"></div>
-    <div>
-      <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#5b21b6">🔬 Tarsonémido de la frutilla</div>
-      <div style="font-size:11px;color:#6b7280;font-style:italic">Phytonemus pallidus (Banks, 1899) · Acari: Tarsonemidae</div>
-    </div>
-  </div>
-</div>
-
-<div style="margin:8px 16px;background:white;border-radius:12px;border:1.5px solid #c4b5fd;padding:12px">
-  <div style="background:#4c1d95;border-radius:8px;padding:10px;margin-bottom:10px">
-    <div style="color:#e9d5ff;font-weight:900;font-size:12px;margin-bottom:6px">🔬 Por qué es extremadamente difícil de detectar y controlar</div>
-    <div style="color:#ddd6fe;font-size:12px;line-height:1.7">
-      <div>• <b style="color:white">Invisible a ojo desnudo</b> — 0.2mm, necesita lupa 20× mínimo</div>
-      <div>• Vive en la <b style="color:white">corona y hojas jóvenes aún enrolladas</b> — protegido físicamente</div>
-      <div>• Los síntomas aparecen <b style="color:white">2–3 semanas después</b> de la infestación inicial</div>
-      <div>• Solo productos <b style="color:white">sistémicos o de alta penetración</b> lo alcanzan</div>
-      <div>• Difícil distinción de síntomas con deficiencias, virus o daño por frío</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
-    <div>
-      <div style="font-weight:900;color:#5b21b6;margin-bottom:6px">Síntomas diagnósticos</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• Hojas jóvenes <b>pequeñas, rizadas y bronceadas</b></div>
-        <div>• Pecíolos <b>acortados y deformados</b></div>
-        <div>• Porte general <b>achaparrado</b></div>
-        <div>• Corona con <b>aspecto rojizo-bronceado</b></div>
-        <div>• Frutos pequeños y deformados</div>
-        <div>• En estadios avanzados: <b>necrosis de puntos de crecimiento</b></div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#5b21b6;margin-bottom:6px">Control</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• <b>Abamectina</b> (Gr. 6) · sistémica parcial</div>
-        <div>• <b>Spiromesifen</b> (Gr. 23) · penetra tejido</div>
-        <div>• Aplicar directamente a la <b>corona</b></div>
-        <div>• 2–3 aplicaciones con 5 días de intervalo</div>
-        <div>• Control biológico: <i>Neoseiulus cucumeris</i></div>
-        <div>• Eliminar material infestado de la plantación</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== TRIPS ====== -->
-<div style="padding:12px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#b45309">🔍 Trips de la flor</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:8px">Frankliniella occidentalis (Pergande, 1895) · Thysanoptera</div>
-</div>
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #fed7aa;padding:12px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:10px">
-    <div>
-      <div style="font-weight:900;color:#c2410c;margin-bottom:5px">Síntomas</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• <b>Plateado/bronceado</b> en pétalos y frutos jóvenes</div>
-        <div>• Frutos deformados con <b>costras corchosas</b></div>
-        <div>• Daño en sépalos → fruto "grano de arroz"</div>
-        <div>• <b>Vector TSWV</b> (virus de la mancha bronceada)</div>
-        <div>• Cicatrices plateadas en hojas jóvenes</div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#c2410c;margin-bottom:5px">Dificultad de control</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• Vive <b>dentro de flores</b> — difícil acceso de pesticidas</div>
-        <div>• Pupas en suelo → fuente permanente</div>
-        <div>• Resistencia rápida a piretroides (IRAC 3)</div>
-        <div>• Múltiples generaciones solapadas</div>
-        <div>• CB: <i>A. swirskii, N. cucumeris</i> en flores</div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#1b4332;border-radius:8px;padding:9px;font-size:12px;color:#d8f3dc;line-height:1.7">
-    <div>• Monitorear <b style="color:white">flores abiertas</b> — agitar y sacudir sobre papel blanco</div>
-    <div>• Umbral: <b style="color:white">≥1 trips/flor</b> → evaluación urgente</div>
-    <div>• Trampas pegantes azules entre plantas</div>
-    <div>• Rotar IRAC: Gr. 5 (spinosad), Gr. 9 (cyantraniliprole), Gr. 4A (imidacloprid solo en suelo)</div>
-  </div>
-</div>
-
-<!-- ====== PULGÓN ====== -->
-<div style="padding:12px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#15803d">🦗 Pulgón de la frutilla</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:8px">Chaetosiphon fragaefolii · Homoptera: Aphididae</div>
-</div>
-<div style="margin:0 16px 16px;background:white;border-radius:12px;border:1px solid #bbf7d0;padding:12px;font-size:12px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px">
-    <div>
-      <div style="font-weight:900;color:#15803d;margin-bottom:5px">Síntomas</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• Colonias en <b>envés de hojas jóvenes</b></div>
-        <div>• Enrollamiento y deformación foliar</div>
-        <div>• <b>Vector de virus</b> (SMYEV, SCV, SVBV)</div>
-        <div>• Melaza + fumagina en frutos</div>
-        <div>• Mayor daño indirecto (virosis) que directo</div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#15803d;margin-bottom:5px">Control</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• CB: <i>Aphidius colemani, A. ervi</i></div>
-        <div>• CB generalistas: <i>Chrysoperla, Orius</i></div>
-        <div>• Kaolín (barrera física) en plántulas</div>
-        <div>• IRAC 4A: imidacloprid al suelo (precaución)</div>
-        <div>• Eliminar plantas con virosis confirmada</div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#f0fdf4;border-radius:8px;padding:8px;font-size:11px;color:#374151">
-    <b style="color:#15803d">🔑 Monitoreo:</b> revisar envés de hojas apicales · 10 plantas/punto · presencia/ausencia de colonias aladas (mayor riesgo de diseminación viral).
-  </div>
-</div>
-</div>
-
-<!-- ===== PANEL 11: ENFERMEDADES FRUTILLA ===== -->
-<div class="cpanel" id="cp11" style="display:none">
-<div style="padding:16px 16px 6px">
-  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Enfermedades de Frutilla</div>
-  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Fragaria × ananassa — principales patógenos en invernadero y campo</div>
-  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
-    <span style="background:#fce7f3;color:#9d174d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🍓 Frutilla</span>
-    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Alta presión patogénica en invernadero</span>
-  </div>
-</div>
-
-<!-- ====== BOTRYTIS ====== -->
-<div style="padding:14px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#9d174d">🍄 Botrytis — Moho gris</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:4px">Botrytis cinerea Pers. · La enfermedad N°1 en frutilla</div>
-</div>
-
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1.5px solid #f9a8d4;overflow:hidden">
-  <div style="background:#fce7f3;padding:8px 13px"><div style="font-weight:900;font-size:13px;color:#1b4332">Especificidades en frutilla vs. tomate</div></div>
-  <div style="padding:12px;display:flex;flex-direction:column;gap:6px;font-size:12px">
-    <div style="background:#fce7f3;border-radius:8px;padding:9px">
-      <b style="color:#9d174d">Fruto en desarrollo:</b> infección silenciosa durante la floración → síntomas aparecen al madurar. El <b>pétalos infectado</b> es la principal puerta de entrada. Un día lluvioso/húmedo durante floración = epidemia en cosecha.
-    </div>
-    <div style="background:#fce7f3;border-radius:8px;padding:9px">
-      <b style="color:#9d174d">Fruto maduro:</b> altamente susceptible. <b>24–48 h de HR>85%</b> bastan para colapsar un fruto maduro completo.
-    </div>
-    <div style="background:#fce7f3;border-radius:8px;padding:9px">
-      <b style="color:#9d174d">Resistencia a fungicidas:</b> alta presión de selección por frecuencia de aplicaciones. <b>FRAC 1 (benzimidazoles) y FRAC 7 (SDHI)</b> con resistencias documentadas. Rotar obligatoriamente.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:#f9fafb;border-radius:8px;padding:9px">
-        <div style="font-weight:800;color:#9d174d;margin-bottom:4px">Síntomas</div>
-        <div style="line-height:1.7">
-          <div>• Fruto: podredumbre blanda marrón → micelio gris</div>
-          <div>• Flor: pétalos marrones con micelio</div>
-          <div>• Cáliz: puerta entrada frecuente</div>
-          <div>• Hoja: lesión necrótica irregular</div>
-          <div>• Pecíolo: cancro en cuello</div>
-        </div>
-      </div>
-      <div style="background:#f9fafb;border-radius:8px;padding:9px">
-        <div style="font-weight:800;color:#9d174d;margin-bottom:4px">Manejo</div>
-        <div style="line-height:1.7">
-          <div>• Retirar frutos enfermos inmediatamente</div>
-          <div>• Ventilación → reducir HR bajo 85%</div>
-          <div>• Riego en mañana (no tarde)</div>
-          <div>• Aplicar en <b>plena floración</b></div>
-          <div>• FRAC rotar: 1, 2, 7, 11, 12, 17</div>
-          <div>• CB: <i>Trichoderma</i> preventivo</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== ANTRACNOSIS ====== -->
-<div style="padding:12px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#c2410c">🟠 Antracnosis</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:4px">Colletotrichum acutatum Simmonds · Enfermedad explosiva</div>
-</div>
-
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1.5px solid #fed7aa;padding:12px">
-  <div style="background:#450a0a;border-radius:8px;padding:10px;margin-bottom:10px">
-    <div style="color:#fbbf24;font-weight:900;margin-bottom:5px">⚡ Por qué es tan peligrosa</div>
-    <div style="color:#fde8d8;font-size:12px;line-height:1.7">
-      <div>• Puede destruir un cultivo en <b style="color:white">5–7 días</b> bajo condiciones favorables</div>
-      <div>• Ataca simultáneamente fruto, corona y raíz</div>
-      <div>• La <b style="color:white">pudrición de corona</b> es el estadio más letal — no hay recuperación</div>
-      <div>• Se dispersa con <b style="color:white">agua de lluvia o riego por aspersión</b></div>
-      <div>• El patógeno puede estar latente en planta sana → difícil diagnóstico preventivo</div>
-    </div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px">
-    <div>
-      <div style="font-weight:900;color:#c2410c;margin-bottom:5px">Síntomas</div>
-      <div style="line-height:1.7;color:#374151">
-        <div><b>Fruto:</b> lesión circular hundida, salmón/anaranjada con acérvulos rosados</div>
-        <div><b>Corona:</b> pudrición interna café-rojiza → marchitez fulminante</div>
-        <div><b>Pecíolo:</b> lesión negra elíptica hundida</div>
-        <div><b>Flor:</b> necrosis de pétalos y cáliz</div>
-        <div><b>Plántulas:</b> damping-off en vivero</div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#c2410c;margin-bottom:5px">Condiciones favorables</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• T° <b>20–25°C + agua libre</b> en tejido</div>
-        <div>• Lluvia o riego aéreo</div>
-        <div>• Heridas en frutos y tejidos</div>
-        <div>• Plántulas de origen desconocido</div>
-        <div><b>Manejo:</b> fungicidas FRAC 9 (fludioxonil), 3 (trifloxistrobina). Evitar riego aéreo. Material certificado.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Ciclo Antracnosis SVG -->
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1px solid #fed7aa;padding:11px">
-  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#c2410c;margin-bottom:8px;text-align:center">Ciclo de infección — Dispersión por agua</div>
-  <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-    <defs><marker id="amAnt" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c2410c"/></marker></defs>
-    <!-- 1. Inóculo en tejido infectado -->
-    <ellipse cx="45" cy="25" rx="32" ry="18" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
-    <text x="45" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#9a3412">INÓCULO</text>
-    <text x="45" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">tejido infectado</text>
-    <!-- 2. Acérvulos liberan conidios -->
-    <ellipse cx="155" cy="25" rx="35" ry="18" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
-    <text x="155" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ACÉRVULOS</text>
-    <text x="155" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">masas de conidios</text>
-    <!-- 3. Agua dispersa -->
-    <ellipse cx="270" cy="25" rx="35" ry="18" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
-    <text x="270" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#1e3a8a">💧 AGUA</text>
-    <text x="270" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#1e3a8a">dispersión salpicado</text>
-    <!-- 4. Infección -->
-    <ellipse cx="270" cy="95" rx="35" ry="18" fill="#dc2626" stroke="#7f1d1d" stroke-width="2.5"/>
-    <text x="270" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">INFECCIÓN</text>
-    <text x="270" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">fruto · corona</text>
-    <!-- 5. Lesión + esporulación -->
-    <ellipse cx="155" cy="95" rx="35" ry="18" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
-    <text x="155" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">LESIÓN</text>
-    <text x="155" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">+ esporulación rosada</text>
-    <!-- 6. Nuevo inóculo / corona destruida -->
-    <ellipse cx="45" cy="95" rx="32" ry="18" fill="#7f1d1d" stroke="#450a0a" stroke-width="2"/>
-    <text x="45" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">CORONA</text>
-    <text x="45" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">destruida</text>
-    <!-- Flechas -->
-    <line x1="77" y1="25" x2="118" y2="25" stroke="#c2410c" stroke-width="2" marker-end="url(#amAnt)"/>
-    <line x1="190" y1="25" x2="233" y2="25" stroke="#2563eb" stroke-width="2" marker-end="url(#amAnt)"/>
-    <line x1="270" y1="43" x2="270" y2="75" stroke="#c2410c" stroke-width="2" marker-end="url(#amAnt)"/>
-    <line x1="233" y1="95" x2="193" y2="95" stroke="#c2410c" stroke-width="2" marker-end="url(#amAnt)"/>
-    <line x1="118" y1="95" x2="79" y2="95" stroke="#c2410c" stroke-width="2.5" marker-end="url(#amAnt)"/>
-    <line x1="45" y1="77" x2="45" y2="43" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amAnt)"/>
-    <text x="160" y="63" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#c2410c" font-weight="800">5–7 días desde infección hasta lesión</text>
-  </svg>
-</div>
-
-<!-- ====== PHYTOPHTHORA ====== -->
-<div style="padding:12px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#1e40af">🔵 Pudrición de corona — Phytophthora</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:4px">Phytophthora cactorum (Lebert & Cohn) J. Schröt · Oomycota</div>
-</div>
-
-<div style="margin:0 16px 10px;background:white;border-radius:12px;border:1.5px solid #bfdbfe;padding:12px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:10px">
-    <div>
-      <div style="font-weight:900;color:#1e40af;margin-bottom:5px">Síntomas</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• Marchitez repentina de planta entera</div>
-        <div>• Corona: <b>tejido café-rojizo interno</b></div>
-        <div>• Pecíolos y hojas basales con lesiones cafés</div>
-        <div>• Hojas viejas amarillean, jóvenes azul-verdosas</div>
-        <div>• Frutos: pudrición marrón firme "cuero"</div>
-        <div>• Raíces marrones, sin pelos absorbentes</div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#1e40af;margin-bottom:5px">Condiciones favorables</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• <b>Suelo saturado de agua</b> → zoosporas móviles</div>
-        <div>• T° 10–25°C (más fría que Colletotrichum)</div>
-        <div>• Riego excesivo o drenaje deficiente</div>
-        <div>• Heridas en corona (insectos, labores)</div>
-        <div>• Persiste en suelo con oosporas hasta 10 años</div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#dbeafe;border-radius:8px;padding:9px;font-size:12px">
-    <div style="font-weight:900;color:#1e40af;margin-bottom:5px">Manejo — es un Oomycota, NO un hongo verdadero</div>
-    <div style="color:#1e3a8a;line-height:1.7">
-      <div>• <b>FRAC 4 (fosfonatos/fosetil-Al)</b> → eficaz, induce resistencia sistémica</div>
-      <div>• <b>FRAC 49 (oxatiapiprolin)</b> → nueva generación, muy eficaz</div>
-      <div>• ⚠️ Los fungicidas para hongos verdaderos (FRAC 1, 3, 7, 11) NO son eficaces</div>
-      <div>• Mejorar drenaje · evitar exceso de humedad en corona</div>
-      <div>• Material de plantación certificado libre de P. cactorum</div>
-    </div>
-  </div>
-</div>
-
-<!-- ====== OIDIO FRUTILLA ====== -->
-<div style="padding:12px 16px 4px">
-  <div style="font-family:'DM Serif Display',serif;font-size:18px;color:#4d7c0f">⬜ Oídio de la frutilla</div>
-  <div style="font-size:11px;color:#6b7280;font-style:italic;margin-bottom:4px">Podosphaera aphanis (Wallr.) Braun & Takamatsu · Ascomycota</div>
-</div>
-
-<div style="margin:0 16px 16px;background:white;border-radius:12px;border:1px solid #d9f99d;padding:12px;font-size:12px">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-    <div>
-      <div style="font-weight:900;color:#4d7c0f;margin-bottom:5px">Diferencias con oídios de otras especies</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• <b>Epifítico</b> — micelio superficial blanco en envés principalmente</div>
-        <div>• Haz: manchas cloróticas rojizas</div>
-        <div>• Hojas enrollan hacia arriba exponiendo el envés</div>
-        <div>• Frutos deformados con tinte blanquecino</div>
-        <div>• Favorecido por T° 15–25°C, HR moderada</div>
-      </div>
-    </div>
-    <div>
-      <div style="font-weight:900;color:#4d7c0f;margin-bottom:5px">Impacto en fruto</div>
-      <div style="line-height:1.7;color:#374151">
-        <div>• Fruto afectado: pérdida total de valor comercial</div>
-        <div>• Sabor alterado ("polvoso")</div>
-        <div>• Desarrollo desigual del fruto</div>
-        <div><b>FRAC a rotar:</b> 3 (DMI), 7 (SDHI), 11 (estrobilurinas), 13 (quinoxifén)</div>
-        <div>• Azufre preventivo (FRAC M2) eficaz a T°<30°C</div>
-        <div>• CB: <i>Ampelomyces quisqualis</i></div>
-      </div>
-    </div>
-  </div>
-  <div style="background:#1b4332;border-radius:8px;padding:10px;font-size:12px;color:#d8f3dc;line-height:1.7">
-    <div>• Monitorear <b style="color:white">envés de hojas medias</b> — primer signo es polvo blanco bajo la hoja</div>
-    <div>• Hojas con bordes enrollados hacia arriba → confirmar envés inmediatamente</div>
-    <div>• Incidencia: % de plantas con síntomas en al menos una hoja</div>
-    <div>• Alta presión en períodos secos con temperaturas suaves (<b style="color:white">otoño-primavera</b>)</div>
-  </div>
-</div>
-</div>
-</div>
-</div>
 <!-- ===== CIERRE MODAL CAPACITACIÓN ===== -->
 </div><!-- fin container fafaf8 -->
 </div><!-- fin scroll -->
@@ -4570,5 +4094,648 @@ function showCap(i){
   document.getElementById('mCapScroll').scrollTop=0;
 }
 </script>
-</body>
-</html>
+<!-- ============================================================ -->
+<!-- ============= MODAL CAPACITACIÓN FRUTILLA ================= -->
+<!-- ============================================================ -->
+<style>
+.cpF{display:none;padding-bottom:24px}
+#capTabsF{display:flex;overflow-x:auto;border-bottom:2px solid #f3f4f6;background:white;position:sticky;top:0;z-index:10}
+#capTabsF::-webkit-scrollbar{display:none}
+.ctabF{flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s}
+.ctabF.active{color:#be185d !important;border-bottom-color:#be185d !important;background:#fdf2f8}
+</style>
+
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center" id="mCapF">
+  <div style="background:#fafaf8;border-radius:20px 20px 0 0;width:100%;max-width:480px;height:92vh;display:flex;flex-direction:column;overflow:hidden">
+    <!-- Header -->
+    <div style="background:#be185d;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:white">🍓 Capacitación Frutilla</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">Fragaria × ananassa · Plagas y enfermedades</div>
+      </div>
+      <button onclick="closeCapF()" style="background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer;font-weight:900">×</button>
+    </div>
+    <!-- Tab bar -->
+    <div id="capTabsF" style="flex-shrink:0">
+      <button class="ctabF active" id="ctabF0" onclick="showCapF(0)">🕷<br>Arañita</button>
+      <button class="ctabF" id="ctabF1" onclick="showCapF(1)">🔬<br>Tarsoném.</button>
+      <button class="ctabF" id="ctabF2" onclick="showCapF(2)">🔍<br>Trips</button>
+      <button class="ctabF" id="ctabF3" onclick="showCapF(3)">🦗<br>Pulgón</button>
+      <button class="ctabF" id="ctabF4" onclick="showCapF(4)">🍄<br>Botrytis</button>
+      <button class="ctabF" id="ctabF5" onclick="showCapF(5)">🟠<br>Antracnosis</button>
+      <button class="ctabF" id="ctabF6" onclick="showCapF(6)">🔵<br>Phytopht.</button>
+      <button class="ctabF" id="ctabF7" onclick="showCapF(7)">⬜<br>Oídio</button>
+    </div>
+    <!-- Panels scroll -->
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch">
+
+<!-- ===== PANEL F0: ARAÑITA ===== -->
+<div class="cpF" id="cpF0" style="display:block">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Arañita bimaculada</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Tetranychus urticae Koch, 1836 · Acari: Tetranychidae</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ácaro fitófago</span>
+    <span style="background:#450a0a;color:#fca5a5;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Alta resistencia</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #fca5a5">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#b91c1c;margin-bottom:8px;text-align:center">Ciclo biológico · 7–10 días a 25°C · Hasta 20 generaciones/año en frutilla</div>
+  <svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amA0" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#b91c1c"/></marker></defs>
+    <circle cx="160" cy="70" r="56" fill="#fee2e2" opacity="0.35"/>
+    <circle cx="160" cy="18" r="15" fill="#fffde7" stroke="#d97706" stroke-width="2"/>
+    <text x="160" y="14" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">HUEVO</text>
+    <text x="160" y="24" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">esférico perlado</text>
+    <circle cx="232" cy="46" r="14" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+    <text x="232" y="42" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#854d0e">LARVA</text>
+    <text x="232" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#854d0e">3 patas</text>
+    <circle cx="265" cy="95" r="14" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+    <text x="265" y="91" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#9a3412">PROTO-</text>
+    <text x="265" y="101" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">NINFA</text>
+    <circle cx="232" cy="138" r="14" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+    <text x="232" y="134" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#9a3412">DEUTO-</text>
+    <text x="232" y="144" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">NINFA</text>
+    <circle cx="90" cy="138" r="18" fill="#dc2626" stroke="#9f1239" stroke-width="2.5"/>
+    <text x="90" y="133" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ADULTO</text>
+    <text x="90" y="143" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">♀ 0.4mm</text>
+    <circle cx="55" cy="95" r="14" fill="#e9d5ff" stroke="#7c3aed" stroke-width="2"/>
+    <text x="55" y="91" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#4c1d95">QUIES-</text>
+    <text x="55" y="101" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">CENCIA</text>
+    <path d="M172,22 A56,56 0 0,1 222,40" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amA0)"/>
+    <path d="M244,56 A56,56 0 0,1 265,83" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amA0)"/>
+    <path d="M260,108 A56,56 0 0,1 242,130" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amA0)"/>
+    <path d="M216,143 A56,56 0 0,1 108,148" fill="none" stroke="#b91c1c" stroke-width="2.5" marker-end="url(#amA0)"/>
+    <path d="M73,127 A56,56 0 0,1 56,108" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amA0)"/>
+    <path d="M56,80 A56,56 0 0,1 65,40" fill="none" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amA0)"/>
+    <path d="M76,26 A56,56 0 0,1 146,18" fill="none" stroke="#b91c1c" stroke-width="2" marker-end="url(#amA0)"/>
+    <text x="160" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" fill="#b91c1c" font-weight="800">7–10 días</text>
+    <text x="160" y="76" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#6b7280">T° óptima 28–32°C</text>
+    <text x="160" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">HR baja &lt;60%</text>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#450a0a;border-radius:12px;padding:13px;margin-bottom:10px">
+    <div style="color:#fca5a5;font-weight:900;font-size:13px;margin-bottom:10px">⚠️ Por qué es la plaga más difícil de controlar en frutilla</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:9px"><div style="color:#fbbf24;font-weight:900;margin-bottom:3px">1. Velocidad reproductiva extrema</div><div style="color:#fde8d8;line-height:1.6">Ciclo completo en <b style="color:white">7–10 días a 25°C</b>. Una hembra deposita 60–100 huevos. Hasta <b style="color:white">20 generaciones/año</b> en invernadero. Una infestación inicial se vuelve explosiva en 3 semanas.</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:9px"><div style="color:#fbbf24;font-weight:900;margin-bottom:3px">2. Resistencia múltiple a acaricidas</div><div style="color:#fde8d8;line-height:1.6">Grupos IRAC <b style="color:white">IA (organofosforados), IB (carbamatos) y IIIA</b> ya con resistencia documentada. Resistencia cruzada entre grupos. Se instala en <b style="color:white">3–5 generaciones (3–5 semanas)</b> con aplicaciones repetidas.</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:9px"><div style="color:#fbbf24;font-weight:900;margin-bottom:3px">3. Hábitat protegido en envés + telaraña</div><div style="color:#fde8d8;line-height:1.6">Vive bajo telaraña en el envés. El follaje denso de frutilla dificulta la penetración del spray. Los <b style="color:white">huevos son resistentes a la mayoría de acaricidas</b> → necesario ovicida específico.</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:9px"><div style="color:#fbbf24;font-weight:900;margin-bottom:3px">4. Generaciones solapadas</div><div style="color:#fde8d8;line-height:1.6">Huevos, larvas, ninfas y adultos coexisten simultáneamente. No hay ventana de erradicación. Se requieren <b style="color:white">2–3 aplicaciones cada 5–7 días</b>.</div></div>
+      <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:9px"><div style="color:#fbbf24;font-weight:900;margin-bottom:3px">5. Control biológico frágil</div><div style="color:#fde8d8;line-height:1.6"><i style="color:white">Phytoseiulus persimilis</i> y <i style="color:white">Neoseiulus californicus</i> son muy sensibles a pesticidas. Un tratamiento químico destruye la colonia de fitoseidos establecida → rebrote explosivo.</div></div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #fca5a5;padding:12px;margin-bottom:10px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">🔬 Estrategia de manejo integrado</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+      <div style="background:#f0fdf4;border-radius:8px;padding:9px"><div style="font-weight:900;color:#15803d;margin-bottom:4px">Control biológico</div><div style="line-height:1.7"><div><b>P. persimilis:</b> especialista, con poblaciones altas</div><div><b>N. californicus:</b> preventivo, más resistente</div><div><b>A. swirskii:</b> compatible con trips</div><div style="color:#dc2626;margin-top:3px">⚠️ Incompatible con acaricidas</div></div></div>
+      <div style="background:#fff7ed;border-radius:8px;padding:9px"><div style="font-weight:900;color:#c2410c;margin-bottom:4px">IRAC a rotar</div><div style="line-height:1.7"><div><b>Gr. 6:</b> Abamectina</div><div><b>Gr. 10B:</b> Clofentezina (ovicida)</div><div><b>Gr. 21:</b> Fenazaquín</div><div><b>Gr. 23:</b> Spiromesifen</div><div><b>Gr. 25:</b> Cyflumetofen</div><div style="color:#dc2626">🚫 Evitar IA, IB, IIIA</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Claves de monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">envés de 10 hojas trifoliadas jóvenes</b> por punto</div>
+      <div>• <b style="color:white">Umbral: 5 huevos o 2 móviles/hoja</b> → acción</div>
+      <div>• Usar lupa 10× · huevos esféricos perlados, móviles amarillo-rojizo</div>
+      <div>• Condiciones de riesgo: T° &gt;25°C + HR &lt;60%</div>
+      <div>• Severidad 1–5 según bronceado foliar y extensión de telaraña</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F1: TARSONÉMIDO ===== -->
+<div class="cpF" id="cpF1">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Tarsonémido de la frutilla</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Phytonemus pallidus (Banks, 1899) · Acari: Tarsonemidae</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Acaro microscópico</span>
+    <span style="background:#4c1d95;color:#e9d5ff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Invisible sin lupa 20×</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #c4b5fd">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#5b21b6;margin-bottom:8px;text-align:center">Ciclo biológico · 7–14 días · Vive en corona y hojas jóvenes enrolladas</div>
+  <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amT1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#5b21b6"/></marker></defs>
+    <!-- Hoja enrollada (hábitat) -->
+    <path d="M120,50 Q160,20 200,50 Q220,65 200,80 Q160,60 120,80 Q100,65 120,50 Z" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5"/>
+    <text x="160" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#14532d">HOJA ENROLLADA</text>
+    <text x="160" y="67" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">hábitat protegido</text>
+    <!-- Huevo -->
+    <ellipse cx="48" cy="25" rx="36" ry="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="48" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#4c1d95">HUEVO</text>
+    <text x="48" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">oval, 0.1mm</text>
+    <!-- Larva -->
+    <ellipse cx="48" cy="70" rx="36" ry="18" fill="#ddd6fe" stroke="#6d28d9" stroke-width="2"/>
+    <text x="48" y="65" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#4c1d95">LARVA</text>
+    <text x="48" y="75" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">3 patas · 0.15mm</text>
+    <!-- Ninfa estacionaria -->
+    <ellipse cx="48" cy="115" rx="36" ry="18" fill="#c4b5fd" stroke="#5b21b6" stroke-width="2"/>
+    <text x="48" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#3b0764">NINFA EST.</text>
+    <text x="48" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#3b0764">inmóvil en tejido</text>
+    <!-- Adulto -->
+    <ellipse cx="272" cy="70" rx="36" ry="22" fill="#7c3aed" stroke="#4c1d95" stroke-width="2.5"/>
+    <text x="272" y="65" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ADULTO</text>
+    <text x="272" y="75" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#e9d5ff">0.2mm · 4 patas</text>
+    <text x="272" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#e9d5ff">corona + hoja joven</text>
+    <!-- Flechas -->
+    <line x1="48" y1="43" x2="48" y2="50" stroke="#5b21b6" stroke-width="2" marker-end="url(#amT1)"/>
+    <line x1="48" y1="88" x2="48" y2="95" stroke="#5b21b6" stroke-width="2" marker-end="url(#amT1)"/>
+    <line x1="84" y1="115" x2="220" y2="85" stroke="#5b21b6" stroke-width="2" marker-end="url(#amT1)"/>
+    <line x1="236" y1="55" x2="84" y2="30" stroke="#5b21b6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amT1)"/>
+    <text x="160" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#5b21b6" font-weight="800">7–14 días · síntomas 2–3 semanas después</text>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#4c1d95;border-radius:12px;padding:13px;margin-bottom:10px">
+    <div style="color:#e9d5ff;font-weight:900;font-size:13px;margin-bottom:8px">🔬 Por qué es extremadamente difícil de detectar y controlar</div>
+    <div style="font-size:12px;color:#ddd6fe;line-height:1.8">
+      <div>• <b style="color:white">Invisible a ojo desnudo</b> — 0.2mm, requiere lupa 20× mínimo</div>
+      <div>• Vive en la <b style="color:white">corona y hojas jóvenes aún enrolladas</b> → protección física total</div>
+      <div>• Síntomas aparecen <b style="color:white">2–3 semanas después</b> de la infestación — detección tardía</div>
+      <div>• Solo productos <b style="color:white">sistémicos o de alta penetración</b> lo alcanzan en su hábitat</div>
+      <div>• Fácil confusión con deficiencias nutricionales, virus o daño por frío</div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #c4b5fd;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#1b4332;font-size:12px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Síntomas diagnósticos</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#ede9fe;border-radius:8px;padding:9px;line-height:1.7"><div style="font-weight:800;color:#4c1d95;margin-bottom:3px">Síntomas precoces</div><div>Hojas jóvenes pequeñas y bronceadas</div><div>Pecíolos acortados y deformados</div><div>Hoja nueva no se despliega normal</div></div>
+      <div style="background:#f5f3ff;border-radius:8px;padding:9px;line-height:1.7"><div style="font-weight:800;color:#4c1d95;margin-bottom:3px">Síntomas avanzados</div><div>Porte general achaparrado</div><div>Corona con aspecto rojizo-bronceado</div><div>Frutos pequeños y deformados</div><div>Necrosis de puntos de crecimiento</div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Abamectina</b> (Gr. 6) + <b style="color:white">Spiromesifen</b> (Gr. 23) → aplicar directamente a corona</div>
+      <div>• 2–3 aplicaciones con <b style="color:white">5 días de intervalo</b> (cubre todos los estadios)</div>
+      <div>• Control biológico: <i>Neoseiulus cucumeris</i></div>
+      <div>• Monitorear corona con lupa 20× → buscar individuos translúcidos en hoja enrollada</div>
+      <div>• Eliminar y destruir plantas muy afectadas para reducir fuente de inóculo</div>
+      <div>• Material de plantación certificado libre de tarsonémido</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F2: TRIPS ===== -->
+<div class="cpF" id="cpF2">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Trips de la flor</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Frankliniella occidentalis (Pergande, 1895) · Thysanoptera</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fff7ed;color:#c2410c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Insecto chupador</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🦠 Vector TSWV</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #fed7aa">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#c2410c;margin-bottom:8px;text-align:center">Ciclo biológico · 15–20 días · Pupa en suelo</div>
+  <svg viewBox="0 0 320 125" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amTr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c2410c"/></marker></defs>
+    <!-- Flor (hábitat) -->
+    <rect x="130" y="0" width="60" height="55" rx="10" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+    <text x="160" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#92400e">🌸 FLOR</text>
+    <text x="160" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">adultos + larvas</text>
+    <text x="160" y="45" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">protegidos</text>
+    <!-- Suelo -->
+    <rect x="0" y="85" width="320" height="40" fill="#fef3c7" opacity="0.6" rx="0"/>
+    <text x="10" y="100" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#92400e">🟫 SUELO</text>
+    <!-- 1. Huevo en tejido vegetal -->
+    <ellipse cx="48" cy="28" rx="34" ry="17" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+    <text x="48" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#9a3412">HUEVO</text>
+    <text x="48" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">en tejido floral</text>
+    <!-- 2. Larva en flor -->
+    <ellipse cx="48" cy="70" rx="34" ry="17" fill="#ffedd5" stroke="#c2410c" stroke-width="2"/>
+    <text x="48" y="65" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#9a3412">LARVA</text>
+    <text x="48" y="75" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">alimenta en flor</text>
+    <!-- 3. Pupa en suelo -->
+    <ellipse cx="160" cy="105" rx="40" ry="16" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+    <text x="160" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#78350f">PUPA</text>
+    <text x="160" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#78350f">en suelo · no se alimenta</text>
+    <!-- 4. Adulto -->
+    <ellipse cx="272" cy="65" rx="38" ry="20" fill="#f97316" stroke="#c2410c" stroke-width="2.5"/>
+    <text x="272" y="58" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ADULTO</text>
+    <text x="272" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">1–2mm · frange</text>
+    <text x="272" y="78" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">vuela entre flores</text>
+    <!-- Flechas -->
+    <line x1="48" y1="45" x2="48" y2="52" stroke="#c2410c" stroke-width="2" marker-end="url(#amTr)"/>
+    <line x1="80" y1="80" x2="118" y2="100" stroke="#c2410c" stroke-width="2" marker-end="url(#amTr)"/>
+    <line x1="200" y1="105" x2="240" y2="85" stroke="#c2410c" stroke-width="2" marker-end="url(#amTr)"/>
+    <path d="M250,50 Q190,10 82,20" fill="none" stroke="#c2410c" stroke-width="2" marker-end="url(#amTr)"/>
+    <text x="165" y="18" font-family="Nunito,sans-serif" font-size="7.5" fill="#c2410c" font-weight="700">pone huevos en tejido</text>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #fed7aa;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#c2410c;margin-bottom:5px">Síntomas en frutilla</div><div style="line-height:1.7;color:#374151"><div>• Frutos con <b>costras plateadas/bronceadas</b></div><div>• Frutos deformados ("cuernos de gato")</div><div>• Sépalos con necrosis café</div><div>• Hojas jóvenes con cicatrices plateadas</div><div>• Daño tipo "papel de lija" en pétalos</div></div></div>
+      <div><div style="font-weight:900;color:#c2410c;margin-bottom:5px">Riesgo viral — TSWV</div><div style="line-height:1.7;color:#374151"><div>Vector de <b>Tomato Spotted Wilt Virus</b></div><div>Adquiere el virus en larva</div><div>Transmite como adulto</div><div>Síntomas: manchas anulares en hoja</div><div>Amarillamiento y necrosis en fruto</div><div style="color:#dc2626;font-weight:700">Sin control curativo</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Monitorear <b style="color:white">flores abiertas</b> → agitar sobre papel blanco · umbral: ≥1 trips/flor</div>
+      <div>• Trampas pegantes <b style="color:white">azules</b> (atraen más a trips) entre plantas</div>
+      <div>• Control biológico: <i>Amblyseius swirskii</i> (en flores), <i>Orius laevigatus</i></div>
+      <div>• Rotar IRAC: Gr. <b style="color:white">5</b> (spinosad) → Gr. <b style="color:white">9</b> (cyantraniliprole) → Gr. <b style="color:white">28</b></div>
+      <div>• Evitar IRAC 3 (piretroides) → resistencia documentada</div>
+      <div>• Pupar en suelo → cubierta de suelo dificulta emergencia de adultos</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F3: PULGÓN ===== -->
+<div class="cpF" id="cpF3">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Pulgón de la frutilla</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Chaetosiphon fragaefolii (Cockerell, 1901) · Hemiptera: Aphididae</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Insecto succionador</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🦠 Vector de 5+ virus</span>
+  </div>
+</div>
+<div style="margin:8px 16px 0;background:white;border-radius:12px;padding:11px;border:1.5px solid #bbf7d0">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#15803d;margin-bottom:8px;text-align:center">Ciclo biológico · Partenogénesis · Reproducción continua en invernadero</div>
+  <svg viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amPu" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#15803d"/></marker></defs>
+    <!-- Hoja (hábitat) -->
+    <ellipse cx="160" cy="55" rx="80" ry="35" fill="#dcfce7" stroke="#15803d" stroke-width="1.5" opacity="0.5"/>
+    <text x="160" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#15803d">ENVÉS DE HOJA JOVEN</text>
+    <text x="160" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">colonias compactas</text>
+    <!-- Ninfa -->
+    <ellipse cx="45" cy="35" rx="35" ry="18" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="45" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#15803d">NINFA</text>
+    <text x="45" y="40" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">4 estadios</text>
+    <!-- Áptera -->
+    <ellipse cx="45" cy="80" rx="35" ry="18" fill="#bbf7d0" stroke="#16a34a" stroke-width="2"/>
+    <text x="45" y="75" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#14532d">♀ ÁPTERA</text>
+    <text x="45" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">colonia local</text>
+    <!-- Alada -->
+    <ellipse cx="275" cy="55" rx="38" ry="22" fill="#22c55e" stroke="#15803d" stroke-width="2.5"/>
+    <text x="275" y="48" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">♀ ALADA</text>
+    <text x="275" y="58" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">dispersión</text>
+    <text x="275" y="68" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#dcfce7">transmite virus</text>
+    <!-- Flechas -->
+    <line x1="45" y1="53" x2="45" y2="61" stroke="#15803d" stroke-width="2" marker-end="url(#amPu)"/>
+    <path d="M80,80 Q160,90 236,68" fill="none" stroke="#15803d" stroke-width="2" marker-end="url(#amPu)"/>
+    <path d="M237,42 Q160,20 80,30" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amPu)"/>
+    <text x="160" y="15" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#15803d" font-weight="700">partenogénesis → 7–10 días/generación</text>
+    <text x="160" y="100" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#dc2626" font-weight="800">⚠️ Forma alada: alta dispersión viral sin síntomas visibles</text>
+  </svg>
+</div>
+<div style="padding:8px 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #bbf7d0;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#15803d;margin-bottom:5px">Síntomas directos</div><div style="line-height:1.7;color:#374151"><div>• Colonias en envés de hojas apicales</div><div>• Enrollamiento y deformación foliar</div><div>• Melaza + fumagina negra en frutos</div><div>• Amarillamiento generalizado (colonias grandes)</div></div></div>
+      <div><div style="font-weight:900;color:#dc2626;margin-bottom:5px">Daño viral (más grave)</div><div style="line-height:1.7;color:#374151"><div><b>SMYEV</b> (virus clorótico de la nervadura)</div><div><b>SCV</b> (crinkle virus)</div><div><b>SVBV</b> (vein banding)</div><div>Deformación y mosaico foliar</div><div style="color:#dc2626;font-weight:700">Sin tratamiento curativo</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar envés de <b style="color:white">hojas apicales</b> · 10 plantas/punto · presencia/ausencia</div>
+      <div>• Trampas amarillas → detectar formas aladas (mayor riesgo viral)</div>
+      <div>• Control biológico: <i>Aphidius colemani</i>, <i>Chrysoperla</i>, <i>Orius</i></div>
+      <div>• Kaolín (barrera reflectante) reduce aterrizaje de formas aladas</div>
+      <div>• Eliminar plantas con virosis confirmada → fuente de inóculo viral</div>
+      <div>• Material de plantación certificado libre de virus</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F4: BOTRYTIS ===== -->
+<div class="cpF" id="cpF4">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Botrytis — Moho gris</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Botrytis cinerea Pers. · La enfermedad N°1 en frutilla</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fce7f3;color:#9d174d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Ascomycota · Necrotrófico</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Policíclico · alta presión</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #f9a8d4">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#9d174d;margin-bottom:8px;text-align:center">Epidemiología específica en frutilla · Infección silenciosa en floración</div>
+  <svg viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amBo" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#9d174d"/></marker></defs>
+    <circle cx="160" cy="60" r="52" fill="#fce7f3" opacity="0.4"/>
+    <!-- Esclerocio -->
+    <circle cx="160" cy="12" r="14" fill="#1c1c1c" stroke="#374151" stroke-width="2"/>
+    <text x="160" y="8" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="white">ESCLERO-</text>
+    <text x="160" y="18" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="white">CIO</text>
+    <!-- Conidios en pétalo -->
+    <circle cx="228" cy="38" r="14" fill="#fce7f3" stroke="#be185d" stroke-width="2"/>
+    <text x="228" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#831843">PÉTALO</text>
+    <text x="228" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="#831843">infección silenciosa</text>
+    <!-- Fruto latente -->
+    <circle cx="255" cy="82" r="14" fill="#fbcfe8" stroke="#be185d" stroke-width="2"/>
+    <text x="255" y="77" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#831843">FRUTO</text>
+    <text x="255" y="87" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="#831843">latente hasta madurez</text>
+    <!-- Lesión fruto -->
+    <circle cx="195" cy="115" r="16" fill="#e11d48" stroke="#9f1239" stroke-width="2.5"/>
+    <text x="195" y="110" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="white">LESIÓN</text>
+    <text x="195" y="120" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="white">en madurez</text>
+    <!-- Esporulación -->
+    <circle cx="105" cy="108" r="16" fill="#fda4af" stroke="#be123c" stroke-width="2"/>
+    <text x="105" y="103" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#881337">ESPORU-</text>
+    <text x="105" y="113" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="#881337">LACIÓN gris</text>
+    <!-- Dispersión -->
+    <circle cx="65" cy="68" r="13" fill="#f9a8d4" stroke="#be185d" stroke-width="2"/>
+    <text x="65" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="#831843">DISPER-</text>
+    <text x="65" y="74" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6.5" fill="#831843">SIÓN</text>
+    <!-- Flechas -->
+    <path d="M171,18 A52,52 0 0,1 218,32" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amBo)"/>
+    <path d="M240,48 A52,52 0 0,1 256,70" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amBo)"/>
+    <path d="M247,96 A52,52 0 0,1 212,112" fill="none" stroke="#9d174d" stroke-width="2.5" marker-end="url(#amBo)"/>
+    <path d="M179,118 A52,52 0 0,1 122,116" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amBo)"/>
+    <path d="M90,100 A52,52 0 0,1 64,82" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amBo)"/>
+    <path d="M60,55 Q55,30 148,14" fill="none" stroke="#9d174d" stroke-width="2" marker-end="url(#amBo)"/>
+    <text x="160" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#9d174d" font-weight="800">HR &gt; 85% · T° 15–22°C</text>
+    <text x="160" y="67" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#6b7280">incubación 2–4 días</text>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#fce7f3;border-radius:12px;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#9d174d;font-size:13px;margin-bottom:8px">Especificidades en frutilla (diferencias con tomate)</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="background:white;border-radius:8px;padding:9px"><b style="color:#9d174d">Infección silenciosa en floración:</b> el pétalo infectado es la principal puerta de entrada. La infección ocurre durante la flor pero los síntomas aparecen al madurar el fruto. Un día húmedo en floración = epidemia en cosecha.</div>
+      <div style="background:white;border-radius:8px;padding:9px"><b style="color:#9d174d">Fruto maduro extremadamente susceptible:</b> 24–48 h con HR&gt;85% bastan para destruir un fruto maduro completo. El fruto no tiene defensas una vez maduro.</div>
+      <div style="background:white;border-radius:8px;padding:9px"><b style="color:#9d174d">Resistencia a fungicidas:</b> alta frecuencia de aplicaciones → FRAC 1 (benzimidazoles) y FRAC 7 (SDHI) con resistencias documentadas en frutilla. Rotación FRAC obligatoria.</div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Aplicar fungicidas en <b style="color:white">plena floración</b> (no esperar síntomas)</div>
+      <div>• Rotar FRAC: <b style="color:white">1 → 2 → 7 → 11 → 12 → 17</b></div>
+      <div>• Retirar frutos enfermos inmediatamente de la plantación</div>
+      <div>• <b style="color:white">Ventilación:</b> reducir HR bajo 85% — más efectivo que cualquier fungicida</div>
+      <div>• Incidencia: N° plantas con síntomas / 20 observadas</div>
+      <div>• Severidad: lesiones en tallos/frutos (1–5)</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F5: ANTRACNOSIS ===== -->
+<div class="cpF" id="cpF5">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Antracnosis</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Colletotrichum acutatum Simmonds · Ascomycota: Glomerellaceae</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fff7ed;color:#c2410c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Hemibiótrofo</span>
+    <span style="background:#450a0a;color:#fca5a5;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Destruye cultivo en 5–7 días</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #fed7aa">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#c2410c;margin-bottom:8px;text-align:center">Ciclo de infección · Dispersión por agua de salpicado</div>
+  <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amAc" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c2410c"/></marker></defs>
+    <ellipse cx="45" cy="25" rx="32" ry="17" fill="#fed7aa" stroke="#c2410c" stroke-width="2"/>
+    <text x="45" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#9a3412">INÓCULO</text>
+    <text x="45" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#9a3412">tejido/suelo/planta</text>
+    <ellipse cx="155" cy="25" rx="35" ry="17" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+    <text x="155" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">ACÉRVULOS</text>
+    <text x="155" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">masas rosadas</text>
+    <ellipse cx="272" cy="25" rx="35" ry="17" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+    <text x="272" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#1e3a8a">💧 AGUA</text>
+    <text x="272" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#1e3a8a">salpicado/lluvia</text>
+    <ellipse cx="272" cy="95" rx="35" ry="20" fill="#dc2626" stroke="#7f1d1d" stroke-width="2.5"/>
+    <text x="272" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">INFECCIÓN</text>
+    <text x="272" y="98" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">fruto · corona</text>
+    <text x="272" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">20–25°C + agua libre</text>
+    <ellipse cx="155" cy="95" rx="35" ry="20" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+    <text x="155" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">LESIÓN</text>
+    <text x="155" y="98" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">hundida salmón</text>
+    <text x="155" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fecaca">5–7 días post-infección</text>
+    <ellipse cx="45" cy="95" rx="32" ry="20" fill="#7f1d1d" stroke="#450a0a" stroke-width="2"/>
+    <text x="45" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">CORONA</text>
+    <text x="45" y="98" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">destruida</text>
+    <text x="45" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">sin recuperación</text>
+    <line x1="77" y1="25" x2="118" y2="25" stroke="#c2410c" stroke-width="2" marker-end="url(#amAc)"/>
+    <line x1="190" y1="25" x2="235" y2="25" stroke="#2563eb" stroke-width="2" marker-end="url(#amAc)"/>
+    <line x1="272" y1="42" x2="272" y2="74" stroke="#c2410c" stroke-width="2" marker-end="url(#amAc)"/>
+    <line x1="235" y1="95" x2="193" y2="95" stroke="#c2410c" stroke-width="2" marker-end="url(#amAc)"/>
+    <line x1="118" y1="95" x2="79" y2="95" stroke="#c2410c" stroke-width="2.5" marker-end="url(#amAc)"/>
+    <path d="M45" y1="74" x2="45" y2="43" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <line x1="45" y1="75" x2="45" y2="44" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amAc)"/>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#450a0a;border-radius:12px;padding:12px;margin-bottom:10px">
+    <div style="color:#fbbf24;font-weight:900;font-size:13px;margin-bottom:8px">⚡ Por qué es tan peligrosa</div>
+    <div style="font-size:12px;color:#fde8d8;line-height:1.8">
+      <div>• Puede destruir un cultivo en <b style="color:white">5–7 días</b> con condiciones favorables</div>
+      <div>• <b style="color:white">Pudrición de corona:</b> ataca el tejido vascular → marchitez fulminante, sin recuperación</div>
+      <div>• El patógeno puede estar <b style="color:white">latente en planta aparentemente sana</b> → diagnóstico difícil</div>
+      <div>• Se dispersa con <b style="color:white">agua de salpicado</b> → riego por aspersión la disemina activamente</div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #fed7aa;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#c2410c;margin-bottom:4px">Síntomas por órgano</div><div style="line-height:1.7;color:#374151"><div><b>Fruto:</b> lesión hundida salmón/café con acérvulos rosados</div><div><b>Corona:</b> pudrición interna rojiza → marchitez total</div><div><b>Pecíolo:</b> lesión negra elíptica hundida</div><div><b>Flor:</b> necrosis de pétalos y cáliz</div></div></div>
+      <div><div style="font-weight:900;color:#c2410c;margin-bottom:4px">Control</div><div style="line-height:1.7;color:#374151"><div>FRAC <b>9</b> (fludioxonil)</div><div>FRAC <b>3</b> (trifloxistrobina)</div><div>FRAC <b>11</b> (azoxistrobina)</div><div style="color:#dc2626">Evitar riego por aspersión</div><div>Material certificado libre de C. acutatum</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo y alerta</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar frutos con lesiones hundidas de color salmón → diagnóstico inmediato</div>
+      <div>• <b style="color:white">Arrancar planta con marchitez repentina</b> → cortar corona → tejido café-rojizo = positivo</div>
+      <div>• Condiciones de máximo riesgo: T° 20–25°C + agua libre en tejido</div>
+      <div>• Eliminar frutos enfermos inmediatamente → fuente de esporas</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F6: PHYTOPHTHORA ===== -->
+<div class="cpF" id="cpF6">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Pudrición de corona</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Phytophthora cactorum (Lebert & Cohn) J. Schröt · Oomycota</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#dbeafe;color:#1e40af;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Oomycota — NO es hongo</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Persiste hasta 10 años</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #bfdbfe">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#1e40af;margin-bottom:8px;text-align:center">Ciclo de infección · Zoosporas móviles en agua del suelo</div>
+  <svg viewBox="0 0 320 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amPh" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#1e40af"/></marker></defs>
+    <!-- Suelo -->
+    <rect x="0" y="90" width="320" height="40" fill="#fef3c7" opacity="0.5"/>
+    <text x="10" y="106" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#92400e">🟫 SUELO SATURADO</text>
+    <!-- Oospora (persistencia) -->
+    <circle cx="50" cy="110" r="16" fill="#1c1c1c" stroke="#374151" stroke-width="1.5"/>
+    <text x="50" y="106" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="900" fill="white">OOS-</text>
+    <text x="50" y="116" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">PORA</text>
+    <!-- Esporangio -->
+    <ellipse cx="160" cy="110" rx="30" ry="16" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="160" y="105" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#1e3a8a">ESPORANGIO</text>
+    <text x="160" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#1e3a8a">libera zoosporas</text>
+    <!-- Zoosporas (móviles en agua) -->
+    <ellipse cx="272" cy="110" rx="36" ry="16" fill="#93c5fd" stroke="#2563eb" stroke-width="2"/>
+    <text x="272" y="105" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#1e3a8a">ZOOSPORAS</text>
+    <text x="272" y="118" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#1e3a8a">nadan hacia raíz</text>
+    <!-- Infección raíz/corona -->
+    <ellipse cx="272" cy="40" rx="36" ry="22" fill="#dc2626" stroke="#7f1d1d" stroke-width="2.5"/>
+    <text x="272" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">CORONA</text>
+    <text x="272" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">pudrición interna</text>
+    <text x="272" y="53" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">T° 10–20°C</text>
+    <!-- Marchitez -->
+    <ellipse cx="160" cy="30" rx="36" ry="22" fill="#f97316" stroke="#c2410c" stroke-width="2"/>
+    <text x="160" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">MARCHITEZ</text>
+    <text x="160" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="white">fulminante</text>
+    <text x="160" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fff">hoja azul-verde</text>
+    <!-- Nuevo inóculo -->
+    <ellipse cx="50" cy="30" rx="36" ry="22" fill="#7f1d1d" stroke="#450a0a" stroke-width="2"/>
+    <text x="50" y="23" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="white">NUEVO</text>
+    <text x="50" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">INÓCULO</text>
+    <text x="50" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#fca5a5">en suelo</text>
+    <!-- Flechas -->
+    <line x1="78" y1="110" x2="128" y2="110" stroke="#1e40af" stroke-width="2" marker-end="url(#amPh)"/>
+    <line x1="192" y1="110" x2="234" y2="110" stroke="#1e40af" stroke-width="2" marker-end="url(#amPh)"/>
+    <line x1="272" y1="94" x2="272" y2="64" stroke="#dc2626" stroke-width="2" marker-end="url(#amPh)"/>
+    <line x1="234" y1="40" x2="198" y2="35" stroke="#c2410c" stroke-width="2" marker-end="url(#amPh)"/>
+    <line x1="122" y1="30" x2="88" y2="30" stroke="#c2410c" stroke-width="2" marker-end="url(#amPh)"/>
+    <path d="M50,52 Q50,75 50,94" fill="none" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amPh)"/>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#dbeafe;border-radius:12px;padding:12px;margin-bottom:10px">
+    <div style="font-weight:900;color:#1e40af;font-size:13px;margin-bottom:8px">⚠️ Es un Oomycota — NO un hongo verdadero</div>
+    <div style="font-size:12px;color:#1e3a8a;line-height:1.7">
+      <div>Los fungicidas convencionales (FRAC 1, 3, 7, 11) <b style="color:#dc2626">NO son eficaces</b>. Requiere fungicidas específicos para Oomycota.</div>
+      <div style="margin-top:6px"><b>Eficaces:</b> FRAC 4 (fosfonatos / fosetil-Al) · FRAC 49 (oxatiapiprolin, nueva generación)</div>
+      <div><b>Oosporas persisten en suelo hasta 10 años</b> → suelo contaminado es fuente permanente</div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #bfdbfe;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#1e40af;margin-bottom:4px">Síntomas</div><div style="line-height:1.7;color:#374151"><div>• Marchitez repentina de planta entera</div><div>• Corona: <b>tejido café-rojizo interno</b></div><div>• Hojas viejas amarillas, jóvenes azul-verdes</div><div>• Raíces marrones, sin pelos absorbentes</div><div>• Frutos: pudrición firme "cuero"</div></div></div>
+      <div><div style="font-weight:900;color:#1e40af;margin-bottom:4px">Favorece infección</div><div style="line-height:1.7;color:#374151"><div>• <b>Suelo saturado de agua</b> → zoosporas</div><div>• T° 10–20°C (más fresca que Colletotrichum)</div><div>• Drenaje deficiente</div><div>• Heridas en corona</div><div>• Suelo compactado</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Cortar corona</b> de planta marchita → tejido café-rojizo = diagnóstico positivo</div>
+      <div>• Mejorar drenaje · evitar exceso de humedad en corona</div>
+      <div>• Aplicar <b style="color:white">fosetil-Al</b> preventivo en suelo contaminado</div>
+      <div>• Material de plantación certificado libre de Phytophthora</div>
+      <div>• Fumigación de suelo o solarización en potreros con historial</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL F7: OÍDIO FRUTILLA ===== -->
+<div class="cpF" id="cpF7">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Oídio de la frutilla</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Podosphaera aphanis (Wallr.) Braun & Takamatsu · Ascomycota</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Biotrófico obligado · Epifítico</span>
+    <span style="background:#fef9c3;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Afecta calidad del fruto</span>
+  </div>
+</div>
+<div style="margin:8px 16px;background:white;border-radius:12px;padding:11px;border:1.5px solid #d9f99d">
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;color:#4d7c0f;margin-bottom:8px;text-align:center">Ciclo epifítico · Micelio superficial en envés · Diferente de L. taurica del tomate</div>
+  <svg viewBox="0 0 320 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+    <defs><marker id="amOi" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#4d7c0f"/></marker></defs>
+    <!-- Hoja -->
+    <rect x="0" y="55" width="320" height="8" fill="#22c55e" opacity="0.5" rx="2"/>
+    <text x="8" y="50" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#15803d">HAZ — manchas cloróticas rojizas + hoja enrollada hacia arriba</text>
+    <text x="8" y="78" font-family="Nunito,sans-serif" font-size="7.5" font-weight="800" fill="#4d7c0f">ENVÉS — micelio blanco superficial (principal síntoma visible)</text>
+    <!-- 1. Conidio llega al envés -->
+    <circle cx="32" cy="40" r="13" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+    <text x="32" y="36" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#15803d">CONI-</text>
+    <text x="32" y="46" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">DIO</text>
+    <!-- 2. Germina en superficie envés -->
+    <circle cx="105" cy="40" r="15" fill="#bbf7d0" stroke="#15803d" stroke-width="2"/>
+    <text x="105" y="35" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#14532d">GERMINA</text>
+    <text x="105" y="45" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">en envés</text>
+    <!-- 3. Apresorio + haustorio -->
+    <circle cx="185" cy="40" r="15" fill="#86efac" stroke="#15803d" stroke-width="2"/>
+    <text x="185" y="35" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#14532d">HAUS-</text>
+    <text x="185" y="45" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">TORIO</text>
+    <line x1="185" y1="55" x2="185" y2="63" stroke="#15803d" stroke-width="1.5" marker-end="url(#amOi)"/>
+    <text x="205" y="62" font-family="Nunito,sans-serif" font-size="6.5" fill="#15803d">solo haustorio entra a célula</text>
+    <!-- 4. Micelio superficial crece en envés -->
+    <circle cx="268" cy="40" r="18" fill="#4ade80" stroke="#15803d" stroke-width="2.5"/>
+    <text x="268" y="33" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#14532d">MICELIO</text>
+    <text x="268" y="43" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">blanco en envés</text>
+    <text x="268" y="53" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#14532d">+ conidióforos</text>
+    <!-- Síntoma en haz -->
+    <ellipse cx="185" cy="95" rx="55" ry="20" fill="#fef08a" stroke="#ca8a04" stroke-width="2"/>
+    <text x="185" y="90" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#854d0e">MANCHA CLORÓTICA</text>
+    <text x="185" y="102" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#854d0e">hoja enrolla hacia arriba</text>
+    <!-- Fruto afectado -->
+    <circle cx="65" cy="120" r="20" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+    <text x="65" y="115" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#7f1d1d">FRUTO</text>
+    <text x="65" y="125" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#7f1d1d">blanquecino/deformado</text>
+    <!-- Dispersión viento -->
+    <path d="M280,24 Q160,5 46,24" fill="none" stroke="#4d7c0f" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#amOi)"/>
+    <text x="163" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#4d7c0f" font-weight="700">dispersión por viento → nuevas infecciones</text>
+    <!-- Flechas entre estadios -->
+    <line x1="46" y1="40" x2="88" y2="40" stroke="#4d7c0f" stroke-width="2" marker-end="url(#amOi)"/>
+    <line x1="121" y1="40" x2="168" y2="40" stroke="#4d7c0f" stroke-width="2" marker-end="url(#amOi)"/>
+    <line x1="200" y1="40" x2="248" y2="40" stroke="#4d7c0f" stroke-width="2" marker-end="url(#amOi)"/>
+    <line x1="185" y1="75" x2="185" y2="73" stroke="#ca8a04" stroke-width="1.5" stroke-dasharray="2,1" marker-end="url(#amOi)"/>
+    <text x="165" y="137" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" fill="#dc2626" font-weight="800">Fruto afectado = pérdida total de valor comercial</text>
+  </svg>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #d9f99d;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;font-size:12px;color:#1b4332;text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Diferencias con oídio del tomate</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#f0fdf4;border-radius:8px;padding:9px"><div style="font-weight:800;color:#15803d;margin-bottom:4px">P. aphanis (frutilla)</div><div style="line-height:1.7;color:#374151"><div>Epifítico — micelio en envés</div><div>Hoja se <b>enrolla hacia arriba</b></div><div>Mancha clorótica rojiza en haz</div><div>Afecta frutos → pérdida comercial</div><div>Sabor "polvoso" en fruto afectado</div></div></div>
+      <div style="background:#fef9c3;border-radius:8px;padding:9px"><div style="font-weight:800;color:#92400e;margin-bottom:4px">L. taurica (tomate)</div><div style="line-height:1.7;color:#374151"><div>Endofítico — micelio interno</div><div>Hoja sin enrollamiento</div><div>Mancha amarilla en haz</div><div>Polvo blanco en envés</div><div>No afecta fruto directamente</div></div></div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #d9f99d;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#4d7c0f;margin-bottom:6px">Impacto en fruto — el más diferenciador vs. tomate</div>
+    <div style="display:flex;flex-direction:column;gap:4px;line-height:1.7;color:#374151">
+      <div>• Fruto afectado: <b>tinte blanquecino</b> en superficie → pérdida total de valor comercial</div>
+      <div>• Sabor alterado ("polvoso") — rechazo en mercado fresco</div>
+      <div>• Desarrollo desigual → fruto deformado</div>
+      <div>• Alta presión en otoño-primavera con T° 15–25°C</div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Control y monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">envés de hojas medias</b> · polvo blanco = signo diagnóstico</div>
+      <div>• <b style="color:white">Hoja enrollada hacia arriba</b> → confirmar envés inmediatamente</div>
+      <div>• Rotar FRAC: <b style="color:white">3 (DMI) → 7 (SDHI) → 11 (estrobilurinas) → 13 (quinoxifén)</b></div>
+      <div>• Azufre preventivo (FRAC M2) muy eficaz a T° &lt;30°C</div>
+      <div>• Control biológico: <i>Ampelomyces quisqualis</i></div>
+      <div>• Aumentar ventilación en invernadero</div>
+    </div>
+  </div>
+</div>
+</div>
+
+    </div><!-- fin scroll -->
+  </div><!-- fin contenedor -->
+</div><!-- fin mCapF -->
+
+<script>
+function openCapF(){document.getElementById('mCapF').style.display='flex';showCapF(0);}
+function closeCapF(){document.getElementById('mCapF').style.display='none';}
+function showCapF(n){
+  document.querySelectorAll('.cpF').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.ctabF').forEach(b=>b.classList.remove('active'));
+  const p=document.getElementById('cpF'+n),t=document.getElementById('ctabF'+n);
+  if(p)p.style.display='block';if(t)t.classList.add('active');
+  const scroll=document.querySelector('#mCapF [style*="overflow-y"]');
+  if(scroll)scroll.scrollTop=0;
+}
+document.getElementById('mCapF').addEventListener('click',function(e){if(e.target===this)closeCapF();});
+</script>
+</body></html>
