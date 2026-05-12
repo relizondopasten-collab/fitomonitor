@@ -328,40 +328,51 @@ input:checked+.tsl:before{transform:translateX(20px)}
 <div class="mov" id="mModulo"><div class="modal">
   <div class="mh"></div><div class="mt">Nuevo Módulo / Invernadero</div>
   <div class="fg"><label class="fl">Campo</label><select class="fs" id="mC"></select></div>
-  <div class="fg"><label class="fl">Sector predial</label><input class="fi" id="mSector" placeholder="Ej: A, B, Las Casas..."></div>
-  <div class="fg"><label class="fl">Módulo (dentro del sector)</label>
+  <div class="fg"><label class="fl">Sector predial</label><input class="fi" id="mSector" placeholder="Ej: A, B, Las Casas..." oninput="updateNombreModulo()"></div>
+  <div class="fg"><label class="fl">Módulo</label>
     <select class="fs" id="mModTipo" onchange="updateNombreModulo()">
       <option value="Norte">Norte</option>
       <option value="Sur">Sur</option>
       <option value="Centro">Centro</option>
       <option value="Único">Único</option>
-      <option value="Otro">Otro (libre)</option>
+      <option value="Otro">Otro (nombre libre)</option>
     </select>
   </div>
   <div class="fg" id="fgNombreLibre" style="display:none"><label class="fl">Nombre del módulo</label><input class="fi" id="mN" placeholder="Ej: Módulo 1 Norte"></div>
+
+  <!-- CULTIVO Y ÉPOCA — visibles desde el inicio -->
+  <div style="background:#f0fdf4;border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid #bbf7d0">
+    <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin-bottom:10px">🌱 Cultivo</div>
+    <div class="f2">
+      <div class="fg" style="margin:0">
+        <label class="fl">Cultivo</label>
+        <select class="fs" id="mCultivo" onchange="toggleEpoca()">
+          <option value="tomate">🍅 Tomate</option>
+          <option value="pimenton">🫑 Pimentón</option>
+          <option value="frutilla">🍓 Frutilla</option>
+          <option value="especialidades">🌿 Especialidades</option>
+        </select>
+      </div>
+      <div class="fg" id="fgEpoca" style="margin:0">
+        <label class="fl">Época</label>
+        <select class="fs" id="mEpoca">
+          <option value="otoño">Otoño</option>
+          <option value="invierno">Invierno</option>
+          <option value="primor">Primor</option>
+          <option value="trastomate">Trastomate</option>
+          <option value="verano">Verano</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg" style="margin-top:10px;margin-bottom:0">
+      <label class="fl">Fecha de establecimiento</label>
+      <input type="date" class="fi" id="mFechaEst">
+    </div>
+  </div>
+
   <div class="f2">
     <div class="fg"><label class="fl">N° mesas/hileras</label><input type="number" class="fi" id="mMs" placeholder="24" min="1"></div>
     <div class="fg"><label class="fl">Superficie (m²)</label><input type="number" class="fi" id="mSu" placeholder="2000"></div>
-  </div>
-  <div class="fg"><label class="fl">Cultivo</label>
-    <select class="fs" id="mCultivo" onchange="toggleEpoca()">
-      <option value="tomate">🍅 Tomate</option>
-      <option value="pimenton">🫑 Pimentón</option>
-      <option value="frutilla">🍓 Frutilla</option>
-      <option value="especialidades">🌿 Especialidades</option>
-    </select>
-  </div>
-  <div class="fg" id="fgEpoca"><label class="fl">Época de cultivo</label>
-    <select class="fs" id="mEpoca">
-      <option value="otoño">Otoño</option>
-      <option value="invierno">Invierno</option>
-      <option value="primor">Primor</option>
-      <option value="trastomate">Trastomate</option>
-      <option value="verano">Verano</option>
-    </select>
-  </div>
-  <div class="fg"><label class="fl">Fecha de establecimiento</label>
-    <input type="date" class="fi" id="mFechaEst">
   </div>
   <div class="fg"><label class="fl">Variedad / Cultivar</label><input class="fi" id="mVa" placeholder="Ej: Zeemann, RAF..."></div>
   <button class="bfull bg" onclick="saveMo()">Guardar</button>
@@ -1266,8 +1277,9 @@ function om(id){
     // nada que precargar - empresa viene de sess
   }
   if(id==='mModulo'){
-    // Mostrar solo nombre del campo (sin prefijo empresa)
     fillSel('mC',db.g('campos'),'nombre');
+    toggleEpoca();
+    updateNombreModulo();
   }
   if(id==='mPunto'){
     // Mostrar módulo con campo (sin prefijo empresa)
