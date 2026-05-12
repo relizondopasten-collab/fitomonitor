@@ -2213,6 +2213,8 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 </div>
 
 <button onclick="openCap()" style="position:fixed;bottom:76px;right:16px;z-index:150;background:#1b4332;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍅 Tomate</button>
+<button onclick="openCapB()" style="position:fixed;bottom:172px;right:16px;z-index:150;background:#065f46;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🐝 CB</button>
+<button onclick="openCapP()" style="position:fixed;bottom:220px;right:16px;z-index:150;background:#c2410c;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🫑 Pimiento</button>
 <button onclick="openCapF()" style="position:fixed;bottom:124px;right:16px;z-index:150;background:#be185d;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍓 Frutilla</button>
 
 <div id="mCap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;overflow:hidden">
@@ -4737,5 +4739,971 @@ function showCapF(n){
   if(scroll)scroll.scrollTop=0;
 }
 document.getElementById('mCapF').addEventListener('click',function(e){if(e.target===this)closeCapF();});
+</script>
+<!-- ============================================================ -->
+<!-- ============= MODAL CAPACITACIÓN PIMIENTO ================= -->
+<!-- ============================================================ -->
+<style>
+.cpP{display:none;padding-bottom:24px}
+#capTabsP{display:flex;overflow-x:auto;border-bottom:2px solid #f3f4f6;background:white;position:sticky;top:0;z-index:10}
+#capTabsP::-webkit-scrollbar{display:none}
+.ctabP{flex:1;min-width:62px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s}
+.ctabP.active{color:#c2410c !important;border-bottom-color:#c2410c !important;background:#fff7ed}
+.en-card{background:white;border-radius:10px;border:1px solid #e5e7eb;overflow:hidden;margin-bottom:8px}
+.en-header{padding:8px 12px;font-weight:900;font-size:11px;color:white}
+.en-body{padding:10px 12px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px;color:#374151}
+.en-photo{width:100%;height:80px;object-fit:cover;border-radius:6px 6px 0 0;display:block}
+.en-nophoto{height:60px;display:flex;align-items:center;justify-content:center;font-size:28px;background:#f9fafb;border-radius:6px}
+</style>
+
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center" id="mCapP">
+  <div style="background:#fafaf8;border-radius:20px 20px 0 0;width:100%;max-width:480px;height:92vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="background:#c2410c;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:white">🫑 Capacitación Pimiento</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">Capsicum annuum · Plagas, enfermedades y enemigos naturales</div>
+      </div>
+      <button onclick="closeCapP()" style="background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer;font-weight:900">×</button>
+    </div>
+    <div id="capTabsP" style="flex-shrink:0">
+      <button class="ctabP active" id="ctabP0" onclick="showCapP(0)">🔍<br>Trips</button>
+      <button class="ctabP" id="ctabP1" onclick="showCapP(1)">🪰<br>Mosca bl.</button>
+      <button class="ctabP" id="ctabP2" onclick="showCapP(2)">🦗<br>Pulgón</button>
+      <button class="ctabP" id="ctabP3" onclick="showCapP(3)">🕷<br>Arañita</button>
+      <button class="ctabP" id="ctabP4" onclick="showCapP(4)">🔵<br>Phytopht.</button>
+      <button class="ctabP" id="ctabP5" onclick="showCapP(5)">🍄<br>Botrytis</button>
+      <button class="ctabP" id="ctabP6" onclick="showCapP(6)">⬜<br>Oídio</button>
+      <button class="ctabP" id="ctabP7" onclick="showCapP(7)">🦠<br>Virosis</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch">
+
+<!-- ===== PANEL P0: TRIPS ===== -->
+<div class="cpP" id="cpP0" style="display:block">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Trips del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Frankliniella occidentalis (Pergande, 1895) · La plaga N°1</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fff7ed;color:#c2410c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Thysanoptera</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🦠 Vector TSWV — daño mayor</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #fed7aa;padding:12px;margin-bottom:10px">
+    <div style="font-weight:900;font-size:12px;color:#c2410c;margin-bottom:8px">Síntomas específicos en pimiento</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+      <div style="line-height:1.7"><div><b>Fruto joven:</b> deformaciones y cicatrices en corcho plateado/suberificado</div><div><b>Flor:</b> aborto floral → caída sin cuajar</div><div><b>Hoja:</b> plateado en envés, bronceado generalizado</div></div>
+      <div style="line-height:1.7"><div><b>TSWV en fruto:</b> manchas amarillas anulares → curvatura</div><div><b>TSWV en hoja:</b> mosaico, clorosis irregular</div><div><b>Daño máximo:</b> en yemas terminales y flores</div></div>
+    </div>
+  </div>
+  <!-- Enemigos naturales -->
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin:10px 0 8px">🐞 Enemigos naturales — control de trips</div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#f97316">🔬 Amblyseius swirskii · Ácaro fitoseido</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#fff7ed;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#c2410c;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>0.8–1mm</b></div><div>Color: <b>naranja-amarillento</b>, translúcido</div><div>4 pares de patas · muy activo</div><div>Se ve a lupa 10× en envés</div></div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div>Trips: <b>huevos + L1</b> (larvas L2 difíciles)</div><div>Huevos de mosca blanca</div><div>Ácaros como presa alternativa</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso</div>
+          <div style="line-height:1.6"><div>Liberación preventiva</div><div>50–100 ind/m²</div><div>Funciona con HR baja (40%)</div><div>T° óptima: 20–28°C</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">✅ Compatible con</div>
+          <div style="line-height:1.6"><div>Spinosad (5–7d intervalo)</div><div>Azufre con cuidado</div><div>🚫 Evitar piretroides, organofosfatos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#dc2626">🪲 Orius laevigatus · Chinche pirata</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#fee2e2;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#b91c1c;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>2–3mm</b></div><div>Color: <b>negro con manchas blancas</b></div><div>Alas características blanco/negro</div><div>Visible a ojo desnudo</div></div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div><b>Todos los estadios de trips</b></div><div>Huevos de T. urticae</div><div>Pulgones (ocasional)</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso</div>
+          <div style="line-height:1.6"><div>200–500 ind/100m²</div><div>Se establece en la flora</div><div>Necesita flores para reproducirse</div><div>T° óptima: 20–27°C</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">✅ Compatible con</div>
+          <div style="line-height:1.6"><div>Selectivo a muchos productos</div><div>🚫 Incompatible: piretroides, abamectina a dosis alta</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#d97706">🔬 Neoseiulus cucumeris · Ácaro fitoseido</div>
+    <div style="padding:10px 12px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="line-height:1.7"><div><b>Tamaño:</b> 0.4–0.5mm · translúcido-beige</div><div><b>Controla:</b> larvas L1 de trips principalmente</div><div><b>Hábitat:</b> envés de hojas · flores</div><div><b>Ventaja:</b> puede alimentarse de polen</div></div>
+      <div style="line-height:1.7"><div><b>T° óptima:</b> 20–25°C</div><div><b>Dosis:</b> 50–100 ind/m²</div><div><b>Ideal para:</b> prevención</div><div>Combinable con A. swirskii</div></div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">flores abiertas</b> → agitar sobre papel blanco · umbral: ≥1 trips/flor</div>
+      <div>• Trampas pegantes <b style="color:white">azules</b> entre plantas · revisar 2×/semana</div>
+      <div>• Condiciones de máximo riesgo: T° 25–30°C + HR baja + sin floraciones previas</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P1: MOSCA BLANCA ===== -->
+<div class="cpP" id="cpP1">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Mosca blanca</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Trialeurodes vaporariorum / Bemisia tabaci · Hemiptera: Aleyrodidae</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Insecto chupador</span>
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🦠 Bemisia: vector virus</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #bbf7d0;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#1b4332;margin-bottom:6px">T. vaporariorum vs. Bemisia tabaci — diferencias clave</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#f0fdf4;border-radius:8px;padding:8px;line-height:1.7"><div style="font-weight:800;color:#15803d">T. vaporariorum</div><div>Alas paralelas al cuerpo</div><div>Prefiere T° frescas (18–22°C)</div><div>Sin vector de virus importantes</div><div>Más fácil de controlar</div></div>
+      <div style="background:#fef3c7;border-radius:8px;padding:8px;line-height:1.7"><div style="font-weight:800;color:#92400e">Bemisia tabaci</div><div>Alas en ángulo (forma de carpa)</div><div>Prefiere T° cálidas (&gt;25°C)</div><div><b>Vector de virus (TYLCV, etc.)</b></div><div>Más difícil de controlar</div></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin:10px 0 8px">🐞 Enemigos naturales — control de mosca blanca</div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#0369a1">🐝 Encarsia formosa · Avispa parasitoide</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#e0f2fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#0369a1;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>0.6mm</b> (muy pequeña)</div><div>Color: <b>negro con abdomen amarillo</b></div><div>Parasita ninfas en escamas negras</div><div>Solo visible con lupa</div></div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div><b>T. vaporariorum</b> — muy eficaz</div><div>Ninfas L3–L4</div><div>⚠️ Menos eficaz vs. Bemisia</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso</div>
+          <div style="line-height:1.6"><div>1–3 avispas/m²/semana</div><div>T° óptima: 18–25°C</div><div>Necesita iluminación ≥8h/día</div><div>Ver escamas negras → parasitismo</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">✅ Compatible</div>
+          <div style="line-height:1.6"><div>Spirotetramat, flupyradifurone</div><div>🚫 Piretroides, neonicotinoides</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#15803d">🪲 Macrolophus pygmaeus · Chinche depredador</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#dcfce7;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>3–4mm</b></div><div>Color: <b>verde pálido</b>, ojos rojos</div><div>Muy activo · visible a ojo desnudo</div><div>Vive en toda la planta</div></div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div>Mosca blanca (todos estadios)</div><div>Huevos y larvas de trips</div><div>Huevos de Tuta absoluta</div><div>Pulgones · ácaros</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso</div>
+          <div style="line-height:1.6"><div>1–2 ind/m²</div><div>Se establece y se reproduce</div><div>Necesita presa para iniciar</div><div>Muy útil en largo plazo</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">✅ Compatible</div>
+          <div style="line-height:1.6"><div>Spinosad (cuidado)</div><div>Productos selectivos</div><div>🚫 Insecticidas de contacto</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Trampas amarillas · revisar 2×/semana · umbral: &gt;10 adultos/trampa/semana</div>
+      <div>• Revisar envés de hojas apicales · contar ninfas por hoja</div>
+      <div>• Escamas negras en envés = <b style="color:white">parasitismo por Encarsia</b> — señal positiva</div>
+      <div>• Registrar % hojas con ninfas</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P2: PULGÓN ===== -->
+<div class="cpP" id="cpP2">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Pulgón del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Myzus persicae (Sulzer) · Macrosiphum euphorbiae · Hemiptera</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Polífago · alta dispersión</span>
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">🦠 Vector CMV, PVY</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #bbf7d0;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#15803d;margin-bottom:4px">Síntomas</div><div style="line-height:1.7"><div>Colonias en envés de hojas jóvenes</div><div>Enrollamiento foliar descendente</div><div>Melaza + fumagina en frutos</div><div>CMV: mosaico + deformación</div><div>PVY: necrosis + mosaico severo</div></div></div>
+      <div><div style="font-weight:900;color:#c2410c;margin-bottom:4px">Daño viral — M. persicae</div><div style="line-height:1.7"><div><b>CMV</b> (Cucumber Mosaic Virus)</div><div><b>PVY</b> (Potato Virus Y)</div><div>Transmisión no persistente</div><div>El pulgón transmite en segundos</div><div style="color:#dc2626">Insecticidas no evitan transmisión</div></div></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin:10px 0 8px">🐞 Enemigos naturales — control de pulgón</div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#854d0e">🐝 Aphidius colemani · Avispa parasitoide</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#fef3c7;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>2–3mm</b></div><div>Color: <b>negro-marrón</b> · avispa slender</div><div>Abdomen abultado con ovipositor</div><div>Vuela activamente buscando colonias</div></div>
+        </div>
+        <div style="background:#dcfce7;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div><b>Myzus persicae</b> (muy eficaz)</div><div>Aphis gossypii</div><div>Ninfas → "momias" doradas</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso</div>
+          <div style="line-height:1.6"><div>0.5–2 avispas/m²/semana</div><div>Lanzar cerca de focos</div><div>Momias doradas = éxito</div><div>Banker plant ideal</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">✅ Compatible</div>
+          <div style="line-height:1.6"><div>Spirotetramat, flonicamid</div><div>Aceites esenciales (cuidado)</div><div>🚫 Piretroides, organofosf.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#16a34a">🦋 Chrysoperla carnea · Crisopa verde</div>
+    <div style="padding:10px 12px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="line-height:1.7">
+        <div><b>Tamaño adulto:</b> 12–15mm, verde brillante</div>
+        <div><b>Larva (depredadora):</b> 7–10mm, pardo moteada</div>
+        <div><b>Controla:</b> pulgones, trips, huevos de polilla</div>
+        <div><b>Liberar larvas</b> (más eficaces que adultos)</div>
+      </div>
+      <div style="line-height:1.7">
+        <div><b>Dosis:</b> 5–20 larvas/m²</div>
+        <div><b>Generalista:</b> complementa A. colemani</div>
+        <div><b>Ventaja:</b> muy activa, 400 presas/larva</div>
+        <div>🚫 Incompatible con insecticidas</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar envés de <b style="color:white">hojas apicales</b> · 10 plantas/punto</div>
+      <div>• Momias doradas en colonia = parasitismo activo → no tratar</div>
+      <div>• Kaolín reflectante reduce aterrizaje de formas aladas vectoras</div>
+      <div>• Trampas amarillas para formas aladas</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P3: ARAÑITA ===== -->
+<div class="cpP" id="cpP3">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Arañita bimaculada</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Tetranychus urticae Koch, 1836 · Acari: Tetranychidae</div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #fca5a5;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#b91c1c;margin-bottom:6px">Síntomas en pimiento</div>
+    <div style="display:flex;flex-direction:column;gap:4px;line-height:1.7">
+      <div>• Moteado blanco-plateado en haz (pústulas de succión) → bronceado generalizado</div>
+      <div>• Telaraña fina en envés y entre hojas → dificulta control con spray</div>
+      <div>• Defoliación en condiciones severas → fruto expuesto a escaldadura solar</div>
+      <div>• Condiciones favorables en pimiento: T° 28–35°C + HR &lt;50% + verano</div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:#15803d;margin:10px 0 8px">🐞 Enemigos naturales — control de arañita</div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#dc2626">🔬 Phytoseiulus persimilis · Especialista</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 12px;font-size:11px">
+      <div>
+        <div style="background:#fee2e2;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#b91c1c;margin-bottom:3px">📸 Identificación</div>
+          <div style="line-height:1.6"><div>Tamaño: <b>0.5–0.6mm</b></div><div>Color: <b>rojo-naranja brillante</b></div><div>Más activo y rápido que T. urticae</div><div>Patas más largas · visible a lupa</div></div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#15803d;margin-bottom:3px">🎯 Controla</div>
+          <div style="line-height:1.6"><div><b>T. urticae exclusivamente</b></div><div>Todos los estadios</div><div>Consume 5–10 huevos/día</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:6px;padding:7px;margin-bottom:6px">
+          <div style="font-weight:800;color:#5b21b6;margin-bottom:3px">⚙️ Uso en pimiento</div>
+          <div style="line-height:1.6"><div>10–50 ind/m² en focos</div><div>T° óptima: 20–26°C</div><div>⚠️ No funciona sin presa</div><div>Lanzar EN el foco</div></div>
+        </div>
+        <div style="background:#fef9c3;border-radius:6px;padding:7px">
+          <div style="font-weight:800;color:#92400e;margin-bottom:3px">⚠️ Limitaciones</div>
+          <div style="line-height:1.6"><div>Sensible a HR baja</div><div>Muy sensible a pesticidas</div><div>No persiste sin presa</div><div>Complementar con N. californicus</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="en-card">
+    <div class="en-header" style="background:#0369a1">🔬 Neoseiulus californicus · Generalista</div>
+    <div style="padding:10px 12px;font-size:11px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="line-height:1.7"><div><b>Tamaño:</b> 0.4mm · pálido/beige</div><div><b>Tolera:</b> HR baja + T° alta (hasta 35°C)</div><div><b>Controla:</b> T. urticae + otros ácaros</div><div><b>Puede subsistir</b> sin presa (polen)</div></div>
+      <div style="line-height:1.7"><div><b>Uso:</b> preventivo + con poblaciones bajas</div><div><b>Dosis:</b> 20–50 ind/m²</div><div><b>Ventaja:</b> más robusto que P. persimilis</div><div>Ideal en verano pimiento</div></div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar envés con lupa 10× · umbral: <b style="color:white">3–5 móviles/hoja</b> en 10 hojas/punto</div>
+      <div>• Focos localizados → liberar P. persimilis directamente</div>
+      <div>• Escala severidad 1–5 según moteado y extensión de telaraña</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P4: PHYTOPHTHORA ===== -->
+<div class="cpP" id="cpP4">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Phytophthora del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Phytophthora capsici Leonian · Oomycota — diferente a P. cactorum</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#dbeafe;color:#1e40af;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Oomycota — NO es hongo</span>
+    <span style="background:#450a0a;color:#fca5a5;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Ataca raíz + corona + fruto</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#450a0a;border-radius:12px;padding:12px;margin-bottom:10px">
+    <div style="color:#fbbf24;font-weight:900;font-size:13px;margin-bottom:8px">⚡ La enfermedad más devastadora del pimiento en Chile</div>
+    <div style="font-size:12px;color:#fde8d8;line-height:1.8">
+      <div>• Puede destruir un invernadero completo en <b style="color:white">7–14 días</b></div>
+      <div>• Ataca simultáneamente raíces, corona, tallo y frutos</div>
+      <div>• Favorecida por <b style="color:white">suelo saturado + T° 25–30°C</b> (más cálida que P. cactorum)</div>
+      <div>• Oosporas persisten en suelo <b style="color:white">hasta 10 años</b></div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #bfdbfe;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#1e40af;margin-bottom:4px">Síntomas por órgano</div><div style="line-height:1.7"><div><b>Raíz:</b> pudrición parda → marchitez total</div><div><b>Corona/cuello:</b> lesión oscura en anillo que estrangula</div><div><b>Tallo:</b> cancro acuoso verde-oscuro → necrosis</div><div><b>Fruto:</b> pudrición acuosa con borde blanco de micelio</div><div><b>Hojas:</b> marchitez repentina sin recuperación</div></div></div>
+      <div><div style="font-weight:900;color:#1e40af;margin-bottom:4px">Control — solo productos Oomycota</div><div style="line-height:1.7"><div>FRAC <b>4:</b> fosfonatos (fosetil-Al)</div><div>FRAC <b>49:</b> oxatiapiprolin</div><div>FRAC <b>44:</b> ametoctradin</div><div style="color:#dc2626"><b>NO eficaces:</b> FRAC 1, 3, 7, 11</div><div>Drenaje + evitar encharcamiento</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Planta marchita sin recuperación → arrancar · ver corona: ¿lesión oscura circular? = positivo</div>
+      <div>• Buscar focos ligados a zonas de encharcamiento o exceso de riego</div>
+      <div>• Aplicar fosetil-Al preventivo al suelo en potrero con historial</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P5: BOTRYTIS ===== -->
+<div class="cpP" id="cpP5">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Botrytis del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Botrytis cinerea Pers. · Necrotrófico policíclico</div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #f9a8d4;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#9d174d;margin-bottom:6px">Especificidades en pimiento vs. tomate</div>
+    <div style="display:flex;flex-direction:column;gap:5px;line-height:1.7">
+      <div style="background:#fce7f3;border-radius:8px;padding:8px"><b style="color:#9d174d">Heridas de despunte/desbrote:</b> principal puerta de entrada en pimiento. Cada herida de poda → riesgo de cancro de tallo.</div>
+      <div style="background:#fce7f3;border-radius:8px;padding:8px"><b style="color:#9d174d">Fruto maduro:</b> lesión gris-marrón con micelio polvoriento → pérdida total en cosecha. Inicio frecuente en zona del cáliz.</div>
+      <div style="background:#fce7f3;border-radius:8px;padding:8px"><b style="color:#9d174d">Pétalo infectado:</b> cae al fruto o hoja → nuevo foco de infección. Retirar pétalos caídos.</div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #f9a8d4;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#9d174d;margin-bottom:4px">Condiciones favorables</div><div style="line-height:1.7"><div>HR &gt;85% + T° 15–22°C</div><div>Noches frías + días cálidos</div><div>Heridas frescas de poda</div><div>Flores senescentes en hoja/fruto</div></div></div>
+      <div><div style="font-weight:900;color:#9d174d;margin-bottom:4px">Control</div><div style="line-height:1.7"><div>Reducir HR (ventilación)</div><div>FRAC 2, 7, 11, 12, 17</div><div>Rotar obligatoriamente</div><div>Trichoderma preventivo</div><div>Retirar tejido necrótico</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Incidencia: N° plantas / 20 con al menos un órgano afectado</div>
+      <div>• Severidad en tallos: lesiones por 20 tallos (escala 1–5)</div>
+      <div>• Micelio gris polvoriento = esporulación activa → dispersión máxima</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P6: OÍDIO ===== -->
+<div class="cpP" id="cpP6">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Oídio del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">Leveillula taurica (Lév.) G. Arnaud · Endofítico</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fef9c3;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Mismo patógeno que en tomate</span>
+    <span style="background:#f0fdf4;color:#15803d;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Micelio endofítico</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #fde68a;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#92400e;margin-bottom:6px">En pimiento — síntomas y comportamiento</div>
+    <div style="display:flex;flex-direction:column;gap:5px;line-height:1.7">
+      <div><b>Haz:</b> manchas amarillo-verdosas cloróticas irregulares → necrosis posterior</div>
+      <div><b>Envés:</b> polvo blanco fino donde emerge el micelio (diagnóstico)</div>
+      <div><b>Hojas afectadas:</b> defolian prematuramente → fruto expuesto a escaldadura</div>
+      <div><b>Mayor impacto:</b> en hoja de otoño-primavera con T° 20–28°C</div>
+      <div><b>Resistencia:</b> pimiento más susceptible que tomate en general</div>
+    </div>
+  </div>
+  <div style="background:white;border-radius:12px;border:1px solid #fde68a;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div><div style="font-weight:900;color:#92400e;margin-bottom:4px">Control químico</div><div style="line-height:1.7"><div>FRAC 3 (DMI): tebuconazol</div><div>FRAC 7 (SDHI): fluxapyroxad</div><div>FRAC 11 (estrobilurinas)</div><div>FRAC 13 (quinoxifén)</div><div>Azufre (FRAC M2) preventivo</div></div></div>
+      <div><div style="font-weight:900;color:#92400e;margin-bottom:4px">Control biológico</div><div style="line-height:1.7"><div><i>Ampelomyces quisqualis</i></div><div><i>Bacillus subtilis</i></div><div><i>Trichoderma asperellum</i></div><div>Bicarbonato de potasio</div><div>Aplicación preventiva = clave</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Monitoreo</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• Revisar <b style="color:white">envés de hojas medias</b> → polvo blanco fino = confirmado</div>
+      <div>• Mancha amarilla en haz sin polvo blanco aún = detección temprana</div>
+      <div>• Incidencia: % plantas con síntomas · Severidad: escala 1–5</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL P7: VIROSIS ===== -->
+<div class="cpP" id="cpP7">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#1b4332">Virosis del pimiento</div>
+  <div style="font-size:13px;color:#6b7280;font-style:italic;font-weight:600">TSWV · CMV · PVY · PepMV · principales en Chile</div>
+  <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+    <span style="background:#fee2e2;color:#b91c1c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">⚠️ Sin tratamiento curativo</span>
+    <span style="background:#fef3c7;color:#92400e;font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px">Manejo del vector = clave</span>
+  </div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:white;border-radius:12px;border:1px solid #fca5a5;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="background:#fee2e2;border-radius:8px;padding:10px"><div style="font-weight:900;color:#b91c1c;margin-bottom:4px">TSWV — Tomato Spotted Wilt Virus · Vector: Trips</div><div style="line-height:1.7"><div>Manchas anulares en fruto (necrosis circular)</div><div>Mosaico + deformación foliar + bronceado</div><div>Transmisión persistente: larva adquiere, adulto transmite</div><div style="color:#dc2626">Insecticidas DESPUÉS de la adquisición = inútiles para TSWV</div></div></div>
+      <div style="background:#fff7ed;border-radius:8px;padding:10px"><div style="font-weight:900;color:#c2410c;margin-bottom:4px">CMV — Cucumber Mosaic Virus · Vector: Pulgón</div><div style="line-height:1.7"><div>Mosaico verde-amarillo + deformación foliar</div><div>Frutos deformados con mosaico</div><div>Transmisión no persistente: en segundos durante prueba de pico</div><div style="color:#dc2626">Insecticidas no evitan transmisión (demasiado rápida)</div></div></div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:10px"><div style="font-weight:900;color:#15803d;margin-bottom:4px">PVY — Potato Virus Y · Vector: Pulgón</div><div style="line-height:1.7"><div>Mosaico + necrosis foliar severa</div><div>Enanismo + pérdida de producción &gt;80%</div><div>Transmisión no persistente</div><div>Plantas enfermas = fuente permanente</div></div></div>
+    </div>
+  </div>
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">🎯 Manejo preventivo — único enfoque posible</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Controlar el vector</b> (trips para TSWV, pulgón para CMV/PVY)</div>
+      <div>• Kaolín reflectante → reduce aterrizaje de vectores alados</div>
+      <div>• Aceites minerales → interfiere con adquisición viral (pulgón)</div>
+      <div>• Eliminar plantas con virosis confirmada → fuente de inóculo</div>
+      <div>• Usar variedades con resistencia a TSWV (gen Tsw) donde esté disponible</div>
+      <div>• Control de malezas reservorias dentro y alrededor del invernadero</div>
+    </div>
+  </div>
+</div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openCapP(){document.getElementById('mCapP').style.display='flex';showCapP(0);}
+function closeCapP(){document.getElementById('mCapP').style.display='none';}
+function showCapP(n){
+  document.querySelectorAll('.cpP').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.ctabP').forEach(b=>b.classList.remove('active'));
+  const p=document.getElementById('cpP'+n),t=document.getElementById('ctabP'+n);
+  if(p)p.style.display='block';if(t)t.classList.add('active');
+  const scroll=document.querySelector('#mCapP [style*="overflow-y"]');
+  if(scroll)scroll.scrollTop=0;
+}
+document.getElementById('mCapP').addEventListener('click',function(e){if(e.target===this)closeCapP();});
+</script>
+<!-- ============================================================ -->
+<!-- ============= MODAL CONTROL BIOLÓGICO ===================== -->
+<!-- ============================================================ -->
+<style>
+.cpB{display:none;padding-bottom:24px}
+#capTabsB{display:flex;overflow-x:auto;border-bottom:2px solid #f3f4f6;background:white;position:sticky;top:0;z-index:10}
+#capTabsB::-webkit-scrollbar{display:none}
+.ctabB{flex:1;min-width:68px;padding:9px 4px;border:none;background:none;font-family:'Nunito',sans-serif;font-size:10px;font-weight:900;cursor:pointer;border-bottom:3px solid transparent;color:#6b7280;transition:all .2s}
+.ctabB.active{color:#065f46 !important;border-bottom-color:#065f46 !important;background:#ecfdf5}
+</style>
+
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:none;align-items:flex-end;justify-content:center" id="mCapB">
+  <div style="background:#fafaf8;border-radius:20px 20px 0 0;width:100%;max-width:480px;height:92vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#065f46,#047857);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;color:white">🐝 Control Biológico</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.7);font-weight:700">Estrategias de manejo integrado · Sistemas naturales</div>
+      </div>
+      <button onclick="closeCapB()" style="background:rgba(255,255,255,.2);border:none;color:white;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer;font-weight:900">×</button>
+    </div>
+    <div id="capTabsB" style="flex-shrink:0">
+      <button class="ctabB active" id="ctabB0" onclick="showCapB(0)">⚖️<br>Conserv. vs<br>Aumentat.</button>
+      <button class="ctabB" id="ctabB1" onclick="showCapB(1)">🌾<br>Banker<br>Plants</button>
+      <button class="ctabB" id="ctabB2" onclick="showCapB(2)">🌿<br>Corredores<br>Biol.</button>
+      <button class="ctabB" id="ctabB3" onclick="showCapB(3)">🏝️<br>Islas de<br>Biodiv.</button>
+      <button class="ctabB" id="ctabB4" onclick="showCapB(4)">🗓️<br>Implementa-<br>ción</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch">
+
+<!-- ===== PANEL B0: CONSERVATIVO vs AUMENTATIVO ===== -->
+<div class="cpB" id="cpB0" style="display:block">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#065f46">Control biológico: tipos y diferencias</div>
+  <div style="font-size:13px;color:#6b7280;font-weight:600;margin-top:4px">Entender cada estrategia para combinarlas correctamente</div>
+</div>
+<div style="padding:0 16px">
+  <!-- Comparación principal -->
+  <div style="background:#1b4332;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="color:white;font-weight:900;font-size:14px;margin-bottom:10px;text-align:center">Los tres tipos de control biológico</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:10px">
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;margin-bottom:4px">🛡️</div><div style="color:white;font-weight:900;margin-bottom:3px">Conservativo</div><div style="color:#d8f3dc">Proteger lo que ya existe</div></div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;margin-bottom:4px">📈</div><div style="color:white;font-weight:900;margin-bottom:3px">Aumentativo</div><div style="color:#d8f3dc">Reforzar con liberaciones repetidas</div></div>
+      <div style="background:rgba(255,255,255,.1);border-radius:8px;padding:9px;text-align:center"><div style="font-size:18px;margin-bottom:4px">🌊</div><div style="color:white;font-weight:900;margin-bottom:3px">Inundativo</div><div style="color:#d8f3dc">Liberación masiva de una vez</div></div>
+    </div>
+  </div>
+
+  <!-- Conservativo -->
+  <div style="background:white;border-radius:12px;border:2px solid #6ee7b7;padding:13px;margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div style="background:#065f46;border-radius:8px;padding:6px 10px;font-size:20px">🛡️</div>
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:17px;color:#065f46">Control Biológico Conservativo</div>
+        <div style="font-size:11px;color:#6b7280">Maximizar el impacto de enemigos naturales ya presentes</div>
+      </div>
+    </div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+      <div style="background:#ecfdf5;border-radius:8px;padding:9px"><b style="color:#065f46">Concepto central:</b> En cualquier ecosistema agrícola existe una fauna auxiliar nativa (arañas, crisopas, ácaros fitoseidos, coccinélidos, avispas parasitoides) que ejerce control natural. El CBC tiene como objetivo <b>no interferir con esa fauna y potenciarla</b>.</div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:9px">
+        <b style="color:#065f46">Prácticas fundamentales:</b>
+        <div style="margin-top:4px;line-height:1.8">
+          <div>• <b>Reducir o eliminar plaguicidas de amplio espectro</b> (piretroides, organofosforados) que matan fauna benéfica</div>
+          <div>• Usar productos selectivos o de bajo impacto sobre enemigos naturales</div>
+          <div>• Crear <b>refugios y hábitat</b> para la fauna auxiliar (ver otras pestañas)</div>
+          <div>• Mantener vegetación diversa en bordes del cultivo</div>
+          <div>• Evitar labranzas profundas en zonas con pupas de parasitoides</div>
+        </div>
+      </div>
+      <div style="background:#fef9c3;border-radius:8px;padding:9px">
+        <b style="color:#92400e">El error más común:</b> liberar enemigos naturales comprados (control aumentativo) mientras se continúa usando plaguicidas de amplio espectro. El resultado es la destrucción inmediata de lo que se liberó.
+      </div>
+    </div>
+  </div>
+
+  <!-- Aumentativo vs Inundativo -->
+  <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:13px;margin-bottom:10px;font-size:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div>
+        <div style="background:#dbeafe;border-radius:8px;padding:9px;margin-bottom:8px">
+          <div style="font-weight:900;color:#1e40af;font-size:13px;margin-bottom:4px">📈 Aumentativo</div>
+          <div style="line-height:1.7;color:#374151">
+            <div><b>Concepto:</b> liberaciones repetidas y programadas de pequeñas cantidades</div>
+            <div><b>Objetivo:</b> mantener y reforzar la población del EN en el tiempo</div>
+            <div><b>Frecuencia:</b> semanal o quincenal durante toda la temporada</div>
+            <div><b>Ejemplo:</b> Aphidius colemani cada 10 días para pulgón</div>
+            <div><b>Ideal cuando:</b> el EN no se establece solo o la presión de plaga es continua</div>
+          </div>
+        </div>
+        <div style="background:#d1fae5;border-radius:6px;padding:7px;font-size:11px">
+          <b style="color:#065f46">Ventaja:</b> control continuo y sostenido a lo largo del ciclo
+        </div>
+      </div>
+      <div>
+        <div style="background:#ede9fe;border-radius:8px;padding:9px;margin-bottom:8px">
+          <div style="font-weight:900;color:#5b21b6;font-size:13px;margin-bottom:4px">🌊 Inundativo</div>
+          <div style="line-height:1.7;color:#374151">
+            <div><b>Concepto:</b> liberación masiva en un momento puntual</div>
+            <div><b>Objetivo:</b> reducir rápidamente una población explosiva</div>
+            <div><b>Frecuencia:</b> 1–2 veces, cuando hay brote</div>
+            <div><b>Ejemplo:</b> Phytoseiulus persimilis 50/m² en foco de arañita</div>
+            <div><b>Ideal cuando:</b> hay foco localizado y activo</div>
+          </div>
+        </div>
+        <div style="background:#e9d5ff;border-radius:6px;padding:7px;font-size:11px">
+          <b style="color:#4c1d95">Ventaja:</b> respuesta rápida ante brotes · el EN puede no persistir
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de compatibilidad -->
+  <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:13px;margin-bottom:16px">
+    <div style="font-weight:900;font-size:13px;color:#1b4332;margin-bottom:10px">🧩 Estrategia combinada recomendada</div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+      <div style="background:#ecfdf5;border-radius:8px;padding:10px;line-height:1.7">
+        <div style="font-weight:800;color:#065f46;margin-bottom:4px">Fase 1 — ANTES del cultivo: Conservativo</div>
+        <div>Preparar el hábitat (banker plants, flora de borde). Reducir el banco de plaguicidas residuales en el suelo. Identificar la fauna auxiliar nativa ya presente.</div>
+      </div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:10px;line-height:1.7">
+        <div style="font-weight:800;color:#065f46;margin-bottom:4px">Fase 2 — Inicio de temporada: Aumentativo preventivo</div>
+        <div>Liberar enemigos naturales generalistas (<i>A. swirskii, N. californicus, A. colemani</i>) antes de detectar la plaga. Dosis bajas, preventivas.</div>
+      </div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:10px;line-height:1.7">
+        <div style="font-weight:800;color:#065f46;margin-bottom:4px">Fase 3 — Ante brotes: Inundativo localizado</div>
+        <div>Identificar el foco. Liberar especialistas en alta dosis directamente en el foco (<i>P. persimilis</i> para arañita, <i>Orius</i> para trips en flores).</div>
+      </div>
+      <div style="background:#ecfdf5;border-radius:8px;padding:10px;line-height:1.7">
+        <div style="font-weight:800;color:#065f46;margin-bottom:4px">Fase 4 — Continuo: Conservativo activo</div>
+        <div>Mantener banker plants. Monitorear relación plaga/depredador. Solo intervenir con química cuando el MIP falla, usando productos selectivos compatibles.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL B1: BANKER PLANTS ===== -->
+<div class="cpB" id="cpB1">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#065f46">Banker Plants</div>
+  <div style="font-size:13px;color:#6b7280;font-weight:600;margin-top:4px">Plantas reservorio que mantienen poblaciones de enemigos naturales</div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#065f46;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="color:white;font-weight:900;font-size:14px;margin-bottom:8px">¿Qué es una banker plant?</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">Una planta que aloja una especie de presa/hospedante alternativo que <b style="color:white">no daña el cultivo</b>, pero permite que los enemigos naturales se reproduzcan y mantengan sus poblaciones en ausencia de la plaga objetivo. Es un "banco" viviente de enemigos naturales instalado dentro o alrededor del invernadero.</div>
+  </div>
+
+  <!-- Sistema 1: Trigo + Rhopalosiphum + Aphidius -->
+  <div style="background:white;border-radius:12px;border:1.5px solid #6ee7b7;padding:13px;margin-bottom:10px">
+    <div style="background:#065f46;border-radius:8px;padding:8px 12px;margin-bottom:10px">
+      <div style="color:white;font-weight:900;font-size:13px">🌾 Sistema Clásico: Trigo + Pulgón de cereales + Aphidius</div>
+    </div>
+    <div style="font-size:12px">
+      <svg viewBox="0 0 320 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin-bottom:10px">
+        <!-- Planta trigo -->
+        <rect x="10" y="20" width="60" height="50" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+        <text x="40" y="38" text-anchor="middle" font-family="Nunito,sans-serif" font-size="16">🌾</text>
+        <text x="40" y="54" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#92400e">TRIGO</text>
+        <text x="40" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#92400e">planta banco</text>
+        <!-- Pulgón cereal -->
+        <rect x="100" y="20" width="70" height="50" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+        <text x="135" y="38" text-anchor="middle" font-family="Nunito,sans-serif" font-size="14">🦗</text>
+        <text x="135" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#15803d">Rhopalosiphum</text>
+        <text x="135" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">pulgón cereal</text>
+        <text x="135" y="72" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#15803d">no daña cultivo</text>
+        <!-- Aphidius -->
+        <rect x="195" y="20" width="70" height="50" rx="8" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+        <text x="230" y="38" text-anchor="middle" font-family="Nunito,sans-serif" font-size="14">🐝</text>
+        <text x="230" y="52" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="900" fill="#4c1d95">Aphidius</text>
+        <text x="230" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">colemani</text>
+        <text x="230" y="72" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4c1d95">parasitoide</text>
+        <!-- Cultivo pulgón -->
+        <rect x="285" y="30" width="28" height="40" rx="6" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+        <text x="299" y="46" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11">🫑</text>
+        <text x="299" y="62" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#dc2626">pulgón</text>
+        <!-- Flechas -->
+        <line x1="70" y1="45" x2="98" y2="45" stroke="#16a34a" stroke-width="2" marker-end="url(#amB1)"/>
+        <defs><marker id="amB1" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#7c3aed"/></marker></defs>
+        <line x1="170" y1="45" x2="193" y2="45" stroke="#7c3aed" stroke-width="2" marker-end="url(#amB1)"/>
+        <path d="M265,38 Q278,35 283,35" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,1" marker-end="url(#amB1)"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:5px;line-height:1.7">
+        <div style="background:#ecfdf5;border-radius:6px;padding:8px"><b style="color:#065f46">Cómo funciona:</b> El trigo aloja colonias de <i>R. padi</i> (pulgón de cereales). <i>A. colemani</i> parasita ese pulgón y se reproduce. Cuando el pulgón del cultivo aparece, <i>A. colemani</i> ya está presente y en cantidad.</div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:8px"><b style="color:#15803d">Instalación:</b> Sembrar trigo en macetas de 2–3L. A las 3 semanas, inocular con <i>R. padi</i>. Colocar macetas entre las plantas del cultivo (1 maceta/20m²).</div>
+        <div style="background:#fef9c3;border-radius:6px;padding:8px"><b style="color:#92400e">Ventaja clave:</b> Aphidius está disponible antes de que aparezca el pulgón del cultivo → respuesta inmediata.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sistema 2: Swirskii Banker -->
+  <div style="background:white;border-radius:12px;border:1.5px solid #fde68a;padding:13px;margin-bottom:10px">
+    <div style="background:#92400e;border-radius:8px;padding:8px 12px;margin-bottom:10px">
+      <div style="color:white;font-weight:900;font-size:13px">🌺 Sistema Swirskii: Plantas ornamentales + presa alternativa + A. swirskii</div>
+    </div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:5px;line-height:1.7">
+      <div style="background:#fff7ed;border-radius:6px;padding:8px"><b style="color:#c2410c">Lógica:</b> <i>A. swirskii</i> puede alimentarse de polen y ácaro <i>Tyrophagus</i> (ácaro de alimentos). Una planta ornamental + Tyrophagus mantiene la población de swirskii.</div>
+      <div style="background:#fff7ed;border-radius:6px;padding:8px"><b style="color:#c2410c">Plantas adecuadas:</b> Tagetes erecta (marigold), Calibrachoa, Gerbera — producen abundante polen que alimenta a swirskii</div>
+      <div style="background:#fef9c3;border-radius:6px;padding:8px"><b style="color:#92400e">Instalación:</b> Maceta con planta ornamental en flor. Inocular con A. swirskii (200–500 ind/maceta). Distribuir 1 maceta/30–50m². Reemplazar cuando la planta se agota.</div>
+    </div>
+  </div>
+
+  <!-- Sistema 3: Nicotiana/Tomatillo -->
+  <div style="background:white;border-radius:12px;border:1.5px solid #bfdbfe;padding:13px;margin-bottom:16px">
+    <div style="background:#1e40af;border-radius:8px;padding:8px 12px;margin-bottom:10px">
+      <div style="color:white;font-weight:900;font-size:13px">🌿 Sistema Encarsia: Nicotiana + mosca blanca + Encarsia formosa</div>
+    </div>
+    <div style="font-size:12px;display:flex;flex-direction:column;gap:5px;line-height:1.7">
+      <div style="background:#dbeafe;border-radius:6px;padding:8px"><b style="color:#1e40af">Lógica:</b> Tabaco ornamental (<i>Nicotiana benthamiana</i>) aloja ninfas de mosca blanca. <i>Encarsia</i> parasita esas ninfas y mantiene su población.</div>
+      <div style="background:#dbeafe;border-radius:6px;padding:8px"><b style="color:#1e40af">Cuidado:</b> Tabaco puede ser reservorio de virus. Usar plantas bien monitoreadas y alejadas de plántulas.</div>
+      <div style="background:#f0fdf4;border-radius:6px;padding:8px"><b style="color:#15803d">Alternativa:</b> Macetas de tomate cherry inoculadas con <i>T. vaporariorum</i> y Encarsia. Tomate no transmite virus de pimiento.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL B2: CORREDORES BIOLÓGICOS ===== -->
+<div class="cpB" id="cpB2">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#065f46">Corredores biológicos</div>
+  <div style="font-size:13px;color:#6b7280;font-weight:600;margin-top:4px">Conectar hábitats para facilitar el movimiento de fauna auxiliar</div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#065f46;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="color:white;font-weight:900;font-size:14px;margin-bottom:8px">Concepto</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">Los enemigos naturales necesitan moverse entre el cultivo y los hábitats circundantes. Un corredor biológico es una <b style="color:white">franja continua de vegetación diversa</b> que conecta áreas naturales con el cultivo, permitiendo que parasitoides, depredadores y polinizadores ingresen y se establezcan.</div>
+  </div>
+
+  <!-- Diagrama corredor -->
+  <div style="background:white;border-radius:12px;border:1px solid #6ee7b7;padding:12px;margin-bottom:10px">
+    <div style="font-weight:900;font-size:12px;color:#065f46;margin-bottom:10px">Diseño de corredor para invernadero</div>
+    <svg viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <!-- Área natural exterior -->
+      <rect x="0" y="0" width="50" height="160" rx="0" fill="#dcfce7" opacity="0.6"/>
+      <text x="25" y="75" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#15803d" transform="rotate(-90,25,75)">ÁREA NATURAL EXTERIOR</text>
+      <!-- Corredor -->
+      <rect x="50" y="20" width="30" height="120" rx="0" fill="#86efac"/>
+      <text x="65" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d" transform="rotate(-90,65,85)">CORREDOR 1–2m</text>
+      <!-- Invernadero -->
+      <rect x="80" y="10" width="200" height="140" rx="6" fill="#fafaf8" stroke="#374151" stroke-width="2"/>
+      <text x="180" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9" font-weight="800" fill="#374151">INVERNADERO</text>
+      <!-- Plantas cultivo -->
+      <text x="115" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="20">🍅</text>
+      <text x="155" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="20">🫑</text>
+      <text x="195" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="20">🍓</text>
+      <text x="235" y="80" text-anchor="middle" font-family="Nunito,sans-serif" font-size="20">🍅</text>
+      <!-- Corredor interno -->
+      <rect x="90" y="95" width="190" height="18" rx="4" fill="#bbf7d0"/>
+      <text x="185" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d">CORREDOR INTERNO (plantas florales)</text>
+      <!-- Banco externo derecho -->
+      <rect x="280" y="20" width="30" height="120" rx="0" fill="#86efac"/>
+      <text x="295" y="85" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" font-weight="900" fill="#14532d" transform="rotate(-90,295,85)">CORREDOR 1–2m</text>
+      <!-- Flechas movimiento EN -->
+      <path d="M62,50 Q70,50 80,60" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="3,2" marker-end="url(#amBC)"/>
+      <path d="M62,110 Q72,110 82,100" fill="none" stroke="#15803d" stroke-width="2" stroke-dasharray="3,2" marker-end="url(#amBC)"/>
+      <defs><marker id="amBC" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#15803d"/></marker></defs>
+      <text x="180" y="145" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7.5" fill="#15803d" font-weight="700">← → flujo de fauna auxiliar</text>
+    </svg>
+  </div>
+
+  <!-- Plantas para corredores -->
+  <div style="background:white;border-radius:12px;border:1px solid #6ee7b7;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#065f46;margin-bottom:8px">🌸 Plantas recomendadas para corredores en Chile central</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="background:#ecfdf5;border-radius:6px;padding:8px">
+        <div style="font-weight:800;color:#065f46;margin-bottom:3px">Plantas con néctar y polen accesible para parasitoides</div>
+        <div style="line-height:1.7"><div>• <b>Phacelia tanacetifolia</b> — atrae encarsia, aphidius, chrysoperla. Flor azul, fácil cultivo.</div><div>• <b>Tagetes erecta</b> — repele plagas, atrae depredadores generalistas</div><div>• <b>Anethum graveolens</b> (eneldo) — flores umbelíferas, ideales para avispas parasitoides</div><div>• <b>Coriandrum sativum</b> — atrae Aphidius y Encarsia cuando floreció</div></div>
+      </div>
+      <div style="background:#ecfdf5;border-radius:6px;padding:8px">
+        <div style="font-weight:800;color:#065f46;margin-bottom:3px">Plantas nativas de valor para fauna auxiliar local</div>
+        <div style="line-height:1.7"><div>• <b>Quillay</b> (Quillaja saponaria) — hospeda áfidos sin daño · hogar de parasitoides nativos</div><div>• <b>Peumo, Maqui</b> — proveen refugio para arañas y crisopas</div><div>• <b>Lavandula</b> — atrae himenópteros todo el año</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">📐 Diseño práctico</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>• <b style="color:white">Ancho mínimo:</b> 1–2m de franja continua</div>
+      <div>• <b style="color:white">Longitud:</b> toda la extensión del invernadero como mínimo</div>
+      <div>• <b style="color:white">Diversidad:</b> 5–8 especies con floración escalonada → provisión continua</div>
+      <div>• <b style="color:white">Distancia al cultivo:</b> lo más cerca posible (≤5m) para facilitar colonización</div>
+      <div>• Combinar plantas de diferente altura → hábitat estratificado</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL B3: ISLAS DE BIODIVERSIDAD ===== -->
+<div class="cpB" id="cpB3">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#065f46">Islas de biodiversidad</div>
+  <div style="font-size:13px;color:#6b7280;font-weight:600;margin-top:4px">Refugios concentrados de flora diversa dentro o alrededor del cultivo</div>
+</div>
+<div style="padding:0 16px">
+  <div style="background:#065f46;border-radius:14px;padding:14px;margin-bottom:12px">
+    <div style="color:white;font-weight:900;font-size:14px;margin-bottom:8px">¿Qué es una isla de biodiversidad?</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">Una <b style="color:white">parcela pequeña (1–10m²)</b> con alta diversidad de plantas en flor, instalada en puntos estratégicos dentro del invernadero o en sus bordes. Funciona como un <b style="color:white">foco de reproducción y refugio</b> para la fauna auxiliar, desde donde los enemigos naturales se dispersan hacia el cultivo.</div>
+  </div>
+
+  <!-- Diferencia con corredor -->
+  <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#1b4332;margin-bottom:8px">Islas vs. Corredores — complementarios</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:#ecfdf5;border-radius:8px;padding:9px;line-height:1.7"><div style="font-weight:800;color:#065f46;margin-bottom:3px">🏝️ Isla de biodiversidad</div><div>Concentrada · puntual</div><div>1–10m² en un punto</div><div>Alta densidad de especies</div><div>Foco de reproducción</div><div>Dentro o en borde del cultivo</div></div>
+      <div style="background:#dbeafe;border-radius:8px;padding:9px;line-height:1.7"><div style="font-weight:800;color:#1e40af;margin-bottom:3px">🌿 Corredor biológico</div><div>Lineal · continuo</div><div>Franja de 1–2m de ancho</div><div>Conecta áreas naturales</div><div>Facilita movimiento</div><div>En bordes del invernadero</div></div>
+    </div>
+    <div style="background:#fef9c3;border-radius:6px;padding:8px;margin-top:8px;font-size:11px"><b style="color:#92400e">Complementariedad:</b> Las islas son los "focos de producción" y los corredores son las "autopistas" que conectan esos focos con todo el cultivo. Idealmente usar ambas estrategias juntas.</div>
+  </div>
+
+  <!-- Diseño -->
+  <div style="background:white;border-radius:12px;border:1px solid #6ee7b7;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#065f46;margin-bottom:8px">🏗️ Diseño de una isla de biodiversidad</div>
+    <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;margin-bottom:8px">
+      <!-- Isla central -->
+      <ellipse cx="150" cy="75" rx="80" ry="55" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+      <text x="150" y="30" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#065f46">ISLA 3–5m²</text>
+      <!-- Capas de plantas -->
+      <circle cx="110" cy="70" r="14" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>
+      <text x="110" y="74" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11">🌻</text>
+      <circle cx="145" cy="55" r="12" fill="#86efac" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="145" y="59" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11">💐</text>
+      <circle cx="180" cy="70" r="14" fill="#fce7f3" stroke="#be185d" stroke-width="1.5"/>
+      <text x="180" y="74" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11">🌸</text>
+      <circle cx="130" cy="90" r="11" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+      <text x="130" y="94" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10">🌿</text>
+      <circle cx="165" cy="90" r="11" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+      <text x="165" y="94" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10">🌼</text>
+      <!-- Cultivo alrededor -->
+      <text x="30" y="55" font-family="Nunito,sans-serif" font-size="16">🍅</text>
+      <text x="30" y="100" font-family="Nunito,sans-serif" font-size="16">🫑</text>
+      <text x="255" y="55" font-family="Nunito,sans-serif" font-size="16">🍅</text>
+      <text x="255" y="100" font-family="Nunito,sans-serif" font-size="16">🫑</text>
+      <!-- Flechas dispersión EN -->
+      <defs><marker id="amID" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#15803d"/></marker></defs>
+      <path d="M72,65 Q55,60 45,60" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amID)"/>
+      <path d="M72,85 Q55,90 45,95" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amID)"/>
+      <path d="M228,65 Q245,60 255,60" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amID)"/>
+      <path d="M228,85 Q245,90 255,95" fill="none" stroke="#15803d" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#amID)"/>
+      <text x="150" y="142" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#15803d" font-weight="700">dispersión de enemigos naturales hacia el cultivo</text>
+    </svg>
+    <div style="display:flex;flex-direction:column;gap:5px;line-height:1.7">
+      <div><b style="color:#065f46">Capa alta (50–80cm):</b> Tagetes, Phacelia, Anethum — atraen parasitoides</div>
+      <div><b style="color:#065f46">Capa media (20–50cm):</b> Coriandro, Lavandula, Salvia — proveen néctar continuo</div>
+      <div><b style="color:#065f46">Capa baja (0–20cm):</b> Thymus, Alyssum — atraen Encarsia y Orius</div>
+      <div><b style="color:#065f46">Ubicación ideal:</b> 1 isla cada 200–300m² · equidistantes en el invernadero</div>
+    </div>
+  </div>
+
+  <!-- Especies recomendadas -->
+  <div style="background:white;border-radius:12px;border:1px solid #6ee7b7;padding:12px;margin-bottom:16px;font-size:12px">
+    <div style="font-weight:900;color:#065f46;margin-bottom:8px">🌱 Especies recomendadas para islas en invernadero Chile</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="line-height:1.7">
+        <div><b>Phacelia tanacetifolia</b> ⭐⭐⭐</div>
+        <div>→ Parasitoides generalistas</div>
+        <div><b>Tagetes erecta</b> ⭐⭐⭐</div>
+        <div>→ Depredadores + repelente</div>
+        <div><b>Anethum graveolens</b> ⭐⭐⭐</div>
+        <div>→ Avispas parasitoides</div>
+        <div><b>Alyssum maritimum</b> ⭐⭐</div>
+        <div>→ Encarsia, Aphidius</div>
+      </div>
+      <div style="line-height:1.7">
+        <div><b>Coriandrum sativum</b> ⭐⭐⭐</div>
+        <div>→ Parasitoides de pulgón</div>
+        <div><b>Lavandula angustifolia</b> ⭐⭐</div>
+        <div>→ Himenópteros todo año</div>
+        <div><b>Salvia officinalis</b> ⭐⭐</div>
+        <div>→ Fauna auxiliar diversa</div>
+        <div><b>Thymus vulgaris</b> ⭐⭐</div>
+        <div>→ Acarofauna benéfica</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== PANEL B4: IMPLEMENTACIÓN ===== -->
+<div class="cpB" id="cpB4">
+<div style="padding:16px 16px 6px">
+  <div style="font-family:'DM Serif Display',serif;font-size:22px;color:#065f46">Guía de implementación</div>
+  <div style="font-size:13px;color:#6b7280;font-weight:600;margin-top:4px">Plan paso a paso para instalar un programa de control biológico</div>
+</div>
+<div style="padding:0 16px">
+  <!-- Timeline -->
+  <div style="background:white;border-radius:12px;border:1px solid #6ee7b7;padding:13px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#065f46;margin-bottom:10px">📅 Cronograma de implementación (temporada tomate/pimiento)</div>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:#065f46;color:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:900;min-width:52px;text-align:center;flex-shrink:0">-4 sem.</div>
+        <div style="line-height:1.7"><b>Preparación del hábitat:</b> instalar corredores e islas de biodiversidad. Sembrar plantas de banco (trigo, Phacelia). Reducir o eliminar plaguicidas residuales.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:#0d9488;color:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:900;min-width:52px;text-align:center;flex-shrink:0">-2 sem.</div>
+        <div style="line-height:1.7"><b>Establecer banker plants:</b> inocular trigo con R. padi. Inocular plantas florales con A. swirskii. Colocar en posición dentro del invernadero.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:#16a34a;color:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:900;min-width:52px;text-align:center;flex-shrink:0">Trasplante</div>
+        <div style="line-height:1.7"><b>Primera liberación aumentativa:</b> A. swirskii (50/m²), A. colemani (0.5/m²/sem), N. californicus (20/m²). Preventivo — antes de detectar plaga.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:#ca8a04;color:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:900;min-width:52px;text-align:center;flex-shrink:0">Semanas<br>1–8</div>
+        <div style="line-height:1.7"><b>Monitoreo semanal + liberaciones de mantenimiento:</b> registrar plaga y EN. Liberar según umbral. Renovar banker plants. Solo química si MIP falla, usando productos selectivos.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="background:#dc2626;color:white;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:900;min-width:52px;text-align:center;flex-shrink:0">Brote</div>
+        <div style="line-height:1.7"><b>Respuesta inundativa:</b> identificar foco. Liberar especialista en alta dosis directamente en el foco. No tratar el invernadero completo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registro -->
+  <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:12px;margin-bottom:10px;font-size:12px">
+    <div style="font-weight:900;color:#1b4332;margin-bottom:8px">📋 Indicadores a monitorear</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="line-height:1.7"><div style="font-weight:800;color:#c2410c;margin-bottom:3px">Registro de plagas</div><div>N° individuos/hoja o flor</div><div>% plantas afectadas</div><div>Distribución de focos</div><div>Evolución temporal</div></div>
+      <div style="line-height:1.7"><div style="font-weight:800;color:#15803d;margin-bottom:3px">Registro de EN</div><div>% momias (parasitismo)</div><div>N° fitoseidos/hoja</div><div>Presencia de Orius/Chrysoperla</div><div>Estado de banker plants</div></div>
+    </div>
+  </div>
+
+  <!-- Productos compatibles -->
+  <div style="background:white;border-radius:12px;border:1px solid #e5e7eb;padding:12px;margin-bottom:10px;font-size:11px">
+    <div style="font-weight:900;color:#1b4332;margin-bottom:8px;font-size:12px">✅ Productos compatibles con control biológico</div>
+    <div style="display:flex;flex-direction:column;gap:4px;line-height:1.7">
+      <div style="background:#dcfce7;border-radius:6px;padding:7px"><b style="color:#15803d">✅ Seguros:</b> Azufre, bicarbonato potásico, cobre, aceites minerales, kaolín</div>
+      <div style="background:#d1fae5;border-radius:6px;padding:7px"><b style="color:#15803d">✅ Selectivos:</b> Spinosad (Gr.5) — intervalo 5–7d antes de liberar EN. Spirotetramat. Flonicamid. Flupyradifurone</div>
+      <div style="background:#fef9c3;border-radius:6px;padding:7px"><b style="color:#92400e">⚠️ Precaución:</b> Abamectina (6d intervalo), Neonicotinoides sistémicos al suelo (cuidado con beneficiosos)</div>
+      <div style="background:#fee2e2;border-radius:6px;padding:7px"><b style="color:#dc2626">🚫 Incompatibles:</b> Piretroides, organofosforados, carbamatos, clorpirifos — destruyen fauna auxiliar</div>
+    </div>
+  </div>
+
+  <div style="background:#1b4332;border-radius:12px;padding:13px;margin-bottom:16px">
+    <div style="color:white;font-weight:900;font-size:13px;margin-bottom:8px">💡 Principio fundamental</div>
+    <div style="font-size:12px;color:#d8f3dc;line-height:1.8">
+      <div>El control biológico no es "hacer nada" — es <b style="color:white">reemplazar una herramienta (pesticida) por un sistema vivo (ecosistema funcional)</b>. Requiere más planificación, monitoreo semanal y conocimiento del comportamiento de cada especie. Los resultados son sostenibles y mejoran cada temporada a medida que el ecosistema se equilibra.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function openCapB(){document.getElementById('mCapB').style.display='flex';showCapB(0);}
+function closeCapB(){document.getElementById('mCapB').style.display='none';}
+function showCapB(n){
+  document.querySelectorAll('.cpB').forEach(p=>p.style.display='none');
+  document.querySelectorAll('.ctabB').forEach(b=>b.classList.remove('active'));
+  const p=document.getElementById('cpB'+n),t=document.getElementById('ctabB'+n);
+  if(p)p.style.display='block';if(t)t.classList.add('active');
+  const scroll=document.querySelector('#mCapB [style*="overflow-y"]');
+  if(scroll)scroll.scrollTop=0;
+}
+document.getElementById('mCapB').addEventListener('click',function(e){if(e.target===this)closeCapB();});
 </script>
 </body></html>
