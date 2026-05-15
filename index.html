@@ -5,8 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FitoMonitor">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="FitoMonitor">
 <meta name="theme-color" content="#1b4332">
-<title>FitoMonitor — Tomate Invernadero</title>
+<meta name="description" content="FitoMonitor — Monitoreo fitosanitario de invernadero">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22FitoMonitor%22%2C%22short_name%22%3A%22FitoMonitor%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231b4332%22%2C%22theme_color%22%3A%22%231b4332%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage/svg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A//www.w3.org/2000/svg'%2520viewBox%3D'0%25200%252032%252032'%253E%253Ctext%2520y%3D'26'%2520font-size%3D'28'%253E%25F0%259F%258C%25BF%253C/text%253E%253C/svg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image/svg%2Bxml%22%7D%5D%7D">
+<title>FitoMonitor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -239,6 +244,11 @@ input:checked+.tsl:before{transform:translateX(20px)}
       <div id="accAccesoWrap" style="display:none">
         <div class="ach" onclick="tacc('accAcceso')"><span>🔐 Gestión de Accesos</span></div>
         <div class="acb open" id="accAcceso"><div id="lstAcceso"></div></div>
+      </div>
+      <!-- Usuarios: solo admin -->
+      <div id="usuariosWrap" style="display:none">
+        <div class="ach" onclick="tacc('accUsuarios')"><span>👥 Usuarios del sistema</span></div>
+        <div class="acb open" id="accUsuarios"><div id="tabUsuarios" style="padding:12px 16px"></div></div>
       </div>
       <div style="height:24px"></div>
     </div>
@@ -583,7 +593,11 @@ input:checked+.tsl:before{transform:translateX(20px)}
           </div>
         </div>
         <div class="subfld" id="fldNeSub" style="display:none">
-          <div class="subfld-t">Severidad del daño radicular (1–5)</div>
+          <div class="fg" style="margin-top:6px">
+            <div class="fl">Incidencia — N° mesas con síntomas</div>
+            <div class="nw"><button class="nbb" onclick="adj('nNePl',-1)">−</button><input type="number" class="nin" id="nNePl" value="0" min="0"><button class="nbb" onclick="adj('nNePl',1)">+</button></div>
+          </div>
+          <div class="subfld-t" style="margin-top:10px">Severidad del daño radicular (1–5)</div>
           <div class="sv-row" id="svNe">
             <button class="sv" onclick="setSv('svNe',1,this)">1</button>
             <button class="sv" onclick="setSv('svNe',2,this)">2</button>
@@ -593,11 +607,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
           </div>
           <div class="svleg" style="margin-top:8px;margin-bottom:0">
             <span class="sl sl1">1 Agallas escasas</span><span class="sl sl2">2 Agallas dispersas</span>
-            <span class="sl sl3">3 Agallas frecuentes</span><span class="sl sl4">4 Sistema radicular comprometido</span><span class="sl sl5">5 Raíz destruida</span>
-          </div>
-          <div class="fg" style="margin-top:10px">
-            <div class="fl">N° plantas con síntomas radicales</div>
-            <div class="nw"><button class="nbb" onclick="adj('nNePl',-1)">−</button><input type="number" class="nin" id="nNePl" value="0" min="0"><button class="nbb" onclick="adj('nNePl',1)">+</button></div>
+            <span class="sl sl3">3 Agallas frecuentes</span><span class="sl sl4">4 Sist. radicular comprometido</span><span class="sl sl5">5 Raíz destruida</span>
           </div>
         </div>
         <div class="infobox">Confirmar con extracción de raíces. <b>Meloidogyne</b>: agallas visibles. Evaluar plantas con síntomas de marchitez y enanismo.</div>
@@ -613,11 +623,11 @@ input:checked+.tsl:before{transform:translateX(20px)}
       <div class="pfld" id="fldFu">
         <div class="f2" style="margin-top:10px">
           <div>
-            <div class="fl">Incidencia (%)</div>
-            <div class="nw"><button class="nbb" onclick="adj('nFuI',-5)">−</button><input type="number" class="nin" id="nFuI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nFuI',5)">+</button></div>
+            <div class="fl">Incidencia — N° mesas con síntomas</div>
+            <div class="nw"><button class="nbb" onclick="adj('nFuI',-1)">−</button><input type="number" class="nin" id="nFuI" value="0" min="0"><button class="nbb" onclick="adj('nFuI',1)">+</button></div>
           </div>
           <div>
-            <div class="fl">Severidad</div>
+            <div class="fl">Severidad — pérdida de vigor</div>
             <div class="sv-row" id="svFu">
               <button class="sv" onclick="setSv('svFu',1,this)">1</button><button class="sv" onclick="setSv('svFu',2,this)">2</button>
               <button class="sv" onclick="setSv('svFu',3,this)">3</button><button class="sv" onclick="setSv('svFu',4,this)">4</button>
@@ -625,7 +635,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
             </div>
           </div>
         </div>
-        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+        <div class="svleg"><span class="sl sl1">1 Amarillez hj. basales</span><span class="sl sl2">2 Clorosis generalizada</span><span class="sl sl3">3 Enanismo + clorosis</span><span class="sl sl4">4 Decaimiento severo</span><span class="sl sl5">5 Marchitez planta</span></div>
       </div>
     </div>
 
@@ -638,11 +648,11 @@ input:checked+.tsl:before{transform:translateX(20px)}
       <div class="pfld" id="fldVe">
         <div class="f2" style="margin-top:10px">
           <div>
-            <div class="fl">Incidencia (%)</div>
-            <div class="nw"><button class="nbb" onclick="adj('nVeI',-5)">−</button><input type="number" class="nin" id="nVeI" value="0" min="0" max="100"><button class="nbb" onclick="adj('nVeI',5)">+</button></div>
+            <div class="fl">Incidencia — N° mesas con síntomas</div>
+            <div class="nw"><button class="nbb" onclick="adj('nVeI',-1)">−</button><input type="number" class="nin" id="nVeI" value="0" min="0"><button class="nbb" onclick="adj('nVeI',1)">+</button></div>
           </div>
           <div>
-            <div class="fl">Severidad</div>
+            <div class="fl">Severidad — pérdida de vigor</div>
             <div class="sv-row" id="svVe">
               <button class="sv" onclick="setSv('svVe',1,this)">1</button><button class="sv" onclick="setSv('svVe',2,this)">2</button>
               <button class="sv" onclick="setSv('svVe',3,this)">3</button><button class="sv" onclick="setSv('svVe',4,this)">4</button>
@@ -650,7 +660,7 @@ input:checked+.tsl:before{transform:translateX(20px)}
             </div>
           </div>
         </div>
-        <div class="svleg"><span class="sl sl1">1 Muy baja</span><span class="sl sl2">2 Baja</span><span class="sl sl3">3 Media</span><span class="sl sl4">4 Alta</span><span class="sl sl5">5 Crítica</span></div>
+        <div class="svleg"><span class="sl sl1">1 Amarillez hj. basales</span><span class="sl sl2">2 Clorosis generalizada</span><span class="sl sl3">3 Enanismo + clorosis</span><span class="sl sl4">4 Decaimiento severo</span><span class="sl sl5">5 Marchitez planta</span></div>
       </div>
     </div>
   </div>
@@ -1004,21 +1014,20 @@ function updateHeader(){
 }
 
 function initAdminUI(){
-  // Cargar auth actualizada desde Firestore
   fsAuthLoad().then(()=>{
-    // Show admin bar
     const bar=document.getElementById('adminBar');
     bar.style.display='flex';
-    // Populate admin view selector
     const sel=document.getElementById('adminViewSel');
     sel.innerHTML='<option value="admin">— Mi panel admin —</option>';
     getAuthCos().forEach(co=>{
       const o=document.createElement('option');o.value=co.id;o.textContent=co.name;
       sel.appendChild(o);
     });
-    // Show access management section
     document.getElementById('accAccesoWrap').style.display='block';
     renderAccessMgmt();
+    // Pestaña Usuarios (solo admin)
+    const usuWrap=document.getElementById('usuariosWrap');
+    if(usuWrap){usuWrap.style.display='block';renderUsuarios();}
   });
 }
 
@@ -1729,8 +1738,8 @@ function buildCard(r){
   const tr=r.plagas?.trips;if(tr?.presente&&tr.presencia==='pres')tags+=`<span class="tag tpl">Trips sev${tr.nivelPoblacional}</span>`;
   const ar=r.plagas?.aranitas;if(ar?.presente&&ar.presencia==='pres')tags+=`<span class="tag tpl">Arañita ${ar.plantasAfectadas}pl sev${ar.severidad}</span>`;
   const ne=r.enfermedades?.nematodos;if(ne?.presente&&ne.presencia==='pres')tags+=`<span class="tag tes">Nematodos sev${ne.severidad}</span>`;
-  const fu=r.enfermedades?.fusarium;if(fu?.presente)tags+=`<span class="tag tes">Fusarium ${fu.incidencia}% sev${fu.severidad}</span>`;
-  const ve=r.enfermedades?.verticillium;if(ve?.presente)tags+=`<span class="tag tes">Verticillium ${ve.incidencia}%</span>`;
+  const fu=r.enfermedades?.fusarium;if(fu?.presente)tags+=`<span class="tag tes">Fusarium ${fu.incidencia}ms sev${fu.severidad}</span>`;
+  const ve=r.enfermedades?.verticillium;if(ve?.presente)tags+=`<span class="tag tes">Verticillium ${ve.incidencia}ms sev${ve.severidad}</span>`;
   const bo=r.enfermedades?.botrytis;if(bo?.presente){const org=bo.organos?.length?` [${bo.organos.join(',')}]`:'';tags+=`<span class="tag tea">Botrytis ${bo.incidencia}%${org}</span>`;}
   const oi=r.enfermedades?.oidio;if(oi?.presente)tags+=`<span class="tag tea">Oídio ${oi.incidencia}%</span>`;
   const bc=s.lv==='cr'?'cr':s.lv!=='ok'?'wi':'';
@@ -1782,10 +1791,10 @@ function calcIS(reg){
   if(e.nematodos?.presente&&e.nematodos.presencia==='pres')s+=(e.nematodos.severidad||0)*3;
   // Botrytis (max 15) — incidencia 0-20 plantas
   if(e.botrytis?.presente)s+=Math.round((e.botrytis.incidencia||0)/20*5)+(e.botrytis.severidad||0)*2;
-  // Fusarium (max 10) — incidencia 0-100%
-  if(e.fusarium?.presente)s+=Math.round((e.fusarium.incidencia||0)/20)+(e.fusarium.severidad||0)*1;
+  // Fusarium (max 10) — incidencia = N° mesas (normalizar sobre 10 mesas aprox)
+  if(e.fusarium?.presente)s+=Math.min(Math.round((e.fusarium.incidencia||0)*2),5)+(e.fusarium.severidad||0)*1;
   // Verticillium (max 10)
-  if(e.verticillium?.presente)s+=Math.round((e.verticillium.incidencia||0)/20)+(e.verticillium.severidad||0)*1;
+  if(e.verticillium?.presente)s+=Math.min(Math.round((e.verticillium.incidencia||0)*2),5)+(e.verticillium.severidad||0)*1;
   // Oídio (max 5)
   if(e.oidio?.presente)s+=Math.round((e.oidio.incidencia||0)/20*1)+(e.oidio.severidad||0)*0.5;
   return Math.min(Math.round(s),100);
@@ -2185,37 +2194,74 @@ function fmtD(d){if(!d)return'';const[y,m,dy]=d.split('-');return`${dy} ${['Ene'
 .lcard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:28px 24px;width:100%;max-width:340px}
 .llogo{font-family:'DM Serif Display',serif;font-size:36px;color:white;text-align:center;line-height:1}
 .lsub{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:700;text-align:center;margin-top:4px}
-.linput{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 16px;color:white;font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;letter-spacing:6px;text-align:center;outline:none;transition:border-color .2s;-webkit-text-security:disc}
-.linput::placeholder{letter-spacing:2px;font-size:14px;font-weight:600;opacity:.4}
+.linput{width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:12px;padding:14px 16px;color:white;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;outline:none;transition:border-color .2s;margin-bottom:10px;-webkit-appearance:none}
+.linput::placeholder{font-size:14px;font-weight:600;opacity:.4}
 .linput:focus{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.15)}
-.lbtn{width:100%;padding:14px;background:#52b788;border:none;border-radius:12px;color:#0f2419;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;margin-top:10px;letter-spacing:.3px}
+.linput-code{font-size:22px;font-weight:900;letter-spacing:6px;text-align:center;-webkit-text-security:disc}
+.lbtn{width:100%;padding:14px;background:#52b788;border:none;border-radius:12px;color:#0f2419;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;margin-top:4px;letter-spacing:.3px}
 .lerr{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.4);border-radius:8px;padding:10px 14px;color:#fca5a5;font-size:12px;font-weight:700;text-align:center;margin-top:10px;display:none}
+.ltabs{display:flex;gap:4px;background:rgba(0,0,0,.2);border-radius:10px;padding:4px;margin-bottom:20px}
+.ltab{flex:1;padding:8px;border:none;border-radius:7px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .2s}
+.ltab.active{background:rgba(255,255,255,.15);color:white}
+.lfl{font-size:11px;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:block}
+.lpass-wrap{position:relative}
+.lpass-wrap .linput{padding-right:48px}
+.lpass-eye{position:absolute;right:14px;top:50%;transform:translateY(-60%);background:none;border:none;color:rgba(255,255,255,.4);font-size:18px;cursor:pointer;padding:4px}
 </style>
 
-<div id="loginScreen" style="display:none;position:fixed;inset:0;z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:24px">
+<div id="loginScreen" style="display:none;position:fixed;inset:0;z-index:500;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:20px">
   <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#52b788,#2d6a4f,#52b788)"></div>
-  <div class="lcard">
-    <div style="text-align:center;margin-bottom:24px">
-      <div style="font-size:48px;line-height:1;margin-bottom:8px">🌿</div>
-      <div class="llogo">FitoMonitor</div>
-      <div class="lsub">Tomate · Invernadero</div>
+  <div style="text-align:center">
+    <div style="font-size:48px;line-height:1;margin-bottom:8px">🌿</div>
+    <div class="llogo">FitoMonitor</div>
+    <div class="lsub">Sistema de Monitoreo Fitosanitario</div>
+  </div>
+  <div class="lcard" style="width:100%;max-width:340px">
+    <!-- Tabs -->
+    <div class="ltabs">
+      <button class="ltab active" id="ltabU" onclick="switchLoginTab('usuario')">👤 Usuario</button>
+      <button class="ltab" id="ltabC" onclick="switchLoginTab('codigo')">🔑 Código</button>
     </div>
-    <label style="display:block;font-size:11px;font-weight:800;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Código de acceso</label>
-    <input class="linput" id="loginCode" type="password" inputmode="numeric" placeholder="● ● ● ● ● ●" maxlength="20"
-      onkeydown="if(event.key==='Enter')doLogin(this.value)">
-    <button class="lbtn" onclick="doLogin(document.getElementById('loginCode').value)">Ingresar →</button>
-    <div class="lerr" id="loginErr">Código incorrecto</div>
+
+    <!-- PANEL USUARIO -->
+    <div id="lpanelU">
+      <span class="lfl">Nombre de usuario</span>
+      <input class="linput" id="loginUser" type="text" placeholder="tu_usuario" autocomplete="username" autocapitalize="off"
+        onkeydown="if(event.key==='Enter')document.getElementById('loginPass').focus()">
+      <span class="lfl">Contraseña</span>
+      <div class="lpass-wrap">
+        <input class="linput" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')doUserLogin()">
+        <button class="lpass-eye" onclick="togglePass('loginPass',this)" tabindex="-1">👁</button>
+      </div>
+      <button class="lbtn" onclick="doUserLogin()">Ingresar →</button>
+    </div>
+
+    <!-- PANEL CÓDIGO -->
+    <div id="lpanelC" style="display:none">
+      <span class="lfl">Código de acceso</span>
+      <input class="linput linput-code" id="loginCode" type="password" inputmode="numeric" placeholder="● ● ● ● ● ●" maxlength="20"
+        onkeydown="if(event.key==='Enter')doLogin(this.value)">
+      <button class="lbtn" onclick="doLogin(document.getElementById('loginCode').value)">Ingresar →</button>
+    </div>
+
+    <div class="lerr" id="loginErr">Acceso incorrecto</div>
   </div>
   <div style="text-align:center">
     <div style="font-size:11px;color:rgba(255,255,255,.25);font-weight:700">Acceso solo para personal autorizado</div>
-    <div style="font-size:10px;color:rgba(255,255,255,.18);margin-top:4px">Solicite su código al asesor técnico</div>
   </div>
 </div>
 
-<button onclick="openCap()" style="position:fixed;bottom:76px;right:16px;z-index:150;background:#1b4332;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍅 Tomate</button>
-<button onclick="openCapB()" style="position:fixed;bottom:172px;right:16px;z-index:150;background:#065f46;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🐝 CB</button>
-<button onclick="openCapP()" style="position:fixed;bottom:220px;right:16px;z-index:150;background:#c2410c;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🫑 Pimiento</button>
-<button onclick="openCapF()" style="position:fixed;bottom:124px;right:16px;z-index:150;background:#be185d;color:white;border:none;border-radius:50px;padding:11px 18px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;display:flex;align-items:center;gap:7px">🍓 Frutilla</button>
+<!-- FAB Capacitación colapsable -->
+<div id="fabWrap" style="position:fixed;bottom:76px;right:16px;z-index:150;display:flex;flex-direction:column-reverse;align-items:flex-end;gap:8px">
+  <button id="fabMain" onclick="toggleFab()" style="background:#1b4332;color:white;border:none;border-radius:50px;width:52px;height:52px;font-size:22px;box-shadow:0 4px 16px rgba(0,0,0,.35);cursor:pointer;transition:transform .2s;flex-shrink:0">📚</button>
+  <div id="fabMenu" style="display:none;flex-direction:column-reverse;gap:8px;align-items:flex-end">
+    <button onclick="openCap();toggleFab()" style="background:#1b4332;color:white;border:none;border-radius:50px;padding:10px 16px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap">🍅 Tomate</button>
+    <button onclick="openCapF();toggleFab()" style="background:#be185d;color:white;border:none;border-radius:50px;padding:10px 16px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap">🍓 Frutilla</button>
+    <button onclick="openCapP();toggleFab()" style="background:#c2410c;color:white;border:none;border-radius:50px;padding:10px 16px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap">🫑 Pimiento</button>
+    <button onclick="openCapB();toggleFab()" style="background:#065f46;color:white;border:none;border-radius:50px;padding:10px 16px;font-family:'Nunito',sans-serif;font-weight:900;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap">🐝 Control Biol.</button>
+  </div>
+</div>
 
 <div id="mCap" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;overflow:hidden">
 <div id="mCapScroll" style="position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch">
@@ -5705,5 +5751,168 @@ function showCapB(n){
   if(scroll)scroll.scrollTop=0;
 }
 document.getElementById('mCapB').addEventListener('click',function(e){if(e.target===this)closeCapB();});
+
+// ===== FAB CAPACITACIÓN =====
+let fabOpen=false;
+function toggleFab(){
+  fabOpen=!fabOpen;
+  const menu=document.getElementById('fabMenu');
+  const btn=document.getElementById('fabMain');
+  if(menu){menu.style.display=fabOpen?'flex':'none';}
+  if(btn){btn.style.transform=fabOpen?'rotate(45deg)':'rotate(0)';}
+}
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('fabWrap');
+  if(fabOpen&&wrap&&!wrap.contains(e.target))toggleFab();
+});
+
+// ===== LOGIN TABS =====
+function switchLoginTab(tab){
+  const isU=tab==='usuario';
+  document.getElementById('ltabU').classList.toggle('active',isU);
+  document.getElementById('ltabC').classList.toggle('active',!isU);
+  document.getElementById('lpanelU').style.display=isU?'block':'none';
+  document.getElementById('lpanelC').style.display=isU?'none':'block';
+  document.getElementById('loginErr').style.display='none';
+}
+function togglePass(id,btn){
+  const el=document.getElementById(id);if(!el)return;
+  el.type=el.type==='password'?'text':'password';
+  btn.textContent=el.type==='password'?'👁':'🙈';
+}
+
+// ===== HASH CONTRASEÑA =====
+async function hashPass(pw){
+  const enc=new TextEncoder();
+  const data=enc.encode(pw+'fito_salt_2025');
+  const buf=await crypto.subtle.digest('SHA-256',data);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// ===== LOGIN POR USUARIO (Firestore /usuarios) =====
+async function doUserLogin(){
+  const usuario=document.getElementById('loginUser').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  if(!usuario||!pass){showLoginErr('Ingrese usuario y contraseña');return;}
+  showLoader('Verificando…');
+  try{
+    const hash=await hashPass(pass);
+    const snap=await db_fs.collection('usuarios').where('usuario','==',usuario).where('activo','==',true).get();
+    hideLoader();
+    if(snap.empty){showLoginErr('Usuario o contraseña incorrectos');return;}
+    const docSnap=snap.docs[0];const u=docSnap.data();
+    if(u.passwordHash!==hash){showLoginErr('Usuario o contraseña incorrectos');return;}
+    sess={id:u.rol==='admin'?'admin':(u.empresaId||'admin'),name:u.nombre,isAdmin:u.rol==='admin',userId:docSnap.id,rol:u.rol,tipo:'usuario'};
+    sessionStorage.setItem(SK,JSON.stringify(sess));
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='flex';
+    updateHeader();
+    if(u.rol==='admin'){
+      fsAuthLoad().then(()=>{initAdminUI();renderCfg();renderStats();}).catch(()=>{initAdminUI();renderCfg();renderStats();});
+    }else{
+      syncDown(sess.id).then(()=>{autoCreateEmpresa({id:sess.id,name:sess.name});renderCfg();renderStats();});
+    }
+  }catch(err){hideLoader();showLoginErr('Error de conexión.');console.error(err);}
+}
+
+// ===== GESTIÓN DE USUARIOS (admin) =====
+let usersCache=[];
+async function loadUsuarios(){
+  try{const snap=await db_fs.collection('usuarios').orderBy('nombre').get();usersCache=snap.docs.map(d=>({id:d.id,...d.data()}));}
+  catch(e){usersCache=[];}
+}
+async function renderUsuarios(){
+  const el=document.getElementById('tabUsuarios');if(!el)return;
+  await loadUsuarios();
+  const roles={admin:'🔑 Admin',consultor:'📋 Consultor',monitor:'📍 Monitor'};
+  const empresas=db.g('empresas');
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div style="font-weight:900;font-size:15px">👥 Usuarios</div>
+    <button class="bsm" onclick="openModalUsuario(null)" style="background:#1b4332;color:white;border:none;border-radius:8px;padding:8px 14px;font-weight:800;cursor:pointer">+ Nuevo</button>
+  </div>
+  ${usersCache.length===0?'<div class="empty">Sin usuarios registrados. Cree el primero con "+ Nuevo".</div>':''}
+  ${usersCache.map(u=>`<div class="card" style="margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px">
+      <div style="width:40px;height:40px;border-radius:50%;background:#d8f3dc;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${u.rol==='admin'?'🔑':u.rol==='consultor'?'📋':'📍'}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:14px">${u.nombre}</div>
+        <div style="font-size:11px;color:var(--muted)">@${u.usuario} · ${roles[u.rol]||u.rol}${u.empresaId&&u.rol!=='admin'?' · '+(empresas.find(e=>e.id===u.empresaId)?.nombre||u.empresaId):' · Acceso total'}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+        <span style="background:${u.activo?'#d8f3dc':'#fee2e2'};color:${u.activo?'#1b4332':'#b91c1c'};font-size:9px;font-weight:900;padding:2px 8px;border-radius:20px;text-align:center">${u.activo?'Activo':'Inactivo'}</span>
+        <button class="bsm" onclick="openModalUsuario('${u.id}')" style="font-size:11px">Editar</button>
+      </div>
+    </div>
+  </div>`).join('')}`;
+}
+function openModalUsuario(uid){
+  const u=uid?usersCache.find(x=>x.id===uid):null;
+  const empresas=db.g('empresas');
+  const empOpts=empresas.map(e=>`<option value="${e.id}"${u?.empresaId===e.id?' selected':''}>${e.nombre}</option>`).join('');
+  const m=document.createElement('div');m.id='mUsuario';
+  m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:400;display:flex;align-items:flex-end;justify-content:center';
+  m.innerHTML=`<div style="background:#fafaf8;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:24px 20px 40px;max-height:90vh;overflow-y:auto">
+    <div style="font-weight:900;font-size:17px;margin-bottom:18px">${u?'Editar usuario':'Nuevo usuario'}</div>
+    <div class="fg"><label class="fl">Nombre completo</label><input class="fi" id="uNombre" value="${u?.nombre||''}" placeholder="Nombre Apellido"></div>
+    <div class="fg"><label class="fl">Nombre de usuario</label><input class="fi" id="uUsuario" value="${u?.usuario||''}" placeholder="nombre_usuario" autocapitalize="off"></div>
+    <div class="fg"><label class="fl">Contraseña${u?' (vacío = no cambiar)':''}</label>
+      <div style="position:relative"><input class="fi" id="uPass" type="password" placeholder="Mínimo 6 caracteres" style="padding-right:44px">
+      <button onclick="togglePass('uPass',this)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;color:var(--muted)">👁</button></div>
+    </div>
+    <div class="fg"><label class="fl">Rol</label>
+      <select class="fs" id="uRol" onchange="toggleEmpresaSel()">
+        <option value="monitor"${u?.rol==='monitor'?' selected':''}>📍 Monitor — Solo monitoreo</option>
+        <option value="consultor"${u?.rol==='consultor'?' selected':''}>📋 Consultor — Gestión completa</option>
+        <option value="admin"${u?.rol==='admin'?' selected':''}>🔑 Admin — Acceso total</option>
+      </select>
+    </div>
+    <div class="fg" id="fgEmpresaSel"${u?.rol==='admin'?' style="display:none"':''}>
+      <label class="fl">Empresa asignada</label>
+      <select class="fs" id="uEmpresa"><option value="">— Seleccionar empresa —</option>${empOpts}</select>
+    </div>
+    ${u?`<div class="fg"><label class="fl">Estado</label>
+      <select class="fs" id="uActivo">
+        <option value="true"${u.activo!==false?' selected':''}>✅ Activo</option>
+        <option value="false"${u.activo===false?' selected':''}>❌ Inactivo</option>
+      </select></div>`:''}
+    <div id="uErr" style="color:#dc2626;font-size:12px;font-weight:700;margin-bottom:10px;display:none"></div>
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="bsm" onclick="document.getElementById('mUsuario').remove()" style="flex:1">Cancelar</button>
+      <button onclick="saveUsuario('${uid||''}')" style="flex:2;background:#1b4332;color:white;border:none;border-radius:10px;padding:14px;font-weight:900;font-size:14px;cursor:pointer">${u?'Guardar':'Crear usuario'}</button>
+    </div>
+  </div>`;
+  document.body.appendChild(m);
+  m.addEventListener('click',e=>{if(e.target===m)m.remove();});
+}
+function toggleEmpresaSel(){
+  const rol=document.getElementById('uRol')?.value;
+  const fg=document.getElementById('fgEmpresaSel');
+  if(fg)fg.style.display=rol==='admin'?'none':'block';
+}
+async function saveUsuario(uid){
+  const nombre=document.getElementById('uNombre').value.trim();
+  const usuario=document.getElementById('uUsuario').value.trim().toLowerCase().replace(/\s+/g,'_');
+  const pass=document.getElementById('uPass').value;
+  const rol=document.getElementById('uRol').value;
+  const empresaId=document.getElementById('uEmpresa')?.value||'';
+  const activoEl=document.getElementById('uActivo');
+  const activo=activoEl?activoEl.value!=='false':true;
+  const errEl=document.getElementById('uErr');
+  if(!nombre||!usuario){errEl.textContent='Nombre y usuario son obligatorios';errEl.style.display='block';return;}
+  if(!uid&&!pass){errEl.textContent='Ingrese una contraseña';errEl.style.display='block';return;}
+  if(pass&&pass.length<6){errEl.textContent='La contraseña debe tener al menos 6 caracteres';errEl.style.display='block';return;}
+  if(rol!=='admin'&&!empresaId){errEl.textContent='Seleccione la empresa asignada';errEl.style.display='block';return;}
+  const dup=usersCache.find(u=>u.usuario===usuario&&u.id!==uid);
+  if(dup){errEl.textContent='Ese nombre de usuario ya existe';errEl.style.display='block';return;}
+  const data={nombre,usuario,rol,activo,modificadoEn:new Date().toISOString()};
+  if(rol!=='admin')data.empresaId=empresaId;else data.empresaId=null;
+  if(pass)data.passwordHash=await hashPass(pass);
+  try{
+    if(uid){await db_fs.collection('usuarios').doc(uid).update(data);}
+    else{data.creadoEn=new Date().toISOString();await db_fs.collection('usuarios').add(data);}
+    document.getElementById('mUsuario')?.remove();
+    renderUsuarios();showToast(uid?'Usuario actualizado ✓':'Usuario creado ✓');
+  }catch(e){errEl.textContent='Error al guardar. Verifique conexión.';errEl.style.display='block';console.error(e);}
+}
 </script>
 </body></html>
